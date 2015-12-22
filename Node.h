@@ -11,6 +11,7 @@
 
 #include <vector>
 #include "ConstantFile.h"
+#include "Edge.h"
 
 using namespace std;
 
@@ -18,11 +19,15 @@ class Node{
 
 public:
  
-    vector<Node> neighbourNode;
+    //Node 所有邻居
+    vector<Edge> neighbourEdge;
+    //Node 当前状态
     status currentStatus;
-    vector<vector<double>> distr;
+    //Node的影响力
     double influence;
+    //Node在图中的序号
     int index;
+    
 };
 
 bool operator < (const Node& source, const Node& target)
