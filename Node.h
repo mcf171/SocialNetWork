@@ -20,12 +20,32 @@ public:
  
     vector<Node> neighbourNode;
     status currentStatus;
+    vector<vector<double>> distr;
     double influence;
+    int index;
 };
 
 bool operator < (const Node& source, const Node& target)
 {
     return source.influence < target.influence;
+}
+
+bool operator == (const Node& source, const Node& target)
+{
+    return source.index == target.index;
+}
+
+
+bool findNode(vector<Node> nodes, Node node)
+{
+    
+    bool exists = false;
+    
+    if(find(nodes.begin(), nodes.end(), node) != nodes.end())
+        exists = true;
+    
+    return exists;
+    
 }
 
 #endif /* Node_h */

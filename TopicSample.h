@@ -1,10 +1,13 @@
 //
-//  TopicSample.cpp
+//  TopicSample.h
 //  SocialNetWork
 //
-//  Created by 王珏 on 15/12/21.
+//  Created by 王珏 on 15/12/22.
 //  Copyright © 2015年 王珏. All rights reserved.
 //
+
+#ifndef TopicSample_h
+#define TopicSample_h
 
 #include <iostream>
 #include "Graph.h"
@@ -14,7 +17,6 @@
 #include <vector>
 
 using namespace std;
-
 /*
  *  进行主题挖掘
  */
@@ -52,7 +54,7 @@ void topicSampleOnline(Graph g,Query q, double xita){
     //找到与离线系统中上下界最接近的上下界
     
     findClosestBound();
-
+    
     //如果找到的边界满足不等式直接返回种子集合
     if (true) {
         //返回种子
@@ -61,7 +63,7 @@ void topicSampleOnline(Graph g,Query q, double xita){
     for(int i = 0 ; i < q.k; i ++)
     {
         //从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
-        vector<Node> u = bestEffort(g, q, xita);
+        //vector<Node> u = bestEffort(g, q, xita);
         //接下来一系列判断
     }
     
@@ -72,3 +74,5 @@ void topiSample(Graph g,Query q, double xita)
     topicSampleOffline();
     topicSampleOnline(g, q, xita);
 }
+
+#endif /* TopicSample_h */

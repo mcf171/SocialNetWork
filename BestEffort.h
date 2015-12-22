@@ -1,10 +1,13 @@
 //
-//  BestEffort.cpp
+//  BestEffort.h
 //  SocialNetWork
 //
-//  Created by 王珏 on 15/12/21.
+//  Created by 王珏 on 15/12/22.
 //  Copyright © 2015年 王珏. All rights reserved.
 //
+
+#ifndef BestEffort_h
+#define BestEffort_h
 
 #include <iostream>
 #include "Graph.h"
@@ -59,3 +62,6 @@ vector<Node> bestEffort(Graph g, Query q, double xita)
     
     return node;
 }
+
+
+#endif /* BestEffort_h */
