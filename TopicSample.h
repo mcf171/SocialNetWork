@@ -16,8 +16,7 @@
 #include "Node.h"
 #include "BestEffort.h"
 #include <vector>
-#include <cstdlib>
-#include <algorithm>
+
 
 using namespace std;
 #define INFMAX 100000000
@@ -25,6 +24,7 @@ using namespace std;
 /*
  *  进行主题挖掘
  */
+/*
 vector<Query> queryMinning(Graph g, double theta){
     
     vector<Query> topicDistributions;
@@ -40,14 +40,17 @@ vector<Query> queryMinning(Graph g, double theta){
     
     return topicDistributions;
 }
-
+*/
 /*
  *  主题采样离线部分
  */
 void topicSampleOffline(Graph g, double theta){
     
+
+
+
     //首先从log中挖掘可能的主题分布
-    vector<Query> topicDistributions = queryMinning(g, theta);//P
+    //vector<Query> topicDistributions = queryMinning(g, theta);//P
 
 }
 
@@ -129,27 +132,33 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 	bool getBound = findClosestBound(q, topicDistributions, upperBound, lowerBound);
 
 
-    //如果找到的边界满足不等式直接返回种子集合
-	if (getBound && lowerBound->sigma > q.epsilon * upperBound->sigma ) {
-        return lowerBound;
-    }
     
-	Query* qResult = new Query(q.k, q.epsilon);
-	Query* q1 = new Query(q);
-	q1->k=1;
-	q1->sigma=0;
-	q1->S.clear();
+	if(!getBound)
+	{
+		//TODO
+		vector<Node> u = bestEffort(g, q, theta);
+		//q.S = u;
+		return &q;
+	}
+	else if (lowerBound->sigma > q.epsilon * upperBound->sigma ) {
+        //如果找到的边界满足不等式直接返回种子集合
+		return lowerBound;
+    }else{
+    
+		Query* qResult = new Query(q.k, q.epsilon);
+		Query* q1 = new Query(q);
+		q1->k=1;
+		q1->sigma=0;
+		q1->S.clear();
 
-    for(int i = 0 ; i < q.k; i ++)
-    {
-        //从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
-
-
-        vector<Node> u = bestEffort(g, *q1, theta);
-		qResult->S.push_back(u[0]);
-
-		if(lowerBound!=NULL)
+		for(int i = 0 ; i < q.k; i ++)
 		{
+			//从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
+
+
+			vector<Node> u = bestEffort(g, *q1, theta);
+			qResult->S.push_back(u[0]);
+
 			vector<Node>::const_iterator iter = findNodeIter(lowerBound->S,u[0]);
 
 			if(iter!=lowerBound->S.end())
@@ -160,12 +169,19 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 			{
 				//TODO
 			}
+			//lowerBound->sigma=
+			if (lowerBound->sigma > q.epsilon * upperBound->sigma ){
+				for (int i = 0; i < lowerBound->S.size(); i++)
+				{
+					qResult->S.push_back(lowerBound->S[i]);
+				}
+				qResult->sigma = lowerBound->sigma;
+				return qResult;
+			}
+
 		}
-
-
-        //接下来一系列判断
-    }
-	return qResult;
+		return qResult;
+	}
 }
 
 void topiSample(Graph g,Query q, double theta)

@@ -16,12 +16,13 @@
 
 using namespace std;
 
+class Edge;
+
 class Node{
 
 public:
- 
-    //Node 所有邻居
-    vector<Edge*> neighbourEdge;
+
+	vector<Edge*> neighbourEdge;
     //Node 当前状态
     status currentStatus;
     //Node的影响力

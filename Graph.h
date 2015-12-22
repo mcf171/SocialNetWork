@@ -36,8 +36,10 @@ void Dijkstra(Graph g,Node* startNode)
     
     priority_queue<Edge*> edge;
     vector<Edge*>::iterator iterEdge;
+		/*
     for(iterEdge = startNode->neighbourEdge.begin(); iterEdge != startNode->neighbourEdge.end(); iterEdge++)
         edge.push(*iterEdge);
+		*/
     
 };
 
