@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "Node.h"
+#include "Edge.h"
 #include "BestEffort.h"
 #include <vector>
 

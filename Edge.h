@@ -6,10 +6,10 @@
 //  Copyright © 2015年 王珏. All rights reserved.
 //
 
-#ifndef Edage_h
-#define Edage_h
+#ifndef Edge_h
+#define Edge_h
 
-#include "Node.h"
+//#include "Node.h"
 
 #include <vector>
 
@@ -29,4 +29,4 @@ public:
     
 };
 
-#endif /* Edage_h */
+#endif /* Edge_h */

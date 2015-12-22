@@ -137,6 +137,8 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 	Query* qResult = new Query(q.k, q.epsilon);
 	Query* q1 = new Query(q);
 	q1->k=1;
+	q1->sigma=0;
+	q1->S.clear();
 
     for(int i = 0 ; i < q.k; i ++)
     {
@@ -148,10 +150,15 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 
 		if(lowerBound!=NULL)
 		{
-			if(findNode(lowerBound->S,u[0]))
+			vector<Node>::const_iterator iter = findNodeIter(lowerBound->S,u[0]);
+
+			if(iter!=lowerBound->S.end())
 			{
-			}else
+				lowerBound->S.erase(iter);
+			}
+			else
 			{
+				//TODO
 			}
 		}
 

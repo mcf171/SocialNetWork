@@ -40,7 +40,6 @@ bool operator == (const Node& source, const Node& target)
     return source.index == target.index;
 }
 
-
 bool findNode(vector<Node> nodes, Node node)
 {
     
@@ -50,6 +49,15 @@ bool findNode(vector<Node> nodes, Node node)
         exists = true;
     
     return exists;
+    
+}
+
+vector<Node>::const_iterator findNodeIter(vector<Node> nodes, Node node)
+{
+
+    vector<Node>::const_iterator result = find(nodes.begin(), nodes.end(), node);
+    
+    return result;
     
 }
 
