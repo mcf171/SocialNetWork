@@ -5,6 +5,7 @@
 //  Created by 王珏 on 15/12/22.
 //  Copyright © 2015年 王珏. All rights reserved.
 //
+#pragma once
 
 #ifndef BestEffort_h
 #define BestEffort_h
