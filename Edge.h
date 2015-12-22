@@ -9,7 +9,7 @@
 #ifndef Edge_h
 #define Edge_h
 
-//#include "Node.h"
+#include "Node.h"
 
 #include <vector>
 
