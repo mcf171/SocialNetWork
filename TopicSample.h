@@ -49,7 +49,7 @@ void findClosestBound()
     
 }
 
-void topicSampleOnline(Graph g,Query q, double xita){
+void topicSampleOnline(Graph g,Query q, double theta){
     
     //找到与离线系统中上下界最接近的上下界
     
@@ -63,16 +63,16 @@ void topicSampleOnline(Graph g,Query q, double xita){
     for(int i = 0 ; i < q.k; i ++)
     {
         //从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
-        //vector<Node> u = bestEffort(g, q, xita);
+        //vector<Node> u = bestEffort(g, q, theta);
         //接下来一系列判断
     }
     
 }
 
-void topiSample(Graph g,Query q, double xita)
+void topiSample(Graph g,Query q, double theta)
 {
     topicSampleOffline();
-    topicSampleOnline(g, q, xita);
+    topicSampleOnline(g, q, theta);
 }
 
 #endif /* TopicSample_h */
