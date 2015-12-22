@@ -14,7 +14,7 @@
 #include "Graph.h"
 #include "Query.h"
 #include "Node.h"
-#include "BestEffort.cpp"
+#include "BestEffort.h"
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
@@ -87,6 +87,8 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 
 	if(upperBound==NULL) return false;
 
+	upperBound = new Query(*upperBound);//新对象
+
 	for (int i = 0; i < lowerBoundIds.size(); i++)
 	{
 		double dKL = upperBound->dKL(topicDistributions[lowerBoundIds[i]]);
@@ -97,6 +99,9 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 		}
 	}
 	if(lowerBound==NULL) return false;
+
+	lowerBound = new Query(*lowerBound);//新对象
+
 	return true;
 
 }
@@ -137,7 +142,11 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 
 		if(lowerBound!=NULL)
 		{
-			vector<Node>::iterator t = find_if(lowerBound->S.begin(),lowerBound->S.end(),u[0].compare);
+			if(findNode(lowerBound->S,u[0]))
+			{
+			}else
+			{
+			}
 		}
 
 
