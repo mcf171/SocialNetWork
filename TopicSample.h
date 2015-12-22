@@ -1,11 +1,14 @@
 //
-//  TopicSample.cpp
+//  TopicSample.h
 //  SocialNetWork
 //
-//  Created by 王珏 on 15/12/21.
+//  Created by 王珏 on 15/12/22.
 //  Copyright © 2015年 王珏. All rights reserved.
 //
 #pragma once
+
+#ifndef TopicSample_h
+#define TopicSample_h
 
 #include <iostream>
 #include "Graph.h"
@@ -17,7 +20,6 @@
 #include <algorithm>
 
 using namespace std;
-
 #define INFMAX 100000000
 
 /*
@@ -114,7 +116,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 	Query* lowerBound=NULL;
 	
 	vector<Query> topicDistributions = loadSampleOfflineResult();
-
+    
 	bool getBound = findClosestBound(q, topicDistributions, upperBound, lowerBound);
 
 
@@ -146,6 +148,9 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 
 void topiSample(Graph g,Query q, double theta)
 {
+
     //loadSampleOfflineResult();
     topicSampleOnline(g, q, theta);
 }
+
+#endif /* TopicSample_h */

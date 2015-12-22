@@ -12,9 +12,6 @@
 #include <vector>
 #include "ConstantFile.h"
 
-#include <vector>
-#include "ConstantFile.h"
-
 using namespace std;
 
 class Node{
@@ -50,4 +47,5 @@ bool findNode(vector<Node> nodes, Node node)
     return exists;
     
 }
+
 #endif /* Node_h */
