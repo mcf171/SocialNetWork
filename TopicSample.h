@@ -106,6 +106,7 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 
 }
 
+
 vector<Query> loadSampleOfflineResult()
 {
 	//从文件中读取Offline结果
@@ -115,6 +116,7 @@ vector<Query> loadSampleOfflineResult()
 
 
 Query* topicSampleOnline(Graph g,Query q, double theta){
+
     
     //找到与离线系统中上下界最接近的上下界    
     Query* upperBound=NULL;
@@ -137,6 +139,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
     for(int i = 0 ; i < q.k; i ++)
     {
         //从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
+
         vector<Node> u = bestEffort(g, *q1, theta);
 		qResult->S.push_back(u[0]);
 
@@ -149,7 +152,6 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 			}
 		}
 
-
         //接下来一系列判断
     }
 	return qResult;
@@ -158,7 +160,9 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 void topiSample(Graph g,Query q, double theta)
 {
 
+
     //loadSampleOfflineResult();
+
     topicSampleOnline(g, q, theta);
 }
 
