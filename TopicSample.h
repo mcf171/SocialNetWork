@@ -19,38 +19,122 @@
 
 
 using namespace std;
+
+#include <cstdlib>
+#include <algorithm>
+#include <string> 
+#include <fstream>
+#include <sstream>
+
+#define NNODE 10
+#define NEDGE 35
+#define NSAMPLE 200
+#define DIM 3
+
+#define NODE_PATH "D:/workspace_cpp/SocialNetWork/nodetest.txt"
+#define EDGE_PATH "D:/workspace_cpp/SocialNetWork/edgetest.txt"
+#define PROP_PATH "D:/workspace_cpp/SocialNetWork/proptest.txt"
+#define SAMPLE_PATH "D:/workspace_cpp/SocialNetWork/m.csv"
+
+
 #define INFMAX 100000000
 
 /*
  *  进行主题挖掘
  */
-/*
-vector<Query> queryMinning(Graph g, double theta){
+
+void LoadData(double* nodedata, double* edgedata, double* propdata, double* sampledata){
+	ifstream fnode (NODE_PATH);
+	ifstream fedge (EDGE_PATH);
+	ifstream fprop (PROP_PATH);
+	ifstream fsample (SAMPLE_PATH);
+	string value;
+
+	//double* sampledata = new double[nfsample*d];
+
+	for (int i = 0; i < NSAMPLE; i++)
+	{
+		for (int j = 0; j < DIM-1; j++)
+		{
+			getline(fsample, value, ',')>>sampledata[i*DIM+j];
+		}
+		fsample>>sampledata[i*DIM+DIM-1];
+		//cout<<sampledata[i*d+d-1]<<endl;
+	}
+
+
+	//double* nodedata = new double[nfedge];
+
+	for (int i = 0; i < NNODE; i++)
+	{
+		fnode>>nodedata[i];
+		//cout<<nodedata[i]<<endl;
+	}
+
+
+	//double* edgedata = new double[nfedge*2];
+
+	for (int i = 0; i < NEDGE; i++)
+	{
+		fedge>>edgedata[i*2]>>edgedata[i*2+1];
+		//cout<<edgedata[i*2]<<endl;
+	}
+
+
+	//double* propdata = new double[nfedge*d];
+
+	for (int i = 0; i < NEDGE; i++)
+	{
+		for (int j = 0; j < DIM; j++)
+		{
+			fprop>>propdata[i*DIM+j];
+		}
+		//cout<<propdata[i*d]<<endl;
+	}
+
+
+}
+
+vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata){
     
     vector<Query> topicDistributions;
-	
-	//TODO：直接从预先聚类好的结果文件读进来
 
-	//计算每个的S
-	for (int i = 0; i < topicDistributions.size(); i++)
+
+	for (int i = 0; i < NSAMPLE; i++)
 	{
-		Query q = topicDistributions[i];
+		Query q(K,Epsilon);
+		q.topicDistribution = sampledata+i*DIM*sizeof(double);
+		//计算每个的S
 		q.S = bestEffort(g, q, theta);
+		topicDistributions.push_back(q);
 	}
-    
+
     return topicDistributions;
 }
-*/
+
 /*
  *  主题采样离线部分
  */
-void topicSampleOffline(Graph g, double theta){
-    
+void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 
+	double* nodedata = new double[NNODE];
+	double* edgedata = new double[NEDGE*2];
+	double* propdata = new double[NEDGE*DIM];
+	double* sampledata = new double[NSAMPLE*DIM];
 
+	LoadData(nodedata, edgedata, propdata, sampledata);
+
+	//直接从预先聚类好的结果文件读进来
 
     //首先从log中挖掘可能的主题分布
-    //vector<Query> topicDistributions = queryMinning(g, theta);//P
+    vector<Query> topicDistributions = queryMinning(g, theta, K, Epsilon, sampledata);//P
+	for (int i = 0; i < NSAMPLE; i++)
+	{
+		//TODO:Save
+		topicDistributions[i].S;
+		topicDistributions[i].sigma;
+	}
+
 
 }
 
@@ -113,7 +197,7 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 
 vector<Query> loadSampleOfflineResult()
 {
-	//从文件中读取Offline结果
+	//TODO:从文件中读取Offline结果
 	vector<Query> result;
 	return result;
 }

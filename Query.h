@@ -11,11 +11,14 @@
 #include <vector>
 #include <math.h>
 
+#define DIM 3
+
 class Query{
     
 public:
-    
-	vector<double> topicDistribution;
+	    
+	//vector<double> topicDistribution;
+	double* topicDistribution;
     int k;//number of seed
     double epsilon;
 
@@ -48,7 +51,7 @@ public:
 
 	bool isUpperBound(Query q)
 	{
-		for (int i = 0; i < topicDistribution.size(); i++)
+		for (int i = 0; i < DIM; i++)
 		{
 			if(topicDistribution[i]<q.topicDistribution[i])
 			{
@@ -60,7 +63,7 @@ public:
 
 	bool isLowerBound(Query q)
 	{
-		for (int i = 0; i < topicDistribution.size(); i++)
+		for (int i = 0; i < DIM; i++)
 		{
 			if(topicDistribution[i]>q.topicDistribution[i])
 			{
@@ -73,7 +76,7 @@ public:
 	double dKL(Query gamma)
 	{
 		double res=0;
-		for (int i = 0; i < topicDistribution.size(); i++)
+		for (int i = 0; i < DIM; i++)
 		{
 			res += gamma.topicDistribution[i] * log(gamma.topicDistribution[i]/topicDistribution[i]);
 		}
