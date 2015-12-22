@@ -24,9 +24,15 @@ public:
     Node* targetNode;
     //topic分布
     vector<double> realDistribution;
-
+    Node* sourceNode;
+    double distance;
     
     
 };
+
+bool operator < (const Edge& source, const Edge& target)
+{
+    return source.distance < target.distance;
+}
 
 #endif /* Edage_h */

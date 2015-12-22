@@ -10,6 +10,7 @@
 #define Node_h
 
 #include <vector>
+#include <iostream>
 #include "ConstantFile.h"
 #include "Edge.h"
 
@@ -20,20 +21,24 @@ class Node{
 public:
  
     //Node 所有邻居
-    vector<Edge> neighbourEdge;
+    vector<Edge*> neighbourEdge;
     //Node 当前状态
     status currentStatus;
     //Node的影响力
     double influence;
     //Node在图中的序号
     int index;
+ 
     
 };
 
 bool operator < (const Node& source, const Node& target)
 {
+    cout<<"";
     return source.influence < target.influence;
 }
+
+
 
 bool operator == (const Node& source, const Node& target)
 {

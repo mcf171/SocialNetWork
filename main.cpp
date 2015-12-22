@@ -14,9 +14,24 @@
 
 using namespace std;
 
+void testEstInfUB();
+
+void testFindNode();
+
+void testpriorityQueue();
+
+int main(int argc, const char * argv[]) {
+    // insert code here...
+
+    testpriorityQueue();
+    
+    return 0;
+}
+
+
 void testEstInfUB()
 {
-
+    
     Node node1;
     node1.index = 1;
     Node node2;
@@ -166,45 +181,45 @@ void testEstInfUB()
     edgeU8U7.realDistribution.push_back(0.0);
     edgeU8U7.realDistribution.push_back(0.8);
     
-    node1.neighbourEdge.push_back(edgeU1U3);
-    node1.neighbourEdge.push_back(edgeU1U2);
-    node1.neighbourEdge.push_back(edgeU1U5);
+    node1.neighbourEdge.push_back(&edgeU1U3);
+    node1.neighbourEdge.push_back(&edgeU1U2);
+    node1.neighbourEdge.push_back(&edgeU1U5);
     
-    node2.neighbourEdge.push_back(edgeU2U1);
-    node2.neighbourEdge.push_back(edgeU2U3);
-    node2.neighbourEdge.push_back(edgeU2U6);
-    node2.neighbourEdge.push_back(edgeU2U7);
+    node2.neighbourEdge.push_back(&edgeU2U1);
+    node2.neighbourEdge.push_back(&edgeU2U3);
+    node2.neighbourEdge.push_back(&edgeU2U6);
+    node2.neighbourEdge.push_back(&edgeU2U7);
     
-    node3.neighbourEdge.push_back(edgeU3U1);
-    node3.neighbourEdge.push_back(edgeU3U2);
-    node3.neighbourEdge.push_back(edgeU3U4);
+    node3.neighbourEdge.push_back(&edgeU3U1);
+    node3.neighbourEdge.push_back(&edgeU3U2);
+    node3.neighbourEdge.push_back(&edgeU3U4);
     
-    node4.neighbourEdge.push_back(edgeU4U3);
-    node4.neighbourEdge.push_back(edgeU4U5);
-    node4.neighbourEdge.push_back(edgeU4U8);
+    node4.neighbourEdge.push_back(&edgeU4U3);
+    node4.neighbourEdge.push_back(&edgeU4U5);
+    node4.neighbourEdge.push_back(&edgeU4U8);
     
-    node5.neighbourEdge.push_back(edgeU5U1);
-    node5.neighbourEdge.push_back(edgeU5U4);
+    node5.neighbourEdge.push_back(&edgeU5U1);
+    node5.neighbourEdge.push_back(&edgeU5U4);
     
-    node6.neighbourEdge.push_back(edgeU6U2);
-    node6.neighbourEdge.push_back(edgeU6U7);
+    node6.neighbourEdge.push_back(&edgeU6U2);
+    node6.neighbourEdge.push_back(&edgeU6U7);
     
-    node7.neighbourEdge.push_back(edgeU7U2);
-    node7.neighbourEdge.push_back(edgeU7U6);
-    node7.neighbourEdge.push_back(edgeU7U8);
+    node7.neighbourEdge.push_back(&edgeU7U2);
+    node7.neighbourEdge.push_back(&edgeU7U6);
+    node7.neighbourEdge.push_back(&edgeU7U8);
     
-    node8.neighbourEdge.push_back(edgeU8U4);
-    node8.neighbourEdge.push_back(edgeU8U7);
+    node8.neighbourEdge.push_back(&edgeU8U4);
+    node8.neighbourEdge.push_back(&edgeU8U7);
     
     Graph g;
-    g.nodes.push_back(node1);
-    g.nodes.push_back(node2);
-    g.nodes.push_back(node3);
-    g.nodes.push_back(node4);
-    g.nodes.push_back(node5);
-    g.nodes.push_back(node6);
-    g.nodes.push_back(node7);
-    g.nodes.push_back(node8);
+    g.nodes.push_back(&node1);
+    g.nodes.push_back(&node2);
+    g.nodes.push_back(&node3);
+    g.nodes.push_back(&node4);
+    g.nodes.push_back(&node5);
+    g.nodes.push_back(&node6);
+    g.nodes.push_back(&node7);
+    g.nodes.push_back(&node8);
     
 }
 
@@ -249,22 +264,14 @@ void testpriorityQueue()
     
     BestEffort bestEffort;
     
-    bestEffort.L.push(node1);
-    bestEffort.L.push(node2);
-    bestEffort.L.push(node3);
+    bestEffort.L.push(&node1);
+    bestEffort.L.push(&node2);
+    bestEffort.L.push(&node3);
     
     while (!bestEffort.L.empty()) {
-        Node temp =bestEffort.L.top();
-        cout<< temp.influence<< ' ';
+        Node* temp =bestEffort.L.top();
+        cout<< temp->influence<< ' ';
         bestEffort.L.pop();
     }
-
-}
-
-int main(int argc, const char * argv[]) {
-    // insert code here...
-
-   
     
-    return 0;
 }

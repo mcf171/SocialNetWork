@@ -22,11 +22,27 @@ class BestEffort{
     
 public:
     
-    priority_queue<Node> L;
+    priority_queue<Node*> L;
     
 };
 
-double estInfUB(Node& node, Graph g, double theta)
+
+void precomputationBased()
+{
+    
+}
+
+void localGraphBased()
+{
+    
+}
+
+void neighborhoodBased()
+{
+    
+}
+
+double estInfUB(Node* node, Graph g, double theta)
 {
     double maxInfluence;
     
@@ -40,7 +56,7 @@ double estInfUB(Node& node, Graph g, double theta)
 void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort)
 {
     
-    vector<Node> nodes = g.nodes;
+    vector<Node*> nodes = g.nodes;
     
     for (int i = 0 ; i < nodes.size();  i ++) {
         //计算每个node的影响上界
