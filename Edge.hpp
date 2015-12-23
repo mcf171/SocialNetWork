@@ -24,6 +24,8 @@ public:
     //topic分布
     vector<double> realDistribution;
     Node* sourceNode;
+    
+    double weight;
     double distance;
     ~Edge();
     bool operator == (const Edge& target)
