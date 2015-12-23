@@ -326,7 +326,7 @@ void testEstInfUB()
     calculateGraph(g);
     */
 
-    Node test = g.findNode(g, 1);
+    Node test = g.findNode(1);
     Query q(3,0.01);
     double topicDistribution []= {0.2,0.8,0};
     q.topicDistribution = topicDistribution;
