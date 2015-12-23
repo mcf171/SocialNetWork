@@ -11,6 +11,8 @@
 #include <vector>
 #include <math.h>
 
+#include "Node.hpp"
+
 #define DIM 3
 
 class Query{
@@ -21,8 +23,7 @@ public:
 	double* topicDistribution;
     int k;//number of seed
     double epsilon;
-
-	vector<Node> S;
+	vector <Node> S;
 	double sigma;
 
 
