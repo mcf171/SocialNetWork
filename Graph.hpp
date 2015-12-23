@@ -35,6 +35,8 @@ void calculateGraph(Graph& g);
 
 double hat_delta_p_u(Tree* tree);
 
-double delta_sigma_v_S_gama(Tree* tree,vector<Node> S_i, vector<double> gamma);
+//double delta_sigma_v_S_gama(Tree* tree,vector<Node> S_i, vector<double> gamma);
+
+double delta_sigma_v_S_gama(Node v, vector<Node> S_i, double* gamma);
 
 #endif /* Graph_h */
