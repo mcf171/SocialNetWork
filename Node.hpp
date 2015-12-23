@@ -33,6 +33,7 @@ public:
     double influence;
     //Node在图中的序号
     int number;
+	double deta_u;
     bool operator < (const Node &target) const{
         
         return this->influence < target.influence;
@@ -56,6 +57,11 @@ public:
         
         
         return this->influence < target->influence;
+    }
+    
+    bool operator <=(const Node& target) const
+    {
+        return this->influence <= target.influence;
     }
 };
 bool findNode(vector<Node> nodes, Node node);

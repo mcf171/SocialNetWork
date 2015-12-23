@@ -5,9 +5,8 @@
 //  Created by 王珏 on 15/12/22.
 //  Copyright © 2015年 王珏. All rights reserved.
 //
-#pragma once
 
-using namespace std;
+
 
 #include <iostream>
 #include "Graph.hpp"
@@ -25,7 +24,9 @@ using namespace std;
 #include <fstream>
 #include <sstream>
 
-#include "json\json.h"
+#include "json/json.h"
+using namespace std;
+
 #pragma comment(lib,"lib_json.lib") 
 
 #define NNODE 10
