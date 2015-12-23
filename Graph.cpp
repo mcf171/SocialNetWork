@@ -24,24 +24,24 @@ void calculateGraph(Graph& g)
     vector<Node>::iterator nodeItera;
     for (nodeItera = g.nodes.begin(); nodeItera != g.nodes.end(); nodeItera++) {
         
-        double totalWeight = hat_delta_p_u((*nodeItera).MIA);
-        (*nodeItera).weight = totalWeight - 1;
-        cout<<"the weight of "<<(*nodeItera).number<<" is :"<<totalWeight<<endl;
+        double distance = hat_delta_p_u((*nodeItera).MIA);
+        (*nodeItera).influence = distance - 1;
+        cout<<"the weight of "<<(*nodeItera).number<<" is :"<<distance<<endl;
     }
 }
 
 double hat_delta_p_u(Tree* tree)
 {
 
-    double weight = tree->node->weight;
+    double distance = tree->node->influence;
     vector<Tree*>::iterator nextNodeIter;
     
     for ( nextNodeIter = tree->nextNode.begin(); nextNodeIter != tree->nextNode.end(); nextNodeIter++) {
         
-        weight += hat_delta_p_u(*nextNodeIter);
+        distance += hat_delta_p_u(*nextNodeIter);
     }
     
-    return weight;
+    return distance;
 }
 
 void Dijkstra(Node& startNode)
