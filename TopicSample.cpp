@@ -16,18 +16,13 @@
 #include "TopicSample.hpp"
 #include <vector>
 
-
-
 #include <cstdlib>
 #include <algorithm>
 #include <string> 
 #include <fstream>
 #include <sstream>
 
-#include "json/json.h"
-using namespace std;
 
-#pragma comment(lib,"lib_json.lib") 
 
 #define NNODE 10
 #define NEDGE 35
@@ -39,9 +34,6 @@ using namespace std;
 #define PROP_PATH "../proptest.txt"
 #define SAMPLE_PATH "../m.csv"
 
-
-//#define 
-
 #define INFMAX 100000000
 
 
@@ -49,25 +41,10 @@ using namespace std;
  *  进行主题挖掘
  */
 
-void LoadData(double* nodedata, double* edgedata, double* propdata, double* sampledata){
+void LoadGraphData(int* nodedata, int* edgedata, double* propdata){
 	ifstream fnode (NODE_PATH);
 	ifstream fedge (EDGE_PATH);
 	ifstream fprop (PROP_PATH);
-	ifstream fsample (SAMPLE_PATH);
-	string value;
-
-	//double* sampledata = new double[NSAMPLE*DIM];
-
-	for (int i = 0; i < NSAMPLE; i++)
-	{
-		for (int j = 0; j < DIM-1; j++)
-		{
-			getline(fsample, value, ',')>>sampledata[i*DIM+j];
-		}
-		fsample>>sampledata[i*DIM+DIM-1];
-		cout<<sampledata[i*DIM+DIM-1]<<endl;
-	}
-
 
 	//double* nodedata = new double[NNODE];
 
@@ -101,6 +78,24 @@ void LoadData(double* nodedata, double* edgedata, double* propdata, double* samp
 
 }
 
+void LoadSampleData(double* sampledata){
+	ifstream fsample (SAMPLE_PATH);
+	string value;
+
+	//double* sampledata = new double[NSAMPLE*DIM];
+
+	for (int i = 0; i < NSAMPLE; i++)
+	{
+		for (int j = 0; j < DIM-1; j++)
+		{
+			getline(fsample, value, ',')>>sampledata[i*DIM+j];
+		}
+		fsample>>sampledata[i*DIM+DIM-1];
+		cout<<sampledata[i*DIM+DIM-1]<<endl;
+	}
+}
+
+
 vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata){
     
     vector<Query> topicDistributions;
@@ -111,7 +106,11 @@ vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double*
 		Query q(K,Epsilon);
 		q.topicDistribution = sampledata+i*DIM*sizeof(double);
 		//计算每个的S
-		q.S = bestEffort(g, q, theta);
+		vector<Node> S = bestEffort(g, q, theta); 
+		for (int i = 0; i < S.size(); i++)
+		{
+			q.S.push_back(S[i].number);
+		}
 		topicDistributions.push_back(q);
 	}
 
@@ -122,30 +121,43 @@ vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double*
  *  主题采样离线部分
  */
 void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
-
-	double* nodedata = new double[NNODE];
-	double* edgedata = new double[NEDGE*2];
-	double* propdata = new double[NEDGE*DIM];
 	double* sampledata = new double[NSAMPLE*DIM];
 
-	LoadData(nodedata, edgedata, propdata, sampledata);
+	LoadSampleData(sampledata);
 
 	//直接从预先聚类好的结果文件读进来
 
     //首先从log中挖掘可能的主题分布
     vector<Query> topicDistributions = queryMinning(g, theta, K, Epsilon, sampledata);//P
 
-	Json::Value root;
+	//Json::Value root;
+	//for (int i = 0; i < NSAMPLE; i++)
+	//{
+	//	//TODO:Save
+	//	for (int j = 0; j < topicDistributions[i].S.size(); j++)
+	//	{
+	//		root[i]["S"][j]=topicDistributions[i].S[j].number;
+	//	}
+	//	
+	//	root[i]["sigma"]=topicDistributions[i].sigma;
+	//}
+
+	stringstream ss;
+	ss<<"K"<<K<<"T"<<theta;
+	string ofname;
+	ss>>ofname;
+
+	ofstream fout(ofname);
 
 	for (int i = 0; i < NSAMPLE; i++)
 	{
 		//TODO:Save
+		fout<<topicDistributions[i].sigma;
 		for (int j = 0; j < topicDistributions[i].S.size(); j++)
 		{
-			root[i]["S"][j]=topicDistributions[i].S[j].number;
+			fout<<" "<<topicDistributions[i].S[i];
 		}
-		
-		root[i]["sigma"]=topicDistributions[i].sigma;
+		fout<<endl;
 	}
 
 
@@ -208,15 +220,44 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 
 
 
-vector<Query> loadSampleOfflineResult()
+vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsilon)
 {
 	//TODO:从文件中读取Offline结果
+	double* sampledata = new double[NSAMPLE*DIM];
+
+	LoadSampleData(sampledata);
+
+
+	stringstream ss;
+	ss<<"K"<<K<<"T"<<theta;
+	string ifname;
+	ss>>ifname;
+
+	ifstream fin(ifname);
+
 	vector<Query> result;
+
+	for (int i = 0; i < NSAMPLE; i++)
+	{
+		//TODO:Save
+		Query q(K,Epsilon);
+		int id;
+		fin>>q.sigma;
+		for (int j = 0; j < K; j++)
+		{
+			//fout<<" "<<topicDistributions[i].S[i].number;
+		}
+		//fout<<endl;
+
+		result.push_back(q);
+	}
+
+	
 	return result;
 }
 
 
-Query* topicSampleOnline(Graph g,Query q, double theta){
+Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 
 
     
@@ -224,7 +265,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
     Query* upperBound=NULL;
 	Query* lowerBound=NULL;
 	
-	vector<Query> topicDistributions = loadSampleOfflineResult();
+	vector<Query> topicDistributions = loadSampleOfflineResult(g, theta, K, Epsilon);
     
 	bool getBound = findClosestBound(q, topicDistributions, upperBound, lowerBound);
 
@@ -252,9 +293,8 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 		{
 			//从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
 			vector<Node> u = bestEffort(g, *q1, theta);
-			qResult->S.push_back(u[0]);
-
-			vector<Node>::const_iterator iter = findNodeIter(lowerBound->S,u[0]);
+			qResult->S.push_back(u[0].number);
+			vector<int>::const_iterator iter = findIntIter(lowerBound->S,u[0].number);
 
 			if(iter!=lowerBound->S.end())
 			{
@@ -279,9 +319,9 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 	}
 }
 
-void topiSample(Graph g,Query q, double theta)
+void topiSample(Graph g,Query q, double theta, int K, double Epsilon)
 {
     //loadSampleOfflineResult();
 
-    topicSampleOnline(g, q, theta);
+    topicSampleOnline(g, q, theta, K, Epsilon);
 }

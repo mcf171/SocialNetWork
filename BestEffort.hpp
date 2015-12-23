@@ -42,8 +42,8 @@ double calDetaUSR(vector<Node>&V, double theta);
 void adjustM(Node& oldNode, double new_inf, priority_queue<Node>& M);
 bool findNodeInM(const Node & findNode,  priority_queue<Node> M);
 double calPP(Node& w, Node& v, Query q);
-double calAP(Node& u, vector<Node> &S, Query &q);
+double calAP(Node& u, vector<int> &S, Query &q);
 void updateAP();
-double CalcMargin(Node& u, Graph& g, double theta, Query& gamma, vector<Node>& S);
+double CalcMargin(Node& u, Graph& g, double theta, Query& gamma, vector<int>& S);
 double EstMarginUB(const Node& u, const Graph& g, double theta, const Query& gamma);
 #endif /* BestEffort_h */

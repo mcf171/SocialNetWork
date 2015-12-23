@@ -172,7 +172,7 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort)
             }
             else if (exact == u.currentStatus)
             {
-                S.push_back(u);
+				S.push_back(u.number);
                 updateAP();
                 break;
             }
@@ -220,7 +220,7 @@ double EstMarginUB(const Node& u, const Graph& g, double theta, const Query& gam
 /*
 	CALCMARGIN
  */
-double CalcMargin(Node& u, Graph& g, double theta, Query& gamma, vector<Node>& S)
+double CalcMargin(Node& u, Graph& g, double theta, Query& gamma, vector<int>& S)
 {
     double res = 0.0;
     
@@ -235,7 +235,7 @@ double CalcMargin(Node& u, Graph& g, double theta, Query& gamma, vector<Node>& S
         Node w = M.top();
         M.pop();
         
-        if (findNode(S, w) || w.influence < theta)
+		if (findInt(S, w.number) || w.influence < theta)
             continue;
         
         for (auto &edge: w.dijkstraEdge)//v belongs to C(w)
@@ -278,7 +278,7 @@ void updateAP()
 /*
 	calculate the ap(u|S,r) i.e. equation (4) in paper
  */
-double calAP(Node& u, vector<Node> &S, Query &q)
+double calAP(Node& u, vector<int> &S, Query &q)
 {
     double res = 0.0;
     

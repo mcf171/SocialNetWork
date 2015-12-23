@@ -64,8 +64,13 @@ public:
         return this->influence <= target.influence;
     }
 };
+
 bool findNode(vector<Node> nodes, Node node);
 
 vector<Node>::const_iterator findNodeIter(vector<Node> nodes, Node node);
+
+bool findInt(vector<int> nodes, int nodeid);
+
+vector<int>::const_iterator findIntIter(vector<int> nodes, int nodeid);
 
 #endif /* Node_h */
