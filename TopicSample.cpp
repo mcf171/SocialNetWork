@@ -7,18 +7,17 @@
 //
 #pragma once
 
-#ifndef TopicSample_h
-#define TopicSample_h
+using namespace std;
 
 #include <iostream>
 #include "Graph.hpp"
 #include "Query.h"
 #include "Node.hpp"
 #include "BestEffort.hpp"
+#include "TopicSample.hpp"
 #include <vector>
 
 
-using namespace std;
 
 #include <cstdlib>
 #include <algorithm>
@@ -27,20 +26,23 @@ using namespace std;
 #include <sstream>
 
 #include "json\json.h"
-//#pragma comment(lib,"lib_json.lib") 
+#pragma comment(lib,"lib_json.lib") 
 
 #define NNODE 10
 #define NEDGE 35
 #define NSAMPLE 200
 #define DIM 3
 
-#define NODE_PATH "D:/workspace_cpp/SocialNetWork/nodetest.txt"
-#define EDGE_PATH "D:/workspace_cpp/SocialNetWork/edgetest.txt"
-#define PROP_PATH "D:/workspace_cpp/SocialNetWork/proptest.txt"
-#define SAMPLE_PATH "D:/workspace_cpp/SocialNetWork/m.csv"
+#define NODE_PATH "../nodetest.txt"
+#define EDGE_PATH "../edgetest.txt"
+#define PROP_PATH "../proptest.txt"
+#define SAMPLE_PATH "../m.csv"
 
+
+//#define 
 
 #define INFMAX 100000000
+
 
 /*
  *  进行主题挖掘
@@ -53,7 +55,7 @@ void LoadData(double* nodedata, double* edgedata, double* propdata, double* samp
 	ifstream fsample (SAMPLE_PATH);
 	string value;
 
-	//double* sampledata = new double[nfsample*d];
+	//double* sampledata = new double[NSAMPLE*DIM];
 
 	for (int i = 0; i < NSAMPLE; i++)
 	{
@@ -62,29 +64,29 @@ void LoadData(double* nodedata, double* edgedata, double* propdata, double* samp
 			getline(fsample, value, ',')>>sampledata[i*DIM+j];
 		}
 		fsample>>sampledata[i*DIM+DIM-1];
-		//cout<<sampledata[i*d+d-1]<<endl;
+		cout<<sampledata[i*DIM+DIM-1]<<endl;
 	}
 
 
-	//double* nodedata = new double[nfedge];
+	//double* nodedata = new double[NNODE];
 
 	for (int i = 0; i < NNODE; i++)
 	{
 		fnode>>nodedata[i];
-		//cout<<nodedata[i]<<endl;
+		cout<<nodedata[i]<<endl;
 	}
 
 
-	//double* edgedata = new double[nfedge*2];
+	//double* edgedata = new double[NEDGE*2];
 
 	for (int i = 0; i < NEDGE; i++)
 	{
 		fedge>>edgedata[i*2]>>edgedata[i*2+1];
-		//cout<<edgedata[i*2]<<endl;
+		cout<<edgedata[i*2]<<endl;
 	}
 
 
-	//double* propdata = new double[nfedge*d];
+	//double* propdata = new double[NEDGE*DIM];
 
 	for (int i = 0; i < NEDGE; i++)
 	{
@@ -92,7 +94,7 @@ void LoadData(double* nodedata, double* edgedata, double* propdata, double* samp
 		{
 			fprop>>propdata[i*DIM+j];
 		}
-		//cout<<propdata[i*d]<<endl;
+		cout<<propdata[i*DIM]<<endl;
 	}
 
 
@@ -131,14 +133,18 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 
     //首先从log中挖掘可能的主题分布
     vector<Query> topicDistributions = queryMinning(g, theta, K, Epsilon, sampledata);//P
+
+	Json::Value root;
+
 	for (int i = 0; i < NSAMPLE; i++)
 	{
 		//TODO:Save
-		topicDistributions[i].S;
-		topicDistributions[i].sigma;
-
-
-
+		for (int j = 0; j < topicDistributions[i].S.size(); j++)
+		{
+			root[i]["S"][j]=topicDistributions[i].S[j].number;
+		}
+		
+		root[i]["sigma"]=topicDistributions[i].sigma;
 	}
 
 
@@ -278,5 +284,3 @@ void topiSample(Graph g,Query q, double theta)
 
     topicSampleOnline(g, q, theta);
 }
-
-#endif /* TopicSample_h */
