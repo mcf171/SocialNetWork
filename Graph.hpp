@@ -29,6 +29,8 @@ void Dijkstra(Node& startNode);
 
 void calculateGraph(Graph& g);
 
-double hat_delta_p_u(Tree* tree, double preValue);
+double hat_delta_p_u(Tree* tree);
+
+double delta_sigma_v_S_gama(Tree* tree,vector<Node> S_i, vector<double> gamma);
 
 #endif /* Graph_h */
