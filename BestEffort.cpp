@@ -47,28 +47,18 @@ void precomputationBased(Graph& g)
     //cout<<"create MIA";
 }
 
-vector<Node> getLocalGraph(Tree MIA,double theta){
+void getLocalGraph(Tree tree,double theta,vector<Node> &nodes){
     
-    vector<Node> nodes;
-    priority_queue<Node> temppNode;
+    if (tree.node->influence > theta)
+        nodes.push_back(*tree.node);
     
+    vector<Tree*>::iterator iterator;
+    for (iterator = tree.nextNode.begin(); iterator != tree.nextNode.end(); iterator++)
+        getLocalGraph(*(*iterator), theta, nodes);
     
-    do{
-        temppNode.push(*(MIA.node));
-        Node node = temppNode.top();
-        temppNode.pop();
-        if(node.influence >= theta)
-            nodes.push_back(node);
-        else
-            break;
-        
-        
-        
-    }while (!temppNode.empty());
-    return nodes;
 }
 
-void localGraphBased(Graph& g,double theta)
+void localGraphBased(Graph& g,double theta, Query q)
 {
     vector<Node>::iterator nodeIter;
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
@@ -87,7 +77,7 @@ void localGraphBased(Graph& g,double theta)
             edge->weight = maxDistance;
         }
     }
-    
+    //得到每个User的hat_gama;
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
@@ -100,11 +90,11 @@ void localGraphBased(Graph& g,double theta)
     
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
-        Graph local_g;
-        g.nodes.clear();
+        Node node = *nodeIter;
+        vector<Node> nodes;
+        nodes.clear();
+        getLocalGraph(*node.MIA, theta, nodes);
         
-        vector<Node> tempNode;
-        tempNode.clear();
         //tempNode.push_back(*nodeIter.)
     }
 

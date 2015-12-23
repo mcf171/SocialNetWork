@@ -26,6 +26,11 @@ Node Graph::findNode(int number)
     return node;
 }
 
+double sigma(vector<Node> nodes, Graph g)
+{
+    return 0;
+}
+
 double getLocalDistance(Tree* tree, double theta)
 {
     double distance = 0;
