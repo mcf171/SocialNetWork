@@ -16,15 +16,15 @@ using namespace std;
 
 class Node;
 class Tree;
-
+class Edge;
 class Graph{
     
 public:
     
     vector<Node> nodes;
-    
+    vector<Edge> edges;
     Node findNode(int number);
-    
+    Edge findeEdgeFromTwoNode(Node sourceNode, Node targetNode);
 };
 
 double getLocalDistance(Tree* startNode, double theta);

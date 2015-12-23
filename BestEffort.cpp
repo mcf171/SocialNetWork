@@ -14,6 +14,43 @@
 #include "Tree.hpp"
 #include <vector>
 
+double hat_delta_theta(Node u,vector<Node>S,Query q)
+{
+    double result = 0;
+    
+    result = hat_delta_p_u(u.MIA) - 1;
+    
+    if (S.size() != 0) {
+        
+        result = (1-calAP(u, S, q))*result;
+    }
+    
+    return  result;
+}
+
+void preprocessOnline(Graph&g, Query q)
+{
+    vector<Node>::iterator nodeIter;
+    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
+        Node node = *nodeIter;
+        
+        vector<Edge*>::iterator edgeIter;
+        for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
+            Edge* edge = *edgeIter;
+            
+            double distance = q.topicDistribution[0]*edge->realDistribution[0]+q.topicDistribution[1]*edge->realDistribution[1]+q.topicDistribution[2]*edge->realDistribution[2];
+            edge->distance = distance;
+            edge->weight = distance;
+        }
+    }
+    
+    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
+    {
+        
+        Dijkstra( *nodeIter);
+    }
+}
+
 /**
  *  基于Precomputation的方法
  */
@@ -138,18 +175,20 @@ double estInfUB(Node node, Graph g, double theta)
  * 离线部分主要功能计算每个点的最大影响上界
  */
 
-void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort)
+void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q)
 {
     
     vector<Node> nodes = g.nodes;
     
-    for (int i = 0 ; i < nodes.size();  i ++) {
-        //计算每个node的影响上界
-        estInfUB(nodes[i], g, theta);
-        //维护优先队列
-        bestEffort.L.push(nodes[i]);
-        //bestEffort.L.push(nodes[i]);
+    
+    
+    localGraphBased(g, theta, q);
+    
+    for(auto node : g.nodes){
+        node.influence = node.hat_gamma_p;
+        bestEffort.L.push(node);
     }
+    
     
 }
 
@@ -163,13 +202,14 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort)
 {
     //Initial an empty heap H and set S
     auto &H = bestEffort.H;
-    auto &S = q.S;
+    vector<Node> S;
     auto &L = bestEffort.L;
     while (!H.empty()) {
         H.pop();
     }
 
     S.clear();
+    preprocessOnline(g, q);
     
     //K次循环找到所有合适的种子
     for (int i = 0; i < q.k ; i++)
@@ -185,7 +225,7 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort)
             
             if (initial == u.currentStatus)
             {
-                double sigma_new = EstMarginUB(u, g, theta, q);
+                double sigma_new = hat_delta_theta(u, S, q);
                 u.currentStatus = bounded;
                 u.influence = sigma_new;
                 H.push(u);
@@ -199,7 +239,7 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort)
             }
             else if (exact == u.currentStatus)
             {
-				S.push_back(u.number);
+				S.push_back(u);
                 updateAP();
                 break;
             }
@@ -234,20 +274,12 @@ void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H)
     }
 }
 
-/*
-	EstMarginUB
- */
-double EstMarginUB(const Node& u, const Graph& g, double theta, const Query& gamma)
-{
-    double res = 0.0;
-    
-    return res;
-}
+
 
 /*
 	CALCMARGIN
  */
-double CalcMargin(Node& u, Graph& g, double theta, Query& gamma, vector<int>& S)
+double CalcMargin(Node u, Graph g, double theta, Query gamma, vector<Node> S)
 {
     double res = 0.0;
     
@@ -262,22 +294,28 @@ double CalcMargin(Node& u, Graph& g, double theta, Query& gamma, vector<int>& S)
         Node w = M.top();
         M.pop();
         
-		if (findInt(S, w.number) || w.influence < theta)
+		if (findNode(S, w) || w.influence < theta)
             continue;
         
-        for (auto &edge: w.dijkstraEdge)//v belongs to C(w)
+        vector<Node> C_W;
+        C_W.clear();
+        w.MIA->getAllNode(C_W);
+        
+        for (auto v: C_W)//v belongs to C(w)
         {
-            Node v = *(edge->targetNode);
+            Edge edge = g.findeEdgeFromTwoNode(w, v);
+            if(edge.isVisited)
+            Node v = *(edge.targetNode);
             Node old_v = v;
-            if (edge->isVisited)
+            if (edge.isVisited)
                 continue;
             
-            double influence = w.influence * calPP(w, v, gamma);
+            double influence = w.influence * calPP(w, v);
             
             if (!findNodeInM(v, M) || influence > v.influence)
             {
                 v.influence = influence;
-                v.deta_u = w.deta_u * calPP(w, v, gamma) *calAP(v, S, gamma);
+                v.deta_u = w.deta_u * calPP(w, v) *calAP(v, S, gamma);
                 
                 if (!findNodeInM(v, M))
                     M.push(v);
@@ -302,24 +340,55 @@ void updateAP()
     
 }
 
+double prodChild(Tree* node,vector<Node>S)
+{
+    double ap = 0;
+    
+    if(findNode(S, *(node->node)))
+        ap = 1;
+    else
+    {
+        vector<Tree*>::iterator iterator;
+        double childAp = 1;
+        for (iterator = node->nextNode.begin(); iterator != node->nextNode.end(); iterator++) {
+            
+            childAp *=(1-prodChild(*iterator, S)*calPP(*((*iterator)->node),*node->node));
+        }
+    }
+    
+    return ap;
+}
+
 /*
 	calculate the ap(u|S,r) i.e. equation (4) in paper
  */
-double calAP(Node& u, vector<int> &S, Query &q)
+double calAP(Node& u, vector<Node> S, Query &q)
 {
     double res = 0.0;
+    
+    if(findNode(S, u))
+        res = 1;
+    else
+    {
+        res = prodChild(u.MIA, S);
+    }
     
     return res;
 }
 
+
+
 /*
 	calculate the pp(w,v|r)
  */
-double calPP(Node& w, Node& v, Query q)
+double calPP(Node w, Node v)
 {
-    double res = 0.0;
+ 
     
-    return res;
+  
+    Tree* tree = findNode(w.MIA, &v);
+    
+    return tree->node->influence;
 }
 
 /*
@@ -382,7 +451,7 @@ vector<Node> bestEffort(Graph g, Query q, double theta)
     
     BestEffort bestEffort;
     
-    bestEffortOffline(g, theta, bestEffort);
+    bestEffortOffline(g, theta, bestEffort,q);
     
     return node;
 }

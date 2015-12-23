@@ -15,6 +15,18 @@ Tree::~Tree()
 
 }
 
+void Tree::getAllNode(vector<Node> &nodes)
+{
+    
+    nodes.push_back(*this->node);
+    
+    for (auto treeNext : this->nextNode)
+    {
+        treeNext->getAllNode(nodes);
+    }
+    
+}
+
 Tree* findNode(Tree* tree, Node* node){
     
     Tree* result = nullptr;
