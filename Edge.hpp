@@ -27,6 +27,7 @@ public:
     
     double weight;
     double distance;
+    bool isVisited;
     ~Edge();
     bool operator == (const Edge& target)
     {
