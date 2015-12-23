@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Node.hpp"
 #include "BestEffort.hpp"
+#include "TopicSample.hpp"
 #include "Edge.hpp"
 #include "Graph.hpp"
 #include <vector>
@@ -28,12 +29,16 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     
     //testPriorityQueueEdge();
-    int te = 1;
-    int* test = &te;
-    
-    te = *test;
-    
-    testEstInfUB();
+    //int te = 1;
+    //int* test = &te;
+    //
+    //te = *test;
+    //
+    //testEstInfUB();
+
+	Graph g;
+	topicSampleOffline(g, 0.1, 5, 0.5);
+
     return 0;
 }
 

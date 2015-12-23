@@ -27,7 +27,6 @@ public:
     Tree* MIA;
     
     ~Node();
-    //Node 当前状态
     status currentStatus;
     //Node的影响力
     double influence;
