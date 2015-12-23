@@ -28,7 +28,7 @@ public:
 };
 
 
-void localGraphBased(Graph& g);
+void localGraphBased(Graph& g,double theta);
 void neighborhoodBased(Graph& g);
 double estInfUB(Node node, Graph g, double theta);
 void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort);

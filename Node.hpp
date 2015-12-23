@@ -31,6 +31,8 @@ public:
     //Node的影响力
     double weight;
     double influence;
+    
+    double hat_gamma_p;
     //Node在图中的序号
     int number;
 	double deta_u;

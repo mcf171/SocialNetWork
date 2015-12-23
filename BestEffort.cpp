@@ -11,6 +11,7 @@
 #include "Query.h"
 #include "Node.hpp"
 #include "Edge.hpp"
+#include "Tree.hpp"
 #include <vector>
 
 /**
@@ -46,7 +47,28 @@ void precomputationBased(Graph& g)
     //cout<<"create MIA";
 }
 
-void localGraphBased(Graph& g)
+vector<Node> getLocalGraph(Tree MIA,double theta){
+    
+    vector<Node> nodes;
+    priority_queue<Node> temppNode;
+    
+    
+    do{
+        temppNode.push(*(MIA.node));
+        Node node = temppNode.top();
+        temppNode.pop();
+        if(node.influence >= theta)
+            nodes.push_back(node);
+        else
+            break;
+        
+        
+        
+    }while (!temppNode.empty());
+    return nodes;
+}
+
+void localGraphBased(Graph& g,double theta)
 {
     vector<Node>::iterator nodeIter;
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
@@ -70,7 +92,22 @@ void localGraphBased(Graph& g)
     {
         
         Dijkstra( *nodeIter);
+        double distance = getLocalDistance((*nodeIter).MIA, theta);
+
+     //   cout<<"the hat_gama of "<<(*nodeIter).number<<" is :"<<distance<<endl;
     }
+    
+    
+    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
+    {
+        Graph local_g;
+        g.nodes.clear();
+        
+        vector<Node> tempNode;
+        tempNode.clear();
+        //tempNode.push_back(*nodeIter.)
+    }
+
 }
 
 void neighborhoodBased(Graph& g)

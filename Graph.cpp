@@ -14,6 +14,39 @@
 #include "Edge.hpp"
 using namespace std;
 
+Node Graph::findNode(Graph g, int number)
+{
+    
+        
+    Node node;
+    node.number = number;
+    vector<Node>::iterator iter;
+    iter = find(g.nodes.begin(), g.nodes.end(), node);
+    if( iter != g.nodes.end())
+        node = *iter;
+    
+    
+    return node;
+    
+    
+}
+
+double getLocalDistance(Tree* tree, double theta)
+{
+    double distance = 0;
+    if(tree->node->influence < theta)
+        distance +=tree->node->influence;
+    vector<Tree*>::iterator nextNodeIter;
+    
+    for ( nextNodeIter = tree->nextNode.begin(); nextNodeIter != tree->nextNode.end(); nextNodeIter++) {
+        
+        distance += getLocalDistance(*nextNodeIter, theta);
+    }
+    tree->node->hat_gamma_p = distance;
+    
+    return distance;
+}
+
 double delta_sigma_v_S_gama(Tree* tree,vector<Node> S_i, vector<double> gamma)
 {
     return 1;
