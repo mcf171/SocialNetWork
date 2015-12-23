@@ -30,6 +30,7 @@ public:
     //Node 当前状态
     status currentStatus;
     //Node的影响力
+    double weight;
     double influence;
     //Node在图中的序号
     int number;
