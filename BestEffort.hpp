@@ -10,9 +10,10 @@
 #define BestEffort_h
 
 #include <iostream>
-
 #include <queue>
 #include <vector>
+
+#include "Query.h"
 
 class Graph;
 using namespace std;
@@ -27,7 +28,11 @@ public:
 };
 
 void precomputationBased(Graph g);
-
-
+void localGraphBased();
+void neighborhoodBased();
+double estInfUB(Node node, Graph g, double theta);
+void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort);
+void bestEffortOnline(Graph g ,Query q, double theta);
+vector<Node> bestEffort(Graph g, Query q, double theta);
 
 #endif /* BestEffort_h */

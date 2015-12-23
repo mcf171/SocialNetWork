@@ -24,3 +24,12 @@ bool findNode(vector<Node> nodes, Node node)
     return exists;
     
 }
+
+vector<Node>::const_iterator findNodeIter(vector<Node> nodes, Node node)
+{
+
+    vector<Node>::const_iterator result = find(nodes.begin(), nodes.end(), node);
+    
+    return result;
+    
+}

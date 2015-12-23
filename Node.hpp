@@ -21,8 +21,6 @@ class Tree;
 class Node{
     
 public:
-    
-    //Node 所有邻居
     vector<Edge*> neighbourEdge;
     vector<Edge*> dijkstraEdge;
     
@@ -62,6 +60,6 @@ public:
 };
 bool findNode(vector<Node> nodes, Node node);
 
-
+vector<Node>::const_iterator findNodeIter(vector<Node> nodes, Node node);
 
 #endif /* Node_h */
