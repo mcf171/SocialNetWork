@@ -26,7 +26,7 @@ public:
     //priority_queue<Node*> L;
 };
 
-void precomputationBased(Graph g);
+void precomputationBased(Graph& g);
 
 
 

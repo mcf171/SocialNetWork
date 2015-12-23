@@ -15,6 +15,7 @@
 using namespace std;
 
 class Node;
+class Tree;
 
 class Graph{
     
@@ -24,5 +25,10 @@ public:
     
 };
 
-void Dijkstra(Graph g,Node& startNode);
+void Dijkstra(Node& startNode);
+
+void calculateGraph(Graph& g);
+
+double hat_delta_p_u(Tree* tree, double preValue);
+
 #endif /* Graph_h */

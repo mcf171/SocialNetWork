@@ -14,7 +14,32 @@
 #include "Edge.hpp"
 using namespace std;
 
-void Dijkstra(Graph g,Node& startNode)
+void calculateGraph(Graph& g)
+{
+    vector<Node>::iterator nodeItera;
+    for (nodeItera = g.nodes.begin(); nodeItera != g.nodes.end(); nodeItera++) {
+        
+        double totalInfluence = hat_delta_p_u((*nodeItera).MIA,1);
+        (*nodeItera).influence = totalInfluence - 1;
+        cout<<"the influence of "<<(*nodeItera).number<<" is :"<<totalInfluence<<endl;
+    }
+}
+
+double hat_delta_p_u(Tree* tree, double preValue)
+{
+
+    double influence = tree->node->influence * preValue;
+    vector<Tree*>::iterator nextNodeIter;
+    
+    for ( nextNodeIter = tree->nextNode.begin(); nextNodeIter != tree->nextNode.end(); nextNodeIter++) {
+        
+        influence += hat_delta_p_u(*nextNodeIter,tree->node->influence);
+    }
+    
+    return influence;
+}
+
+void Dijkstra(Node& startNode)
 {
     vector<Node> S;
     S.push_back(startNode);
@@ -26,6 +51,7 @@ void Dijkstra(Graph g,Node& startNode)
     Tree* MIA = new Tree();
     
     MIA->node = &startNode;
+    MIA->node->influence = 1;
     
     while (!edges.empty())
     {
@@ -35,10 +61,12 @@ void Dijkstra(Graph g,Node& startNode)
         if(!findNode(S, *(edge)->targetNode) || !findNode(S, *(edge)->sourceNode)){
             Tree* sourceNode = findNode(MIA,edge->sourceNode);
             Tree* treeNext = new Tree();
-            treeNext->node = edge->targetNode;
-            
-            ;
-
+            Node* targetNode = new Node();
+            targetNode->neighbourEdge = edge->targetNode->neighbourEdge;
+            targetNode->number = edge->targetNode->number;
+            targetNode->currentStatus = initial;
+            treeNext->node = targetNode;
+            treeNext->node->influence = edge->distance;
             sourceNode->nextNode.push_back(treeNext);
             
             sourceNode->node->dijkstraEdge.push_back(edge);
