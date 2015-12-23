@@ -26,6 +26,9 @@ using namespace std;
 #include <fstream>
 #include <sstream>
 
+#include "json\json.h"
+//#pragma comment(lib,"lib_json.lib") 
+
 #define NNODE 10
 #define NEDGE 35
 #define NSAMPLE 200
@@ -133,6 +136,9 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 		//TODO:Save
 		topicDistributions[i].S;
 		topicDistributions[i].sigma;
+
+
+
 	}
 
 
@@ -238,8 +244,6 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 		for(int i = 0 ; i < q.k; i ++)
 		{
 			//从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
-
-
 			vector<Node> u = bestEffort(g, *q1, theta);
 			qResult->S.push_back(u[0]);
 
@@ -270,11 +274,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta){
 
 void topiSample(Graph g,Query q, double theta)
 {
-
-
-
     //loadSampleOfflineResult();
-
 
     topicSampleOnline(g, q, theta);
 }
