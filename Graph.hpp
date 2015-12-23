@@ -23,7 +23,11 @@ public:
     
     vector<Node> nodes;
     
+    Node findNode(Graph g,int number);
+    
 };
+
+double getLocalDistance(Tree* startNode, double theta);
 
 void Dijkstra(Node& startNode);
 
