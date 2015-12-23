@@ -8,14 +8,22 @@
 
 #ifndef Tree_h
 #define Tree_h
-#include "Node.h"
+
 #include <vector>
+
+using namespace std;
+class Node;
 
 class Tree
 {
+public:
     Node* node;
     
-    vector<Node*> nextNode;
+    vector<Tree*> nextNode;
+
+    
+    ~Tree();
 };
 
+Tree* findNode(Tree* tree, Node* node);
 #endif /* Tree_h */
