@@ -17,8 +17,6 @@ using namespace std;
 #include "TopicSample.hpp"
 #include <vector>
 
-
-
 #include <cstdlib>
 #include <algorithm>
 #include <string> 
@@ -37,9 +35,6 @@ using namespace std;
 #define EDGE_PATH "../edgetest.txt"
 #define PROP_PATH "../proptest.txt"
 #define SAMPLE_PATH "../m.csv"
-
-
-//#define 
 
 #define INFMAX 100000000
 
