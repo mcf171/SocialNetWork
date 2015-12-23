@@ -34,12 +34,10 @@ int main(int argc, const char * argv[]) {
     //
     //te = *test;
     //
-    //testEstInfUB();
-
-
-	loadTest();
-
-
+    testEstInfUB();
+    
+	//Graph g;
+	//topicSampleOffline(g, 0.1, 5, 0.5);
 
     return 0;
 }
