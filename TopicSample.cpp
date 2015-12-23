@@ -84,7 +84,6 @@ void LoadSampleData(double* sampledata){
 
 	//double* sampledata = new double[NSAMPLE*DIM];
 
-
 	for (int i = 0; i < NSAMPLE; i++)
 	{
 		for (int j = 0; j < DIM; j++)
@@ -231,7 +230,7 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 
 vector<Query> loadSampleOfflineResult(double theta, int K, double Epsilon)
 {
-	//TODO:从文件中读取Offline结果
+	//从文件中读取Offline结果
 	double* sampledata = new double[NSAMPLE*DIM];
 	LoadSampleData(sampledata);
 
@@ -317,14 +316,10 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 			{
 				int location = iter-lowerBound->S.begin();
 				lowerBound->S.erase(iter);
-
-				vector<Node>::const_iterator iterN = PL.begin();
-				iterN+=location;
-				PL.erase(iterN);
+				PL.erase(PL.begin()+location);
 			}
 			else
 			{
-				vector<double> sigs;
 				int minlocation=-1;
 				double minsig = INFMAX;
 				for (int i = 0; i < PL.size(); i++)
@@ -332,21 +327,23 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 					double sig = delta_sigma_v_S_gama(PL[i], S_i, q.topicDistribution);
 					if(sig<minsig){
 						minsig=sig;
-						minlocation=sigs.size();
+						minlocation=i;
 					}
-					sigs.push_back(sig);
 				}
-				//double lsg = delta_sigma_v_S_gama(Node v, S_i, q.topicDistribution);
 
-				//TODO
+				lowerBound->S.erase(lowerBound->S.begin()+minlocation);
+				PL.erase(PL.begin()+minlocation);
 			}
-			//lowerBound->sigma=
-			if (lowerBound->sigma > q.epsilon * upperBound->sigma ){
+
+			vector<Node> nowUnion(S_i);
+			nowUnion.insert(nowUnion.end(),PL.begin(),PL.end());
+			qResult->sigma = sigma(nowUnion, g);
+
+			if (qResult->sigma > q.epsilon * upperBound->sigma ){
 				for (int i = 0; i < lowerBound->S.size(); i++)
 				{
 					qResult->S.push_back(lowerBound->S[i]);
 				}
-				qResult->sigma = lowerBound->sigma;
 				return qResult;
 			}
 
