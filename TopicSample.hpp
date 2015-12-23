@@ -31,7 +31,10 @@ using namespace std;
  *  进行主题挖掘
  */
 
-void LoadData(double* nodedata, double* edgedata, double* propdata, double* sampledata);
+void LoadGraphData(double* nodedata, double* edgedata, double* propdata);
+
+void LoadSampleData(double* sampledata);
+
 vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata);
 /*
  *  主题采样离线部分
@@ -44,11 +47,11 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon);
 bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBound, Query* lowerBound);
 
 
-vector<Query> loadSampleOfflineResult();
+vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsilon);
 
 
-Query* topicSampleOnline(Graph g,Query q, double theta);
+Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon);
 
-void topiSample(Graph g,Query q, double theta);
+void topiSample(Graph g,Query q, double theta, int K, double Epsilon);
 
 #endif /* TopicSample_h */

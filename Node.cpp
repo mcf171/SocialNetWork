@@ -33,3 +33,12 @@ vector<Node>::const_iterator findNodeIter(vector<Node> nodes, Node node)
     return result;
     
 }
+
+vector<int>::const_iterator findIntIter(vector<int> nodes, int nodeid)
+{
+
+    vector<int>::const_iterator result = find(nodes.begin(), nodes.end(), nodeid);
+    
+    return result;
+    
+}

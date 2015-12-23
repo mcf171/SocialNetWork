@@ -23,7 +23,7 @@ public:
 	double* topicDistribution;
     int k;//number of seed
     double epsilon;
-	vector <Node> S;
+	vector <int> S;
 	double sigma;
 
 

@@ -62,4 +62,6 @@ bool findNode(vector<Node> nodes, Node node);
 
 vector<Node>::const_iterator findNodeIter(vector<Node> nodes, Node node);
 
+vector<int>::const_iterator findIntIter(vector<int> nodes, int nodeid);
+
 #endif /* Node_h */
