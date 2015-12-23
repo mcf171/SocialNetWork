@@ -327,7 +327,10 @@ void testEstInfUB()
     */
 
     Node test = g.findNode(g, 1);
-    localGraphBased(g, 0.4);
+    Query q(3,0.01);
+    double topicDistribution []= {0.2,0.8,0};
+    q.topicDistribution = topicDistribution;
+    localGraphBased(g, 0.4,q);
     cout<<"test"<<endl;
     
 }

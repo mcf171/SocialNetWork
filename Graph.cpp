@@ -14,6 +14,8 @@
 #include "Edge.hpp"
 using namespace std;
 
+
+
 Node Graph::findNode(Graph g, int number)
 {
     
@@ -29,6 +31,11 @@ Node Graph::findNode(Graph g, int number)
     return node;
     
     
+}
+
+double sigma(vector<Node> nodes, Graph g)
+{
+    return 0;
 }
 
 double getLocalDistance(Tree* tree, double theta)

@@ -39,4 +39,6 @@ double hat_delta_p_u(Tree* tree);
 
 double delta_sigma_v_S_gama(Node v, vector<Node> S_i, double* gamma);
 
+double sigma(vector<Node> nodes, Graph g);
+
 #endif /* Graph_h */

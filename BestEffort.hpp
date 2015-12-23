@@ -27,8 +27,8 @@ public:
     //priority_queue<Node*> L;
 };
 
-
-void localGraphBased(Graph& g,double theta);
+void getLocalGraph(Tree tree,double theta,vector<Node> &nodes);
+void localGraphBased(Graph& g,double theta,Query q);
 void neighborhoodBased(Graph& g);
 double estInfUB(Node node, Graph g, double theta);
 void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort);
