@@ -48,7 +48,7 @@ using namespace std;
  *  进行主题挖掘
  */
 
-void LoadGraphData(double* nodedata, double* edgedata, double* propdata){
+void LoadGraphData(int* nodedata, int* edgedata, double* propdata){
 	ifstream fnode (NODE_PATH);
 	ifstream fedge (EDGE_PATH);
 	ifstream fprop (PROP_PATH);

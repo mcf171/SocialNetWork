@@ -31,7 +31,7 @@ using namespace std;
  *  进行主题挖掘
  */
 
-void LoadGraphData(double* nodedata, double* edgedata, double* propdata);
+void LoadGraphData(int* nodedata, int* edgedata, double* propdata);
 
 void LoadSampleData(double* sampledata);
 
