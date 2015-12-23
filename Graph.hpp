@@ -23,7 +23,7 @@ public:
     
     vector<Node> nodes;
     
-    Node findNode(Graph g,int number);
+    Node findNode(int number);
     
 };
 

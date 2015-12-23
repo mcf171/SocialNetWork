@@ -14,21 +14,16 @@
 #include "Edge.hpp"
 using namespace std;
 
-Node Graph::findNode(Graph g, int number)
+Node Graph::findNode(int number)
 {
-    
-        
     Node node;
     node.number = number;
     vector<Node>::iterator iter;
-    iter = find(g.nodes.begin(), g.nodes.end(), node);
-    if( iter != g.nodes.end())
+    iter = find(nodes.begin(), nodes.end(), node);
+    if( iter != nodes.end())
         node = *iter;
-    
-    
+
     return node;
-    
-    
 }
 
 double getLocalDistance(Tree* tree, double theta)

@@ -326,7 +326,7 @@ void testEstInfUB()
     calculateGraph(g);
     */
 
-    Node test = g.findNode(g, 1);
+    Node test = g.findNode(1);
     localGraphBased(g, 0.4);
     cout<<"test"<<endl;
     

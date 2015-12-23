@@ -273,18 +273,14 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
     Query* upperBound=NULL;
 	Query* lowerBound=NULL;
 	
-	vector<Query> topicDistributions = loadSampleOfflineResult(theta, K, Epsilon);
+	vector<Query> Samples = loadSampleOfflineResult(theta, K, Epsilon);
     
-	bool getBound = findClosestBound(q, topicDistributions, upperBound, lowerBound);
-
-
+	bool getBound = findClosestBound(q, Samples, upperBound, lowerBound);
     
 	if(!getBound)
 	{
-		//TODO
-		vector<Node> u = bestEffort(g, q, theta);
-		//q.S = u;
-		return &q;
+		return NULL;
+		//which can not happen if we put in 000 and 111
 	}
 	else if (lowerBound->sigma > q.epsilon * upperBound->sigma ) {
         //如果找到的边界满足不等式直接返回种子集合
@@ -294,6 +290,12 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		Query* qResult = new Query(q.k, q.epsilon);
 		vector<Node> S_i;
 		vector<Node> PL;
+		for (int i = 0; i < lowerBound->S.size(); i++)
+		{
+			PL.push_back(g.findNode(lowerBound->S[i]));
+		}
+
+
 
 		Query* q1 = new Query(q);
 		q1->k=1;
@@ -307,15 +309,34 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 			//从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
 			vector<Node> u = bestEffort(g, *q1, theta);
 			qResult->S.push_back(u[0].number);
+			S_i.push_back(u[0]);
+
 			vector<int>::const_iterator iter = findIntIter(lowerBound->S,u[0].number);
 
 			if(iter!=lowerBound->S.end())
 			{
+				int location = iter-lowerBound->S.begin();
 				lowerBound->S.erase(iter);
+
+				vector<Node>::const_iterator iterN = PL.begin();
+				iterN+=location;
+				PL.erase(iterN);
 			}
 			else
 			{
-				//double lsg = delta_sigma_v_S_gama(Node v, vector<Node> S_i, double* gamma);
+				vector<double> sigs;
+				int minlocation=-1;
+				double minsig = INFMAX;
+				for (int i = 0; i < PL.size(); i++)
+				{
+					double sig = delta_sigma_v_S_gama(PL[i], S_i, q.topicDistribution);
+					if(sig<minsig){
+						minsig=sig;
+						minlocation=sigs.size();
+					}
+					sigs.push_back(sig);
+				}
+				//double lsg = delta_sigma_v_S_gama(Node v, S_i, q.topicDistribution);
 
 				//TODO
 			}
