@@ -26,13 +26,13 @@
 
 #define NNODE 10
 #define NEDGE 35
-#define NSAMPLE 200
+#define NSAMPLE 500
 #define DIM 3
 
-#define NODE_PATH "../nodetest.txt"
-#define EDGE_PATH "../edgetest.txt"
-#define PROP_PATH "../proptest.txt"
-#define SAMPLE_PATH "../m.csv"
+#define NODE_PATH "../SocialNetWorkGit/data/nodetest.txt"
+#define EDGE_PATH "../SocialNetWorkGit/data/edgetest.txt"
+#define PROP_PATH "../SocialNetWorkGit/data/proptest.txt"
+#define SAMPLE_PATH "../SocialNetWorkGit/data/samples.txt"
 
 #define INFMAX 100000000
 
@@ -46,7 +46,7 @@ void LoadGraphData(int* nodedata, int* edgedata, double* propdata){
 	ifstream fedge (EDGE_PATH);
 	ifstream fprop (PROP_PATH);
 
-	//double* nodedata = new double[NNODE];
+	//int* nodedata = new int[NNODE];
 
 	for (int i = 0; i < NNODE; i++)
 	{
@@ -55,7 +55,7 @@ void LoadGraphData(int* nodedata, int* edgedata, double* propdata){
 	}
 
 
-	//double* edgedata = new double[NEDGE*2];
+	//int* edgedata = new int[NEDGE*2];
 
 	for (int i = 0; i < NEDGE; i++)
 	{
@@ -84,15 +84,26 @@ void LoadSampleData(double* sampledata){
 
 	//double* sampledata = new double[NSAMPLE*DIM];
 
+
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		for (int j = 0; j < DIM-1; j++)
+		for (int j = 0; j < DIM; j++)
 		{
-			getline(fsample, value, ',')>>sampledata[i*DIM+j];
+			fsample>>sampledata[i*DIM+j];
 		}
-		fsample>>sampledata[i*DIM+DIM-1];
-		cout<<sampledata[i*DIM+DIM-1]<<endl;
+		cout<<sampledata[i*DIM]<<endl;
 	}
+
+
+	//for (int i = 0; i < NSAMPLE; i++)
+	//{
+	//	for (int j = 0; j < DIM-1; j++)
+	//	{
+	//		getline(fsample, value, ',')>>sampledata[i*DIM+j];
+	//	}
+	//	fsample>>sampledata[i*DIM+DIM-1];
+	//	cout<<sampledata[i*DIM+DIM-1]<<endl;
+	//}
 }
 
 
@@ -124,7 +135,6 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 	double* sampledata = new double[NSAMPLE*DIM];
 
 	LoadSampleData(sampledata);
-
 	//直接从预先聚类好的结果文件读进来
 
     //首先从log中挖掘可能的主题分布
@@ -159,7 +169,7 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 		}
 		fout<<endl;
 	}
-
+	fout.close();
 
 }
 
@@ -219,12 +229,10 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 }
 
 
-
-vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsilon)
+vector<Query> loadSampleOfflineResult(double theta, int K, double Epsilon)
 {
 	//TODO:从文件中读取Offline结果
 	double* sampledata = new double[NSAMPLE*DIM];
-
 	LoadSampleData(sampledata);
 
 
@@ -241,17 +249,17 @@ vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsil
 	{
 		//TODO:Save
 		Query q(K,Epsilon);
-		int id;
 		fin>>q.sigma;
 		for (int j = 0; j < K; j++)
 		{
-			//fout<<" "<<topicDistributions[i].S[i].number;
+			int nodeid;
+			fin>>nodeid;
+			q.S.push_back(nodeid);
 		}
-		//fout<<endl;
 
 		result.push_back(q);
 	}
-
+	fin.close();
 	
 	return result;
 }
@@ -265,7 +273,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
     Query* upperBound=NULL;
 	Query* lowerBound=NULL;
 	
-	vector<Query> topicDistributions = loadSampleOfflineResult(g, theta, K, Epsilon);
+	vector<Query> topicDistributions = loadSampleOfflineResult(theta, K, Epsilon);
     
 	bool getBound = findClosestBound(q, topicDistributions, upperBound, lowerBound);
 
@@ -321,7 +329,20 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 
 void topiSample(Graph g,Query q, double theta, int K, double Epsilon)
 {
-    //loadSampleOfflineResult();
-
+	//offline
+	topicSampleOffline(g, theta, K, Epsilon);
+	//online
     topicSampleOnline(g, q, theta, K, Epsilon);
+}
+
+
+void loadTest(){
+	int* nodedata = new int[NNODE];
+	int* edgedata = new int[NEDGE*2];
+	double* propdata = new double[NEDGE*DIM];
+	LoadGraphData(nodedata,edgedata,propdata);
+
+
+	//double* sampledata = new double[NSAMPLE*DIM];
+	//LoadSampleData(sampledata);
 }

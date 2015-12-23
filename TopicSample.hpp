@@ -47,11 +47,13 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon);
 bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBound, Query* lowerBound);
 
 
-vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsilon);
+vector<Query> loadSampleOfflineResult(double theta, int K, double Epsilon);
 
 
 Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon);
 
 void topiSample(Graph g,Query q, double theta, int K, double Epsilon);
+
+void loadTest();
 
 #endif /* TopicSample_h */
