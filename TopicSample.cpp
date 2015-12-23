@@ -292,10 +292,15 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
     }else{
     
 		Query* qResult = new Query(q.k, q.epsilon);
+		vector<Node> S_i;
+		vector<Node> PL;
+
 		Query* q1 = new Query(q);
 		q1->k=1;
 		q1->sigma=0;
 		q1->S.clear();
+
+
 
 		for(int i = 0 ; i < q.k; i ++)
 		{
@@ -310,6 +315,8 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 			}
 			else
 			{
+				//double lsg = delta_sigma_v_S_gama(Node v, vector<Node> S_i, double* gamma);
+
 				//TODO
 			}
 			//lowerBound->sigma=
