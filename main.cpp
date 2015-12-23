@@ -35,7 +35,7 @@ int main(int argc, const char * argv[]) {
     //te = *test;
     //
     testEstInfUB();
-
+    
 	//Graph g;
 	//topicSampleOffline(g, 0.1, 5, 0.5);
 
