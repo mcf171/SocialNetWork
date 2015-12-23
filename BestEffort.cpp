@@ -29,6 +29,7 @@ void precomputationBased(Graph& g)
                     maxDistance = *distanceIter;
             }
             edge->distance = maxDistance;
+            edge->weight = maxDistance;
         }
     }
     

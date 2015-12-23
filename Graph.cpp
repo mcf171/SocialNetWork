@@ -14,29 +14,34 @@
 #include "Edge.hpp"
 using namespace std;
 
+double delta_sigma_v_S_gama(Tree* tree,vector<Node> S_i, vector<double> gamma)
+{
+    return 1;
+}
+
 void calculateGraph(Graph& g)
 {
     vector<Node>::iterator nodeItera;
     for (nodeItera = g.nodes.begin(); nodeItera != g.nodes.end(); nodeItera++) {
         
-        double totalInfluence = hat_delta_p_u((*nodeItera).MIA,1);
-        (*nodeItera).influence = totalInfluence - 1;
-        cout<<"the influence of "<<(*nodeItera).number<<" is :"<<totalInfluence<<endl;
+        double totalWeight = hat_delta_p_u((*nodeItera).MIA);
+        (*nodeItera).weight = totalWeight - 1;
+        cout<<"the weight of "<<(*nodeItera).number<<" is :"<<totalWeight<<endl;
     }
 }
 
-double hat_delta_p_u(Tree* tree, double preValue)
+double hat_delta_p_u(Tree* tree)
 {
 
-    double influence = tree->node->influence * preValue;
+    double weight = tree->node->weight;
     vector<Tree*>::iterator nextNodeIter;
     
     for ( nextNodeIter = tree->nextNode.begin(); nextNodeIter != tree->nextNode.end(); nextNodeIter++) {
         
-        influence += hat_delta_p_u(*nextNodeIter,tree->node->influence);
+        weight += hat_delta_p_u(*nextNodeIter);
     }
     
-    return influence;
+    return weight;
 }
 
 void Dijkstra(Node& startNode)
@@ -66,15 +71,18 @@ void Dijkstra(Node& startNode)
             targetNode->number = edge->targetNode->number;
             targetNode->currentStatus = initial;
             treeNext->node = targetNode;
-            treeNext->node->influence = edge->distance;
+            treeNext->node->weight = edge->weight;
+            treeNext->node->influence = edge->distance*sourceNode->node->influence;
             sourceNode->nextNode.push_back(treeNext);
             
             sourceNode->node->dijkstraEdge.push_back(edge);
             S.push_back(*edge->targetNode);
             for(iterEdge = edge->targetNode->neighbourEdge.begin(); iterEdge != edge->targetNode->neighbourEdge.end(); iterEdge ++)
             {
-                if(!findNode(S, *(*iterEdge)->targetNode) || !findNode(S, *(*iterEdge)->sourceNode))
+                if(!findNode(S, *(*iterEdge)->targetNode) || !findNode(S, *(*iterEdge)->sourceNode)){
+                    (*iterEdge)->distance = (*iterEdge)->distance*sourceNode->node->influence;
                     edges.push(*iterEdge);
+                }
             }
             /*
             long size = edges.size();
@@ -82,7 +90,7 @@ void Dijkstra(Node& startNode)
             for(int i = 0 ; i < size; i ++)
             {
                 Edge* edge = temp.top();
-                cout<<edge->sourceNode->number<<" "<<edge->targetNode->number<<" "<<edge->distance<<endl;
+                cout<<edge->sourceNode->number<<" "<<edge->targetNode->number<<" "<<edge->weight<<endl;
                 temp.pop();
             }
             cout<<"------"<<endl;
