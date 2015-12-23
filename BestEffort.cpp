@@ -12,7 +12,7 @@
 #include "Node.hpp"
 #include "Edge.hpp"
 
-void precomputationBased(Graph g)
+void precomputationBased(Graph& g)
 {
     
     vector<Node>::iterator nodeIter;
@@ -35,7 +35,7 @@ void precomputationBased(Graph g)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra(g, *nodeIter);
+        Dijkstra( *nodeIter);
     }
     
     //cout<<"create MIA";

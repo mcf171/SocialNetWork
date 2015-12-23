@@ -317,6 +317,8 @@ void testEstInfUB()
     
     precomputationBased(g);
     
+    calculateGraph(g);
+    
     cout<<"test"<<endl;
     
 }

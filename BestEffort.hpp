@@ -27,12 +27,15 @@ public:
     //priority_queue<Node*> L;
 };
 
-void precomputationBased(Graph g);
+
 void localGraphBased();
 void neighborhoodBased();
 double estInfUB(Node node, Graph g, double theta);
 void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort);
 void bestEffortOnline(Graph g ,Query q, double theta);
 vector<Node> bestEffort(Graph g, Query q, double theta);
+
+void precomputationBased(Graph& g);
+
 
 #endif /* BestEffort_h */
