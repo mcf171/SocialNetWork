@@ -11,9 +11,9 @@
 #include <vector>
 
 #include <queue>
-#include "Node.hpp";
-#include "Edge.hpp";
-#include "Tree.hpp";
+#include "Node.hpp"
+#include "Edge.hpp"
+#include "Tree.hpp"
 
 using namespace std;
 
@@ -23,15 +23,23 @@ class Edge;
 class Graph{
     
 public:
+    
+    //保存社交网络中所有的用户
     vector<Node> nodes;
+    
+    //保存社交网络中所有的边
 	vector<Edge> edges;
+    
+    //从图中根据number找到用户
 	Node findNode(int number);
-    Edge findeEdgeFromTwoNode(Node sourceNode, Node targetNode);
+    
+    //从图中根据两个用户找到边
+   // Edge findeEdgeFromTwoNode(Node sourceNode, Node targetNode);
 };
 
 double getLocalDistance(Tree* startNode, double theta);
 
-void Dijkstra(Node& startNode);
+void Dijkstra(Node startNode,Tree* MIA);
 
 void calculateGraph(Graph& g);
 

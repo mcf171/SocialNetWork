@@ -25,6 +25,7 @@ public:
     vector<Edge*> dijkstraEdge;
     
     Tree* MIA;
+    Node();
     //vector<double> realTopicDistribute;
     ~Node();
     status currentStatus;
@@ -32,7 +33,7 @@ public:
     double weight;
     double influence;
     
-    double hat_gamma_p;
+    double hat_delta_sigma_p;
     //Node在图中的序号
     int number;
 	double deta_u;

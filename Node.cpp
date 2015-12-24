@@ -13,6 +13,11 @@ Node::~Node(){
 
 }
 
+Node::Node()
+{
+    this->MIA = new Tree();
+}
+
 bool findNode(vector<Node> nodes, Node node)
 {
     

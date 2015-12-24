@@ -28,6 +28,7 @@ double hat_delta_theta(Node u,vector<Node>S,Query q)
     return  result;
 }
 
+//针对LocalGraph算法，当进行在线查询时进行重构MIA
 void preprocessOnline(Graph&g, Query q)
 {
     vector<Node>::iterator nodeIter;
@@ -47,29 +48,36 @@ void preprocessOnline(Graph&g, Query q)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra( *nodeIter);
+        Dijkstra( *nodeIter,&(*nodeIter->MIA));
     }
 }
 
-/**
- *  基于Precomputation的方法
+
+/*
+ * 基于Precomputation的方法
+ * precomputation方法只选取每条边上topic分布最大的topic
+ * @param g 社交网络图
  */
+
 void precomputationBased(Graph& g)
 {
     
     vector<Node>::iterator nodeIter;
+
+    //对于图中的每个节点都将边设置为最大的topic值
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
+
+        //获取每个节点
         Node node = *nodeIter;
         
         vector<Edge*>::iterator edgeIter;
+        
+        //获取节点的每个邻边
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
             Edge* edge = *edgeIter;
-            //vector<double>::iterator distanceIter;
+
             double maxDistance = 0;
-            //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
-            //    if(*distanceIter > maxDistance)
-            //        maxDistance = *distanceIter;
-            //}
+
 			for (int i = 0; i < DIM; i++)
 			{
 				if(edge->realDistribution[i] > maxDistance)
@@ -80,10 +88,12 @@ void precomputationBased(Graph& g)
         }
     }
     
+    //对每个节点计算构建MIA
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra( *nodeIter);
+        Dijkstra( *nodeIter,&(*nodeIter->MIA));
+
     }
     
     //cout<<"create MIA";
@@ -100,6 +110,12 @@ void getLocalGraph(Tree tree,double theta,vector<Node> &nodes){
     
 }
 
+/*
+* localGraph算法是基于Precomputation算法的，然后通过Precomputation算法构建的图再构建一个子图
+* @param g 社交网络图
+* @param theta，用户自定义的阈值
+* @param q 在线
+*/
 void localGraphBased(Graph& g,double theta, Query q)
 {
     vector<Node>::iterator nodeIter;
@@ -128,7 +144,7 @@ void localGraphBased(Graph& g,double theta, Query q)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra( *nodeIter);
+        Dijkstra( *nodeIter,&(*nodeIter->MIA));
         double distance = getLocalDistance((*nodeIter).MIA, theta);
 
      //   cout<<"the hat_gama of "<<(*nodeIter).number<<" is :"<<distance<<endl;
@@ -175,7 +191,7 @@ void neighborhoodBased(Graph& g)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra( *nodeIter);
+        Dijkstra( *nodeIter,&(*nodeIter->MIA));
     }
 }
 
@@ -188,19 +204,32 @@ double estInfUB(Node node, Graph g, double theta)
 
 /*
  * 离线部分主要功能计算每个点的最大影响上界
+ * 在Precomputation算法中是脱离了在线部分的查询Q，但是对于LocalGraph算法是需要结合在线查询的Q，但是只计算影响力大的点
+ * @param g 社交网络图
+ * @param theta 用户自定义阈值
+ * @param bestEffort bestEffort算法对象
+ * @param q 查询语句
  */
 
-void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q)
+void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,algorithm chooseAlgorithm)
 {
     
+    //获取图中所有的Users
     vector<Node> nodes = g.nodes;
     
-    
-    
-    localGraphBased(g, theta, q);
-    
+
+    if (chooseAlgorithm == precomputation) {
+        //precomputaion算法
+        precomputationBased(g);
+    }
+    else if(chooseAlgorithm == localGraph){
+        //LocalGraph算法
+        localGraphBased(g, theta, q);
+    }
+
+    //将计算后的节点插入优先队列
     for(auto node : g.nodes){
-        node.influence = node.hat_gamma_p;
+        node.influence = node.hat_delta_sigma_p;
         bestEffort.L.push(node);
     }
     
@@ -213,18 +242,22 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q)
  * 在线部分主要计算在给定主题分布下的精确上界
  */
 
-void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort)
+void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,algorithm chooseAlgorithm)
 {
     //Initial an empty heap H and set S
     auto &H = bestEffort.H;
     vector<Node> S;
+    
     auto &L = bestEffort.L;
+    //初始化一个空的最大堆
     while (!H.empty()) {
         H.pop();
     }
 
     S.clear();
-    preprocessOnline(g, q);
+    //预处理在线节点针对LocalGraph算法，如果不是LocalGraph算法，进行注释
+    if(chooseAlgorithm == localGraph)
+        preprocessOnline(g, q);
     
     //K次循环找到所有合适的种子
     for (int i = 0; i < q.k ; i++)
@@ -233,11 +266,14 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort)
         
         while (!H.empty())
         {
+            //从离线的优先队列中和最大堆中考虑是否加入新的元素
             insertCandidates(L, H);
             
+            //从堆顶取一个元素
             Node u = H.top();
             H.pop();
             
+            //如果是初始状态那么久进一步计算在gama主题分布下的上界
             if (initial == u.currentStatus)
             {
                 double sigma_new = hat_delta_theta(u, S, q);
@@ -245,6 +281,7 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort)
                 u.influence = sigma_new;
                 H.push(u);
             }
+            //如果已经是gamga主题分布下的上界则计算精确的上界
             else if (bounded == u.currentStatus)
             {
                 double sigma_new = CalcMargin(u, g, theta, q, S);
@@ -252,6 +289,7 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort)
                 u.influence = sigma_new;
                 H.push(u);
             }
+            //如果已经是精确上界则直接弹出
             else if (exact == u.currentStatus)
             {
 				S.push_back(u);
@@ -289,6 +327,11 @@ void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H)
     }
 }
 
+
+void initEdge(Graph g)
+{
+    
+}
 
 
 /*
@@ -456,6 +499,7 @@ void adjustM(Node& oldNode, double new_inf, priority_queue<Node>& M)
         }
         M_.push(u);
     }
+    M = M_;
 }
 
 /*
@@ -474,13 +518,22 @@ double calDetaUSR(vector<Node>&V, double theta)
     return res;
 }
 
-vector<Node> bestEffort(Graph g, Query q, double theta)
+
+/**
+ * bestEffort算法入口，输入为一个图G，查询语句Q，以及用户定义的theta,最后一个参数是要选择的上界计算算法
+ */
+vector<Node> bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorithm)
 {
     vector<Node> node;
     
     BestEffort bestEffort;
     
-    bestEffortOffline(g, theta, bestEffort,q);
+    
+    //首先进行离线处理
+    bestEffortOffline(g, theta, bestEffort,q,chooseAlgorithm);
+    
+    //进行在线处理
+    bestEffortOnline(g, q, theta, bestEffort,chooseAlgorithm);
     
     return node;
 }

@@ -31,9 +31,10 @@ void getLocalGraph(Tree tree,double theta,vector<Node> &nodes);
 void localGraphBased(Graph& g,double theta,Query q);
 void neighborhoodBased(Graph& g);
 double estInfUB(Node node, Graph g, double theta);
-void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q);
-void bestEffortOnline(Graph g ,Query q, double theta);
-vector<Node> bestEffort(Graph g, Query q, double theta);
+void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,algorithm chooseAlgorithm);
+void bestEffortOnline(Graph g ,Query q, double theta,algorithm chooseAlgorithm);
+
+vector<Node> bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorithm);
 
 void precomputationBased(Graph& g);
 void preprocessOnline(Graph&g, Query q);
