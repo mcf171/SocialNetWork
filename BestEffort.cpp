@@ -14,7 +14,7 @@
 #include "Tree.hpp"
 #include <vector>
 
-double hat_delta_theta(Node u,vector<Node>S,Query q)
+double hat_delta_theta(Node u,map<int, Node>S,Query q)
 {
     double result = 0;
     
@@ -31,13 +31,13 @@ double hat_delta_theta(Node u,vector<Node>S,Query q)
 //针对LocalGraph算法，当进行在线查询时进行重构MIA
 void preprocessOnline(Graph&g, Query q)
 {
-    vector<Node>::iterator nodeIter;
+    map<int, Node>::iterator nodeIter;
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
-        Node node = *nodeIter;
+		Node node = nodeIter->second;
         
-        vector<Edge*>::iterator edgeIter;
+        map<int, Edge*>::iterator edgeIter;
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
-            Edge* edge = *edgeIter;
+            Edge* edge = edgeIter->second;
             
             double distance = q.topicDistribution[0]*edge->realDistribution[0]+q.topicDistribution[1]*edge->realDistribution[1]+q.topicDistribution[2]*edge->realDistribution[2];
             edge->distance = distance;
@@ -48,7 +48,7 @@ void preprocessOnline(Graph&g, Query q)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra( *nodeIter,&(*nodeIter->MIA));
+		Dijkstra( nodeIter->second,(nodeIter->second.MIA));
     }
 }
 
@@ -62,19 +62,19 @@ void preprocessOnline(Graph&g, Query q)
 void precomputationBased(Graph& g)
 {
     
-    vector<Node>::iterator nodeIter;
+    map<int, Node>::iterator nodeIter;
 
     //对于图中的每个节点都将边设置为最大的topic值
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
 
         //获取每个节点
-        Node node = *nodeIter;
+		Node node = nodeIter->second;
         
-        vector<Edge*>::iterator edgeIter;
+        map<int, Edge*>::iterator edgeIter;
         
         //获取节点的每个邻边
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
-            Edge* edge = *edgeIter;
+			Edge* edge = edgeIter->second;
 
             double maxDistance = 0;
 
@@ -92,7 +92,7 @@ void precomputationBased(Graph& g)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra( *nodeIter,&(*nodeIter->MIA));
+		Dijkstra( nodeIter->second,(nodeIter->second.MIA));
 
     }
     
@@ -118,13 +118,13 @@ void getLocalGraph(Tree tree,double theta,vector<Node> &nodes){
 */
 void localGraphBased(Graph& g,double theta, Query q)
 {
-    vector<Node>::iterator nodeIter;
+    map<int, Node>::iterator nodeIter;
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
-        Node node = *nodeIter;
+		Node node = nodeIter->second;
         
-        vector<Edge*>::iterator edgeIter;
+        map<int,Edge*>::iterator edgeIter;
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
-            Edge* edge = *edgeIter;
+            Edge* edge = edgeIter->second;
             //vector<double>::iterator distanceIter;
             double maxDistance = 0;
             //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
@@ -144,8 +144,8 @@ void localGraphBased(Graph& g,double theta, Query q)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra( *nodeIter,&(*nodeIter->MIA));
-        double distance = getLocalDistance((*nodeIter).MIA, theta);
+        Dijkstra( nodeIter->second,(nodeIter->second.MIA));
+        double distance = getLocalDistance(nodeIter->second.MIA, theta);
 
      //   cout<<"the hat_gama of "<<(*nodeIter).number<<" is :"<<distance<<endl;
     }
@@ -153,7 +153,7 @@ void localGraphBased(Graph& g,double theta, Query q)
     
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
-        Node node = *nodeIter;
+        Node node = nodeIter->second;
         vector<Node> nodes;
         nodes.clear();
         getLocalGraph(*node.MIA, theta, nodes);
@@ -165,13 +165,13 @@ void localGraphBased(Graph& g,double theta, Query q)
 
 void neighborhoodBased(Graph& g)
 {
-    vector<Node>::iterator nodeIter;
+    map<int, Node>::iterator nodeIter;
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
-        Node node = *nodeIter;
+        Node node = nodeIter->second;
         
-        vector<Edge*>::iterator edgeIter;
+        map<int, Edge*>::iterator edgeIter;
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
-            Edge* edge = *edgeIter;
+            Edge* edge = edgeIter->second;
             //vector<double>::iterator distanceIter;
             double maxDistance = 0;
             //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
@@ -191,7 +191,7 @@ void neighborhoodBased(Graph& g)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra( *nodeIter,&(*nodeIter->MIA));
+        Dijkstra( nodeIter->second,(nodeIter->second.MIA));
     }
 }
 
@@ -215,7 +215,7 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
 {
     
     //获取图中所有的Users
-    vector<Node> nodes = g.nodes;
+    map<int, Node> nodes = g.nodes;
     
 
     if (chooseAlgorithm == precomputation) {
@@ -228,10 +228,11 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
     }
 
     //将计算后的节点插入优先队列
-    for(auto node : g.nodes){
-        node.influence = node.hat_delta_sigma_p;
-        bestEffort.L.push(node);
-    }
+	for (map<int, Node>::iterator iter=nodes.begin(); iter!=nodes.end(); iter++)  
+    {  
+		iter->second.influence = iter->second.hat_delta_sigma_p;
+        bestEffort.L.push(iter->second);
+    }  
     
     
 }
@@ -246,7 +247,7 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,alg
 {
     //Initial an empty heap H and set S
     auto &H = bestEffort.H;
-    vector<Node> S;
+    map<int, Node> S;
     
     auto &L = bestEffort.L;
     //初始化一个空的最大堆
@@ -292,7 +293,7 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,alg
             //如果已经是精确上界则直接弹出
             else if (exact == u.currentStatus)
             {
-				S.push_back(u);
+				S[u.number]=u;
                 updateAP();
                 break;
             }
@@ -337,7 +338,7 @@ void initEdge(Graph g)
 /*
 	CALCMARGIN
  */
-double CalcMargin(Node u, Graph g, double theta, Query gamma, vector<Node> S)
+double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
 {
     double res = 0.0;
     
@@ -352,7 +353,7 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, vector<Node> S)
         Node w = M.top();
         M.pop();
         
-		if (findNode(S, w) || w.influence < theta)
+		if (findKey(S, w.number) || w.influence < theta)
             continue;
         
         vector<Node> C_W;
@@ -361,10 +362,10 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, vector<Node> S)
         
         for (Node v: C_W)//v belongs to C(w)
         {
-			vector<Edge*>::iterator iter;
+			map<int, Edge*>::iterator iter;
 			Edge* pedge=NULL;
 			for(iter = w.neighbourEdge.begin();iter != w.neighbourEdge.end();iter++){
-				Edge* pedge= *iter;
+				Edge* pedge= iter->second;
 				if(pedge->targetNode->number==v.number){
 					break;
 				}
@@ -413,11 +414,11 @@ void updateAP()
     //TODO
 }
 
-double prodChild(Tree* node,vector<Node>S)
+double prodChild(Tree* node,map<int, Node> S)
 {
     double ap = 0;
     
-    if(findNode(S, *(node->node)))
+	if(findKey(S, node->node->number))
         ap = 1;
     else
     {
@@ -435,11 +436,11 @@ double prodChild(Tree* node,vector<Node>S)
 /*
 	calculate the ap(u|S,r) i.e. equation (4) in paper
  */
-double calAP(Node& u, vector<Node> S, Query &q)
+double calAP(Node& u, map<int, Node> S, Query &q)
 {
     double res = 0.0;
     
-    if(findNode(S, u))
+    if(findKey(S, u.number))
         res = 1;
     else
     {
@@ -506,16 +507,16 @@ void adjustM(Node& oldNode, double new_inf, priority_queue<Node>& M)
 /*
 	calculate the deta(u|S,r) showed in Line 14 in Algorithm 2
  */
-double calDetaUSR(vector<Node>&V, double theta)
+double calDetaUSR(map<int, Node>&V, double theta)
 {
     double res = 0.0;
     
-    for (auto &i: V)
-    {
-        if (i.influence >= theta)
-            res += i.deta_u;
-    }
-    
+	for (map<int, Node>::iterator i=V.begin(); i!=V.end(); i++)  
+    {  
+		if (i->second.influence >= theta)
+            res += i->second.deta_u;
+    }  
+
     return res;
 }
 

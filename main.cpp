@@ -17,13 +17,13 @@
 
 using namespace std;
 
-void testEstInfUB();
+//void testEstInfUB();
 
-void testFindNode();
+//void testFindNode();
 
-void testpriorityQueue();
+//void testpriorityQueue();
 
-void testPriorityQueueEdge();
+//void testPriorityQueueEdge();
 
 int main(int argc, const char * argv[]) {
     // insert code here...
@@ -34,7 +34,7 @@ int main(int argc, const char * argv[]) {
     //
     //te = *test;
     //
-    testEstInfUB();
+    //testEstInfUB();
     double result = 0.8+0.7+0.6+0.36+0.56+0.35+0.448;
 //    double result = 0.46*0.25088+0.72*0.7308+0.4*1.08227+0.4*1.30157 + 0.46+0.72+0.4+0.4;
     cout<<result <<endl;
@@ -43,7 +43,7 @@ int main(int argc, const char * argv[]) {
 
     return 0;
 }
-
+/*
 void testPriorityQueueEdge()
 {
     priority_queue<Edge*,vector<Edge*>,EdgeCompare> edges;
@@ -426,14 +426,14 @@ void testEstInfUB()
     precomputationBased(g);
     
     calculateGraph(g);
-    
-/*
-    Node test = g.findNode(1);
-    Query q(3,0.01);
-    double topicDistribution []= {0.2,0.8,0};
-    q.topicDistribution = topicDistribution;
-    localGraphBased(g, 0.4,q);
- */
+
+
+    ////Node test = g.findNode(1);
+    ////Query q(3,0.01);
+    ////double topicDistribution []= {0.2,0.8,0};
+    ////q.topicDistribution = topicDistribution;
+    ////localGraphBased(g, 0.4,q);
+
     cout<<"test"<<endl;
     
 }
@@ -464,6 +464,7 @@ void testFindNode()
     cout<<exist<<endl;
 }
 
+
 void testpriorityQueue()
 {
     
@@ -488,15 +489,15 @@ void testpriorityQueue()
         cout<< temp.influence<< ' ';
         bestEffort.L.pop();
     }
-    /*
-     bestEffort.L.push(&node1);
-     bestEffort.L.push(&node2);
-     bestEffort.L.push(&node3);
-     
-     while (!bestEffort.L.empty()) {
-     Node* temp =bestEffort.L.top();
-     cout<< temp->influence<< ' ';
-     bestEffort.L.pop();
-     }
-     */
+
+     ////bestEffort.L.push(&node1);
+     ////bestEffort.L.push(&node2);
+     ////bestEffort.L.push(&node3);
+     ////
+     ////while (!bestEffort.L.empty()) {
+     ////Node* temp =bestEffort.L.top();
+     ////cout<< temp->influence<< ' ';
+     ////bestEffort.L.pop();
+
 }
+*/

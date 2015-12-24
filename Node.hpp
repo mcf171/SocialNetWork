@@ -10,6 +10,7 @@
 #define Node_h
 
 #include <vector>
+#include <map>
 #include <iostream>
 #include "ConstantFile.h"
 
@@ -21,13 +22,21 @@ class Tree;
 class Node{
     
 public:
-    vector<Edge*> neighbourEdge;
+
+
+
+    //vector<Edge*> neighbourEdge;
+	map<int, Edge*> neighbourEdge;
     vector<Edge*> dijkstraEdge;
     
     Tree* MIA;
     Node();
-    //vector<double> realTopicDistribute;
+    Node(int num);
+
     ~Node();
+
+	void insertEdge(int targetPoint, Edge* edge);
+
     status currentStatus;
     //Node的影响力
     double weight;
@@ -68,7 +77,10 @@ public:
     }
 };
 
-bool findNode(vector<Node> nodes, Node node);
+//bool findNode(vector<Node> nodes, Node node);
+
+bool findKey(map<int, Node> S, int key);
+
 
 vector<Node>::const_iterator findNodeIter(vector<Node> nodes, Node node);
 

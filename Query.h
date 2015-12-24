@@ -12,8 +12,7 @@
 #include <math.h>
 
 #include "Node.hpp"
-
-#define DIM 3
+#include "Load.hpp"
 
 class Query{
     

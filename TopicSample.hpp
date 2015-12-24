@@ -32,12 +32,6 @@ using namespace std;
  */
 
 
-//从文件读取图的节点和边的信息
-void LoadGraphData(int* nodedata, int* edgedata, double* propdata);
-
-//从文件读取主题分布的采样点的信息
-void LoadSampleData(double* sampledata);
-
 //调用BestEffort，离线计算每一个采样点的S和sigma值，保存在Query的She sigma两个属性中，传出来
 vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata);
 
@@ -61,7 +55,5 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon);
  */
 
 void topiSample(Graph g,Query q, double theta, int K, double Epsilon);
-
-void loadTest();
 
 #endif /* TopicSample_h */

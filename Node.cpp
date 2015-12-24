@@ -13,11 +13,19 @@ Node::~Node(){
 
 }
 
-Node::Node()
+Node::Node(){}
+
+Node::Node(int num)
 {
-    this->MIA = new Tree();
+	this->number = num;
+	this->MIA = new Tree();
 }
 
+void Node::insertEdge(int targetPoint, Edge* edge)
+{
+	this->neighbourEdge[targetPoint]=edge;
+}
+/*
 bool findNode(vector<Node> nodes, Node node)
 {
     
@@ -29,7 +37,16 @@ bool findNode(vector<Node> nodes, Node node)
     return exists;
     
 }
-
+*/
+bool findKey(map<int, Node> S, int key)
+{
+	map<int, Node>::iterator iter = S.find(key);
+	if(iter!=S.end())
+	{
+		return true;
+	}
+	return false;
+}
 
 vector<Node>::const_iterator findNodeIter(vector<Node> nodes, Node node)
 {
