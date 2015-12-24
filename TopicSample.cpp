@@ -248,8 +248,12 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 				
 			}
 
-			map<int, Node> nowUnion = map<int, Node>(S_i);
+			map<int, Node> nowUnion;
 			for (map<int, Node>::iterator iter= PL.begin();iter!=PL.end();iter++)
+				{
+					nowUnion[iter->first]=iter->second;
+				}
+			for (map<int, Node>::iterator iter= S_i.begin();iter!=S_i.end();iter++)
 				{
 					nowUnion[iter->first]=iter->second;
 				}
