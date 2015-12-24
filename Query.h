@@ -12,18 +12,19 @@
 #include <math.h>
 
 #include "Node.hpp"
-
-#define DIM 3
+#include "Load.hpp"
 
 class Query{
     
 public:
 	    
-	//vector<double> topicDistribution;
+	//参数
 	double* topicDistribution;
     int k;//number of seed
     double epsilon;
-	vector <int> S;
+
+	//输出的结果
+	map <int, Node> S;
 	double sigma;
 
 

@@ -8,102 +8,18 @@
 
 
 
-#include <iostream>
+
 #include "Graph.hpp"
 #include "Query.h"
 #include "Node.hpp"
 #include "BestEffort.hpp"
 #include "TopicSample.hpp"
-#include <vector>
-
-#include <cstdlib>
-#include <algorithm>
-#include <string> 
-#include <fstream>
-#include <sstream>
-
-
-
-#define NNODE 10
-#define NEDGE 35
-#define NSAMPLE 500
-#define DIM 3
-
-#define NODE_PATH "../SocialNetWorkGit/data/nodetest.txt"
-#define EDGE_PATH "../SocialNetWorkGit/data/edgetest.txt"
-#define PROP_PATH "../SocialNetWorkGit/data/proptest.txt"
-#define SAMPLE_PATH "../SocialNetWorkGit/data/samples.txt"
-
-#define INFMAX 100000000
-
+#include "Load.hpp"
 
 /*
  *  进行主题挖掘
  */
 
-void LoadGraphData(int* nodedata, int* edgedata, double* propdata){
-	ifstream fnode (NODE_PATH);
-	ifstream fedge (EDGE_PATH);
-	ifstream fprop (PROP_PATH);
-
-	//int* nodedata = new int[NNODE];
-
-	for (int i = 0; i < NNODE; i++)
-	{
-		fnode>>nodedata[i];
-		cout<<nodedata[i]<<endl;
-	}
-
-
-	//int* edgedata = new int[NEDGE*2];
-
-	for (int i = 0; i < NEDGE; i++)
-	{
-		fedge>>edgedata[i*2]>>edgedata[i*2+1];
-		cout<<edgedata[i*2]<<endl;
-	}
-
-
-	//double* propdata = new double[NEDGE*DIM];
-
-	for (int i = 0; i < NEDGE; i++)
-	{
-		for (int j = 0; j < DIM; j++)
-		{
-			fprop>>propdata[i*DIM+j];
-		}
-		cout<<propdata[i*DIM]<<endl;
-	}
-
-
-}
-
-void LoadSampleData(double* sampledata){
-	ifstream fsample (SAMPLE_PATH);
-	string value;
-
-	//double* sampledata = new double[NSAMPLE*DIM];
-
-	for (int i = 0; i < NSAMPLE; i++)
-	{
-		for (int j = 0; j < DIM; j++)
-		{
-			fsample>>sampledata[i*DIM+j];
-		}
-		cout<<sampledata[i*DIM]<<endl;
-	}
-
-
-	//for (int i = 0; i < NSAMPLE; i++)
-	//{
-	//	for (int j = 0; j < DIM-1; j++)
-	//	{
-	//		getline(fsample, value, ',')>>sampledata[i*DIM+j];
-	//	}
-	//	fsample>>sampledata[i*DIM+DIM-1];
-	//	cout<<sampledata[i*DIM+DIM-1]<<endl;
-	//}
-}
 
 
 vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata){
@@ -116,10 +32,10 @@ vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double*
 		Query q(K,Epsilon);
 		q.topicDistribution = sampledata+i*DIM*sizeof(double);
 		//计算每个的S
-		vector<Node> S = bestEffort(g, q, theta,precomputation);
-		for (int i = 0; i < S.size(); i++)
+		vector<Node> tempS = bestEffort(g, q, theta, precomputation);
+		for (vector<Node>::iterator iter = tempS.begin();iter!=tempS.end();iter++)
 		{
-			q.S.push_back(S[i].number);
+			q.S[iter->number]=*iter;
 		}
 		topicDistributions.push_back(q);
 	}
@@ -161,9 +77,9 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 	for (int i = 0; i < NSAMPLE; i++)
 	{
 		fout<<topicDistributions[i].sigma;
-		for (int j = 0; j < topicDistributions[i].S.size(); j++)
+		for (map<int,Node>::iterator iter = topicDistributions[i].S.begin(); iter!=topicDistributions[i].S.end(); iter++)
 		{
-			fout<<" "<<topicDistributions[i].S[i];
+			fout<<" "<<iter->first;
 		}
 		fout<<endl;
 	}
@@ -227,7 +143,7 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 }
 
 
-vector<Query> loadSampleOfflineResult(double theta, int K, double Epsilon)
+vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsilon)
 {
 	//从文件中读取Offline结果
 	double* sampledata = new double[NSAMPLE*DIM];
@@ -251,7 +167,7 @@ vector<Query> loadSampleOfflineResult(double theta, int K, double Epsilon)
 		{
 			int nodeid;
 			fin>>nodeid;
-			q.S.push_back(nodeid);
+			q.S[nodeid]=NULL;
 		}
 
 		result.push_back(q);
@@ -270,7 +186,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
     Query* upperBound=NULL;
 	Query* lowerBound=NULL;
 	
-	vector<Query> Samples = loadSampleOfflineResult(theta, K, Epsilon);
+	vector<Query> Samples = loadSampleOfflineResult(g, theta, K, Epsilon);
     
 	bool getBound = findClosestBound(q, Samples, upperBound, lowerBound);
     
@@ -285,11 +201,11 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
     }else{
     
 		Query* qResult = new Query(q.k, q.epsilon);
-		vector<Node> S_i;
-		vector<Node> PL;
-		for (int i = 0; i < lowerBound->S.size(); i++)
+		map<int, Node> S_i;
+		map<int, Node> PL;
+		for (map<int, Node>::iterator iter= lowerBound->S.begin();iter!=lowerBound->S.end();iter++)
 		{
-			PL.push_back(g.findNode(lowerBound->S[i]));
+			PL[iter->first]=g.findNode(iter->first);
 		}
 
 
@@ -305,46 +221,46 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		{
 			//从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
 			vector<Node> u = bestEffort(g, *q1, theta,precomputation);
-			qResult->S.push_back(u[0].number);
-			S_i.push_back(u[0]);
+			qResult->S[u[0].number]=u[0];
+			S_i[u[0].number]=u[0];
 
-			vector<int>::const_iterator iter = findIntIter(lowerBound->S,u[0].number);
+			//vector<int>::const_iterator iter = findIntIter(lowerBound->S,u[0].number);
 
-			if(iter!=lowerBound->S.end())
+			if(findKey(PL,u[0].number))
 			{
-				int location = iter-lowerBound->S.begin();
-				lowerBound->S.erase(iter);
-				PL.erase(PL.begin()+location);
+				PL.erase(PL.find(u[0].number));
 			}
 			else
 			{
-				int minlocation=-1;
+				int minpoint=-1;
 				double minsig = INFMAX;
-				for (int i = 0; i < PL.size(); i++)
+				for (map<int, Node>::iterator iter = PL.begin();iter!=PL.end();iter++ )
 				{
 
                     // can't guarantee it's true...
-					double sig = delta_sigma_v_S_gamma(PL[i], S_i ,q,theta,g);
+					double sig = delta_sigma_v_S_gamma(iter->second, S_i ,q,theta,g);
 					if(sig<minsig){
 						minsig=sig;
-						minlocation=i;
+						minpoint=iter->second.number;
 					}
 				}
-
-				lowerBound->S.erase(lowerBound->S.begin()+minlocation);
-				PL.erase(PL.begin()+minlocation);
+				PL.erase(PL.find(minpoint));
+				
 			}
 
-			vector<Node> nowUnion(S_i);
-			nowUnion.insert(nowUnion.end(),PL.begin(),PL.end());
+			map<int, Node> nowUnion = map<int, Node>(S_i);
+			for (map<int, Node>::iterator iter= PL.begin();iter!=PL.end();iter++)
+				{
+					nowUnion[iter->first]=iter->second;
+				}
             
             //sigma是不是还要传个Q
-			//qResult->sigma = sigma(nowUnion, g);
+			qResult->sigma = sigma(nowUnion, g, q);
 
 			if (qResult->sigma > q.epsilon * upperBound->sigma ){
-				for (int i = 0; i < lowerBound->S.size(); i++)
+				for (map<int, Node>::iterator iter= PL.begin();iter!=PL.end();iter++)
 				{
-					qResult->S.push_back(lowerBound->S[i]);
+					qResult->S[iter->first]=iter->second;
 				}
 				return qResult;
 			}
@@ -362,14 +278,3 @@ void topiSample(Graph g,Query q, double theta, int K, double Epsilon)
     topicSampleOnline(g, q, theta, K, Epsilon);
 }
 
-
-void loadTest(){
-	int* nodedata = new int[NNODE];
-	int* edgedata = new int[NEDGE*2];
-	double* propdata = new double[NEDGE*DIM];
-	LoadGraphData(nodedata,edgedata,propdata);
-
-
-	//double* sampledata = new double[NSAMPLE*DIM];
-	//LoadSampleData(sampledata);
-}

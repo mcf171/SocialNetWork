@@ -13,6 +13,17 @@ Edge::~Edge(){
    
 }
 
+Edge::Edge(int idnum, Node* source, Node* target, double* realdistribution)
+{
+	this->id=idnum;
+	this->targetNode = target;
+	this->sourceNode = source;
+	this->sourceNodeId = source->number;
+	this->targetNodeId = target->number;
+	this->realDistribution = realdistribution;
+	source->insertEdge(this->targetNodeId, this);
+}
+
 bool Edge::operator == (const Edge& target)
 {
     return this->targetNode->number == target.targetNode->number && this->sourceNode->number == target.sourceNode->number;

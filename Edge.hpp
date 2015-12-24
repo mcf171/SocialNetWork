@@ -19,15 +19,21 @@ using namespace std;
 class Edge{
     
 public:
-    
+    int id;
+	int sourceNodeId;
+	int targetNodeId;
+	Node* sourceNode;
     Node* targetNode;
     //topic分布
     double* realDistribution;
-    Node* sourceNode;
+    
     
     double weight;
     double distance;
     bool isVisited;
+
+	Edge(int idnum, Node* source, Node* target, double* realdistribution);
+
     ~Edge();
     /*
     bool operator == (const Edge& target)

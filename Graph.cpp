@@ -12,6 +12,7 @@
 #include "Node.hpp"
 #include "Tree.hpp"
 #include "Edge.hpp"
+#include "Load.hpp"
 using namespace std;
 /*
 Edge Graph::findeEdgeFromTwoNode(Node sourceNode, Node targetNode)
@@ -28,16 +29,30 @@ Edge Graph::findeEdgeFromTwoNode(Node sourceNode, Node targetNode)
     return edge;
 }
 */
+
+Graph::Graph()
+{
+	int* nodedata = new int[NNODE];
+	int* edgedata = new int[NEDGE*2];
+	double* propdata = new double[NEDGE*DIM];
+	LoadGraphData(nodedata,edgedata,propdata);
+
+	for (int i = 0; i < NNODE; i++)
+	{
+		nodes[nodedata[i]]=Node(nodedata[i]);
+	}
+	for (int i = 0; i < NEDGE; i++)
+	{
+		int sourceId=edgedata[2*i];
+		int targetId=edgedata[2*i+1];
+		edges.push_back(Edge(i,&nodes[sourceId],&nodes[targetId],&propdata[DIM*i]));
+	}
+
+}
+
 Node Graph::findNode(int number)
 {
-    Node node;
-    node.number = number;
-    vector<Node>::iterator iter;
-    iter = find(nodes.begin(), nodes.end(), node);
-    if( iter != nodes.end())
-        node = *iter;
-
-    return node;
+	return nodes[number];
 }
 
 
@@ -62,12 +77,12 @@ double getLocalDistance(Tree* tree, double theta)
 
 void calculateGraph(Graph& g)
 {
-    vector<Node>::iterator nodeItera;
+    map<int,Node>::iterator nodeItera;
     for (nodeItera = g.nodes.begin(); nodeItera != g.nodes.end(); nodeItera++) {
         
-        double distance = hat_delta_p_u((*nodeItera).MIA);
-        (*nodeItera).influence = distance - 1;
-        cout<<"the weight of "<<(*nodeItera).number<<" is :"<<distance-1<<endl;
+		double distance = hat_delta_p_u((nodeItera->second).MIA);
+        (nodeItera->second).influence = distance - 1;
+        cout<<"the weight of "<<(nodeItera->second).number<<" is :"<<distance-1<<endl;
     }
 }
 
@@ -93,19 +108,17 @@ double hat_delta_p_u(Tree* tree)
 void Dijkstra(Node startNode,Tree* MIA)
 {
     //S记录已经存在在MIA模型中的节点
-    
-    vector<Node> S;
-    S.push_back(startNode);
+    map<int, Node> S;
+	S[startNode.number]=startNode;
     
     //构建优先队列从而挑选出当前到以后节点集合S中最小的路径，temp是用于辅助输出，可以没有。
     priority_queue<Edge*,vector<Edge*>,EdgeCompare> edges,temp;
-    vector<Edge*>::iterator iterEdge;
+    map<int,Edge*>::iterator iterEdge;
     
     //首先设置Node到自己的距离为1
     for(iterEdge = startNode.neighbourEdge.begin(); iterEdge != startNode.neighbourEdge.end(); iterEdge++){
-        (*iterEdge)->distance = 1;
-        //cout<<(*iterEdge)->sourceNode->number<<" number"<< endl;
-        edges.push(*iterEdge);
+		(iterEdge->second)->distance = 1;
+        edges.push(iterEdge->second);
     }
     
 
@@ -121,14 +134,14 @@ void Dijkstra(Node startNode,Tree* MIA)
         edges.pop();
  
         //边的两端只要有一个节点不在集合S中则加入MIA中
-        if(!findNode(S, *(edge)->targetNode) || !findNode(S, *(edge)->sourceNode)){
+		if(!findKey(S, edge->targetNodeId) || !findKey(S, edge->sourceNodeId)){
             
             //下面则是构建MIA模型中的一个点
             Tree* sourceNode = findNode(MIA,edge->sourceNode);
             Tree* treeNext = new Tree();
-            Node* targetNode = new Node();
-            targetNode->neighbourEdge = edge->targetNode->neighbourEdge;
-            targetNode->number = edge->targetNode->number;
+			Node* targetNode = new Node(*edge->targetNode);
+            //targetNode->neighbourEdge = edge->targetNode->neighbourEdge;
+            //targetNode->number = edge->targetNode->number;
             targetNode->currentStatus = initial;
             treeNext->node = targetNode;
             treeNext->node->weight = edge->weight;
@@ -137,14 +150,14 @@ void Dijkstra(Node startNode,Tree* MIA)
             sourceNode->nextNode.push_back(treeNext);
             
             sourceNode->node->dijkstraEdge.push_back(edge);
-            S.push_back(*edge->targetNode);
+            S[edge->targetNodeId] = *edge->targetNode;
             
             //这一步是对于新加入的点同时将这个点的可达的点全部加入Edge中
             for(iterEdge = edge->targetNode->neighbourEdge.begin(); iterEdge != edge->targetNode->neighbourEdge.end(); iterEdge ++)
             {
-                if(!findNode(S, *(*iterEdge)->targetNode) || !findNode(S, *(*iterEdge)->sourceNode)){
-                    (*iterEdge)->distance = (*iterEdge)->distance*sourceNode->node->influence;
-                    edges.push(*iterEdge);
+				if(!findKey(S, iterEdge->second->targetNodeId) || !findKey(S, iterEdge->second->sourceNodeId)){
+                    iterEdge->second->distance = iterEdge->second->distance*sourceNode->node->influence;
+                    edges.push(iterEdge->second);
                 }
             }
             
@@ -165,3 +178,5 @@ void Dijkstra(Node startNode,Tree* MIA)
     
     
 };
+
+

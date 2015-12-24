@@ -9,7 +9,7 @@
 #ifndef Graph_h
 #define Graph_h
 #include <vector>
-
+#include<map>
 #include <queue>
 #include "Node.hpp"
 #include "Edge.hpp"
@@ -24,8 +24,13 @@ class Graph{
     
 public:
     
+
+
+	Graph();
+
     //保存社交网络中所有的用户
-    vector<Node> nodes;
+    //vector<Node> nodes;
+	map<int, Node> nodes;
     
     //保存社交网络中所有的边
 	vector<Edge> edges;

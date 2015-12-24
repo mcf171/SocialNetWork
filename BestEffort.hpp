@@ -40,18 +40,18 @@ void precomputationBased(Graph& g);
 void preprocessOnline(Graph&g, Query q);
 
 void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H);
-double calDetaUSR(vector<Node>&V, double theta);
+double calDetaUSR(map<int, Node>&V, double theta);
 void adjustM(Node& oldNode, double new_inf, priority_queue<Node>& M);
 bool findNodeInM(const Node & findNode,  priority_queue<Node> M);
 
 double calPP(Node w, Node v);
 double prodChild(Tree* node,vector<Node>S);
-double calAP(Node& u, vector<Node> S, Query &q);
+double calAP(Node& u, map<int, Node> S, Query &q);
 
-double hat_delta_theta(Node u,vector<Node>S,Query q);
+double hat_delta_theta(Node u,map<int, Node>S,Query q);
 
-double delta_sigma_v_S_gamma(Node v, vector<Node> S_i, Query q, double theta, Graph g);
-double sigma(vector<Node> nodes, Graph g ,Query q);
-double CalcMargin(Node u, Graph g, double theta, Query gamma, vector<Node> S);
+double delta_sigma_v_S_gamma(Node v, map<int, Node> S_i, Query q, double theta, Graph g);
+double sigma(map<int, Node> nodes, Graph g ,Query q);
+double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S);
 
 #endif /* BestEffort_h */
