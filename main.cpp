@@ -19,7 +19,7 @@ using namespace std;
 
 void testBestEffort();
 
-Graph* getGraph();
+//Graph* getGraph();
 
 void testFindNode();
 
@@ -31,14 +31,14 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     
     
-    getGraph();
+    //getGraph();
     
 	//Graph g;
 	//topicSampleOffline(g, 0.1, 5, 0.5);
 
     return 0;
 }
-
+/*
 void testBestEffort()
 {
     Query q(3,0.01);
@@ -432,7 +432,7 @@ Graph* getGraph()
     precomputationBased(g);
     
     calculateGraph(g);
-    */
+
 
     Query q(3,0.01);
     double topicDistribution []= {0.2,0.8,0};
@@ -504,5 +504,7 @@ void testpriorityQueue()
      cout<< temp->influence<< ' ';
      bestEffort.L.pop();
      }
-     */
+     
 }
+
+*/
