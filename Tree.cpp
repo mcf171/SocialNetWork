@@ -42,7 +42,7 @@ Tree* findNode(Tree* tree, Node* node){
                 break;
             
             Tree* tempNode = *treeItero;
-            
+
             if(tempNode->node == node)
             {
                 result = tempNode;

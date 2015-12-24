@@ -132,7 +132,7 @@ void Dijkstra(Node startNode,Tree* MIA)
         
         Edge* edge = edges.top();
         edges.pop();
-        
+ 
         //边的两端只要有一个节点不在集合S中则加入MIA中
 		if(!findKey(S, edge->targetNodeId) || !findKey(S, edge->sourceNodeId)){
             
