@@ -71,7 +71,7 @@ void precomputationBased(Graph& g)
 		Node node = nodeIter->second;
         
         map<int, Edge*>::iterator edgeIter;
-        (*nodeIter).ap_node_S_gamma = 1.0;
+		nodeIter->second.ap_node_S_gamma = 1.0;
         //获取节点的每个邻边
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
 			Edge* edge = edgeIter->second;
@@ -299,11 +299,11 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,alg
             else if (exact == u.currentStatus)
             {
 				S[u.number]=u;
-                vector<Node>::iterator itertor;
+                map<int,Node>::iterator itertor;
                 for (itertor = g.nodes.begin(); itertor != g.nodes.end(); itertor ++) {
                     
-                    if(!findNode(S, *itertor))
-                       (*itertor).ap_node_S_gamma =  calAP(*itertor, S, q);
+					if(!findKey(S, itertor->second.number))
+                       itertor->second.ap_node_S_gamma =  calAP(itertor->second, S, q);
                     
                 }
                 
@@ -347,13 +347,13 @@ void initEdge(Graph g)
 }
 
 
-double sigma(vector<Node> nodes, Graph g ,Query q)
+double sigma(map<int, Node> nodes, Graph g ,Query q)
 {
     
-    vector<Node>::iterator itertor;
+    map<int, Node>::iterator itertor;
     double result = 0;
     for(itertor = g.nodes.begin(); itertor != g.nodes.end() ; itertor ++)
-        calAP(*itertor, nodes, q );
+        calAP(itertor->second, nodes, q );
     
     return 0;
 }
@@ -423,7 +423,7 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
 
 
 
-double delta_sigma_v_S_gamma(Node v, vector<Node> S_i, Query q, double theta, Graph g)
+double delta_sigma_v_S_gamma(Node v, map<int, Node> S_i, Query q, double theta, Graph g)
 {
     CalcMargin(v, g, theta, q, S_i);
     return 1;
@@ -460,7 +460,7 @@ double calAP(Node& u, map<int, Node> S, Query &q)
 {
         res = 1;
     }else{
-        if(findNode(S, u))
+		if(findKey(S, u.number))
             res = 1;
         else
         {

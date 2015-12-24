@@ -24,7 +24,7 @@ public:
     double epsilon;
 
 	//输出的结果
-	vector <int> S;
+	map <int, Node> S;
 	double sigma;
 
 
