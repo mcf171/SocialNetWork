@@ -90,7 +90,7 @@ double hat_delta_p_u(Tree* tree)
  * @param MIA，需要构建的MIA树
  * @param g 社交网络图
  */
-void Dijkstra(Node startNode,Tree* MIA)
+void Dijkstra(Node& startNode,Tree* MIA)
 {
     //S记录已经存在在MIA模型中的节点
     vector<Node> S;
@@ -146,7 +146,7 @@ void Dijkstra(Node startNode,Tree* MIA)
                 }
             }
             
-            /*
+            
             long size = edges.size();
             temp = edges;
             for(int i = 0 ; i < size; i ++)
@@ -156,7 +156,7 @@ void Dijkstra(Node startNode,Tree* MIA)
                 temp.pop();
             }
             cout<<"------"<<endl;
-            */
+            
             
         }
     }
