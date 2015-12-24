@@ -68,25 +68,37 @@ void testPriorityQueueEdge()
     edgeU1U3.distance = 0.5;
     edgeU1U3.sourceNode = &node1;
     edgeU1U3.targetNode = &node3;
-    edgeU1U3.realDistribution.push_back(0.4);
-    edgeU1U3.realDistribution.push_back(0.8);
-    edgeU1U3.realDistribution.push_back(0.3);
+    //edgeU1U3.realDistribution.push_back(0.4);
+    //edgeU1U3.realDistribution.push_back(0.8);
+    //edgeU1U3.realDistribution.push_back(0.3);
+	edgeU1U3.realDistribution=new double[3];
+	edgeU1U3.realDistribution[0]=0.4;
+	edgeU1U3.realDistribution[1]=0.8;
+	edgeU1U3.realDistribution[2]=0.3;
     
     Edge edgeU3U1;
     edgeU3U1.distance = 0.4;
     edgeU3U1.sourceNode = &node3;
     edgeU3U1.targetNode = &node1;
-    edgeU3U1.realDistribution.push_back(0.4);
-    edgeU3U1.realDistribution.push_back(0.8);
-    edgeU3U1.realDistribution.push_back(0.3);
+    //edgeU3U1.realDistribution.push_back(0.4);
+    //edgeU3U1.realDistribution.push_back(0.8);
+    //edgeU3U1.realDistribution.push_back(0.3);
+	edgeU3U1.realDistribution=new double[3];
+	edgeU3U1.realDistribution[0]=0.4;
+	edgeU3U1.realDistribution[1]=0.8;
+	edgeU3U1.realDistribution[2]=0.3;
     
     Edge edgeU1U2;
     edgeU1U2.distance = 0.6;
     edgeU1U2.sourceNode = &node1;
     edgeU1U2.targetNode = &node2;
-    edgeU1U2.realDistribution.push_back(0.7);
-    edgeU1U2.realDistribution.push_back(0.3);
-    edgeU1U2.realDistribution.push_back(0.0);
+    //edgeU1U2.realDistribution.push_back(0.7);
+    //edgeU1U2.realDistribution.push_back(0.3);
+    //edgeU1U2.realDistribution.push_back(0.0);
+	edgeU1U2.realDistribution=new double[3];
+	edgeU1U2.realDistribution[0]=0.7;
+	edgeU1U2.realDistribution[1]=0.3;
+	edgeU1U2.realDistribution[2]=0.0;
 
     Edge edgeU1U4;
     edgeU1U4.distance = 0.7;
@@ -128,157 +140,246 @@ void testEstInfUB()
     Edge edgeU1U3;
     edgeU1U3.sourceNode = &node1;
     edgeU1U3.targetNode = &node3;
-    edgeU1U3.realDistribution.push_back(0.4);
-    edgeU1U3.realDistribution.push_back(0.8);
-    edgeU1U3.realDistribution.push_back(0.3);
+    //edgeU1U3.realDistribution.push_back(0.4);
+    //edgeU1U3.realDistribution.push_back(0.8);
+    //edgeU1U3.realDistribution.push_back(0.3);
+	edgeU1U3.realDistribution=new double[3];
+	edgeU1U3.realDistribution[0]=0.4;
+	edgeU1U3.realDistribution[1]=0.8;
+	edgeU1U3.realDistribution[2]=0.3;
     
     Edge edgeU3U1;
     edgeU3U1.sourceNode = &node3;
     edgeU3U1.targetNode = &node1;
-    edgeU3U1.realDistribution.push_back(0.4);
-    edgeU3U1.realDistribution.push_back(0.8);
-    edgeU3U1.realDistribution.push_back(0.3);
+    //edgeU3U1.realDistribution.push_back(0.4);
+    //edgeU3U1.realDistribution.push_back(0.8);
+    //edgeU3U1.realDistribution.push_back(0.3);
+	edgeU3U1.realDistribution=new double[3];
+	edgeU3U1.realDistribution[0]=0.4;
+	edgeU3U1.realDistribution[1]=0.8;
+	edgeU3U1.realDistribution[2]=0.3;
     
     Edge edgeU1U2;
     edgeU1U2.sourceNode = &node1;
     edgeU1U2.targetNode = &node2;
-    edgeU1U2.realDistribution.push_back(0.7);
-    edgeU1U2.realDistribution.push_back(0.3);
-    edgeU1U2.realDistribution.push_back(0.0);
-    
+    //edgeU1U2.realDistribution.push_back(0.7);
+    //edgeU1U2.realDistribution.push_back(0.3);
+    //edgeU1U2.realDistribution.push_back(0.0);
+    edgeU1U2.realDistribution=new double[3];
+	edgeU1U2.realDistribution[0]=0.7;
+	edgeU1U2.realDistribution[1]=0.3;
+	edgeU1U2.realDistribution[2]=0.0;
+
+
     Edge edgeU2U1;
     edgeU2U1.targetNode = &node1;
     edgeU2U1.sourceNode = &node2;
-    edgeU2U1.realDistribution.push_back(0.7);
-    edgeU2U1.realDistribution.push_back(0.3);
-    edgeU2U1.realDistribution.push_back(0.0);
+    //edgeU2U1.realDistribution.push_back(0.7);
+    //edgeU2U1.realDistribution.push_back(0.3);
+    //edgeU2U1.realDistribution.push_back(0.0);
+	edgeU2U1.realDistribution=new double[3];
+	edgeU2U1.realDistribution[0]=0.7;
+	edgeU2U1.realDistribution[1]=0.3;
+	edgeU2U1.realDistribution[2]=0.0;
     
     Edge edgeU1U5;
     edgeU1U5.sourceNode = &node1;
     edgeU1U5.targetNode = &node5;
-    edgeU1U5.realDistribution.push_back(0.6);
-    edgeU1U5.realDistribution.push_back(0.0);
-    edgeU1U5.realDistribution.push_back(0.5);
-    
+    //edgeU1U5.realDistribution.push_back(0.6);
+    //edgeU1U5.realDistribution.push_back(0.0);
+    //edgeU1U5.realDistribution.push_back(0.5);
+    edgeU1U5.realDistribution=new double[3];
+	edgeU1U5.realDistribution[0]=0.6;
+	edgeU1U5.realDistribution[1]=0.0;
+	edgeU1U5.realDistribution[2]=0.5;
+
     Edge edgeU5U1;
     edgeU5U1.sourceNode = &node5;
     edgeU5U1.targetNode = &node1;
-    edgeU5U1.realDistribution.push_back(0.6);
-    edgeU5U1.realDistribution.push_back(0.0);
-    edgeU5U1.realDistribution.push_back(0.5);
+    //edgeU5U1.realDistribution.push_back(0.6);
+    //edgeU5U1.realDistribution.push_back(0.0);
+    //edgeU5U1.realDistribution.push_back(0.5);
+	edgeU5U1.realDistribution=new double[3];
+	edgeU5U1.realDistribution[0]=0.6;
+	edgeU5U1.realDistribution[1]=0.0;
+	edgeU5U1.realDistribution[2]=0.5;
     
     Edge edgeU2U3;
     edgeU2U3.sourceNode = &node2;
     edgeU2U3.targetNode = &node3;
-    edgeU2U3.realDistribution.push_back(0.6);
-    edgeU2U3.realDistribution.push_back(0.7);
-    edgeU2U3.realDistribution.push_back(0.5);
-    
+    //edgeU2U3.realDistribution.push_back(0.6);
+    //edgeU2U3.realDistribution.push_back(0.7);
+    //edgeU2U3.realDistribution.push_back(0.5);
+    edgeU2U3.realDistribution=new double[3];
+	edgeU2U3.realDistribution[0]=0.6;
+	edgeU2U3.realDistribution[1]=0.7;
+	edgeU2U3.realDistribution[2]=0.5;
+
     Edge edgeU3U2;
     edgeU3U2.sourceNode = &node3;
     edgeU3U2.targetNode = &node2;
-    edgeU3U2.realDistribution.push_back(0.6);
-    edgeU3U2.realDistribution.push_back(0.7);
-    edgeU3U2.realDistribution.push_back(0.5);
-    
+    //edgeU3U2.realDistribution.push_back(0.6);
+    //edgeU3U2.realDistribution.push_back(0.7);
+    //edgeU3U2.realDistribution.push_back(0.5);
+    edgeU3U2.realDistribution=new double[3];
+	edgeU3U2.realDistribution[0]=0.6;
+	edgeU3U2.realDistribution[1]=0.7;
+	edgeU3U2.realDistribution[2]=0.5;
+
     Edge edgeU2U6;
     edgeU2U6.sourceNode = &node2;
     edgeU2U6.targetNode = &node6;
-    edgeU2U6.realDistribution.push_back(0.5);
-    edgeU2U6.realDistribution.push_back(0.1);
-    edgeU2U6.realDistribution.push_back(0.3);
-    
+    //edgeU2U6.realDistribution.push_back(0.5);
+    //edgeU2U6.realDistribution.push_back(0.1);
+    //edgeU2U6.realDistribution.push_back(0.3);
+    edgeU2U6.realDistribution=new double[3];
+	edgeU2U6.realDistribution[0]=0.5;
+	edgeU2U6.realDistribution[1]=0.1;
+	edgeU2U6.realDistribution[2]=0.3;
+
     Edge edgeU6U2;
     edgeU6U2.sourceNode = &node6;
     edgeU6U2.targetNode = &node2;
-    edgeU6U2.realDistribution.push_back(0.5);
-    edgeU6U2.realDistribution.push_back(0.1);
-    edgeU6U2.realDistribution.push_back(0.3);
-    
+    //edgeU6U2.realDistribution.push_back(0.5);
+    //edgeU6U2.realDistribution.push_back(0.1);
+    //edgeU6U2.realDistribution.push_back(0.3);
+    edgeU6U2.realDistribution=new double[3];
+	edgeU6U2.realDistribution[0]=0.5;
+	edgeU6U2.realDistribution[1]=0.1;
+	edgeU6U2.realDistribution[2]=0.3;
+
     Edge edgeU2U7;
     edgeU2U7.sourceNode = &node2;
     edgeU2U7.targetNode = &node7;
-    edgeU2U7.realDistribution.push_back(0.8);
-    edgeU2U7.realDistribution.push_back(0.0);
-    edgeU2U7.realDistribution.push_back(0.4);
-    
+    //edgeU2U7.realDistribution.push_back(0.8);
+    //edgeU2U7.realDistribution.push_back(0.0);
+    //edgeU2U7.realDistribution.push_back(0.4);
+    edgeU2U7.realDistribution=new double[3];
+	edgeU2U7.realDistribution[0]=0.8;
+	edgeU2U7.realDistribution[1]=0.0;
+	edgeU2U7.realDistribution[2]=0.4;
+
     Edge edgeU7U2;
     edgeU7U2.sourceNode = &node7;
     edgeU7U2.targetNode = &node2;
-    edgeU7U2.realDistribution.push_back(0.8);
-    edgeU7U2.realDistribution.push_back(0.0);
-    edgeU7U2.realDistribution.push_back(0.4);
-    
+    //edgeU7U2.realDistribution.push_back(0.8);
+    //edgeU7U2.realDistribution.push_back(0.0);
+    //edgeU7U2.realDistribution.push_back(0.4);
+    edgeU7U2.realDistribution=new double[3];
+	edgeU7U2.realDistribution[0]=0.8;
+	edgeU7U2.realDistribution[1]=0.0;
+	edgeU7U2.realDistribution[2]=0.4;
+
     Edge edgeU3U4;
     edgeU3U4.sourceNode = &node3;
     edgeU3U4.targetNode = &node4;
-    edgeU3U4.realDistribution.push_back(0.1);
-    edgeU3U4.realDistribution.push_back(0.4);
-    edgeU3U4.realDistribution.push_back(0.3);
-    
+    //edgeU3U4.realDistribution.push_back(0.1);
+    //edgeU3U4.realDistribution.push_back(0.4);
+    //edgeU3U4.realDistribution.push_back(0.3);
+    edgeU3U4.realDistribution=new double[3];
+	edgeU3U4.realDistribution[0]=0.1;
+	edgeU3U4.realDistribution[1]=0.4;
+	edgeU3U4.realDistribution[2]=0.3;
+
     Edge edgeU4U3;
     edgeU4U3.sourceNode = &node4;
     edgeU4U3.targetNode = &node3;
-    edgeU4U3.realDistribution.push_back(0.1);
-    edgeU4U3.realDistribution.push_back(0.4);
-    edgeU4U3.realDistribution.push_back(0.3);
-    
+    //edgeU4U3.realDistribution.push_back(0.1);
+    //edgeU4U3.realDistribution.push_back(0.4);
+    //edgeU4U3.realDistribution.push_back(0.3);
+    edgeU4U3.realDistribution=new double[3];
+	edgeU4U3.realDistribution[0]=0.1;
+	edgeU4U3.realDistribution[1]=0.4;
+	edgeU4U3.realDistribution[2]=0.3;
+
     Edge edgeU4U5;
     edgeU4U5.sourceNode = &node4;
     edgeU4U5.targetNode = &node5;
-    edgeU4U5.realDistribution.push_back(0.0);
-    edgeU4U5.realDistribution.push_back(0.5);
-    edgeU4U5.realDistribution.push_back(0.6);
-    
+    //edgeU4U5.realDistribution.push_back(0.0);
+    //edgeU4U5.realDistribution.push_back(0.5);
+    //edgeU4U5.realDistribution.push_back(0.6);
+    edgeU4U5.realDistribution=new double[3];
+	edgeU4U5.realDistribution[0]=0.0;
+	edgeU4U5.realDistribution[1]=0.5;
+	edgeU4U5.realDistribution[2]=0.6;
+
     Edge edgeU5U4;
     edgeU5U4.sourceNode = &node5;
     edgeU5U4.targetNode = &node4;
-    edgeU5U4.realDistribution.push_back(0.0);
-    edgeU5U4.realDistribution.push_back(0.5);
-    edgeU5U4.realDistribution.push_back(0.6);
-    
+    //edgeU5U4.realDistribution.push_back(0.0);
+    //edgeU5U4.realDistribution.push_back(0.5);
+    //edgeU5U4.realDistribution.push_back(0.6);
+    edgeU5U4.realDistribution=new double[3];
+	edgeU5U4.realDistribution[0]=0.0;
+	edgeU5U4.realDistribution[1]=0.5;
+	edgeU5U4.realDistribution[2]=0.6;
+
     Edge edgeU4U8;
     edgeU4U8.sourceNode = &node4;
     edgeU4U8.targetNode = &node8;
-    edgeU4U8.realDistribution.push_back(0.0);
-    edgeU4U8.realDistribution.push_back(0.0);
-    edgeU4U8.realDistribution.push_back(0.7);
-    
+    //edgeU4U8.realDistribution.push_back(0.0);
+    //edgeU4U8.realDistribution.push_back(0.0);
+    //edgeU4U8.realDistribution.push_back(0.7);
+    edgeU4U8.realDistribution=new double[3];
+	edgeU4U8.realDistribution[0]=0.0;
+	edgeU4U8.realDistribution[1]=0.0;
+	edgeU4U8.realDistribution[2]=0.7;
+
     Edge edgeU8U4;
     edgeU8U4.sourceNode = &node8;
     edgeU8U4.targetNode = &node4;
-    edgeU8U4.realDistribution.push_back(0.0);
-    edgeU8U4.realDistribution.push_back(0.0);
-    edgeU8U4.realDistribution.push_back(0.7);
-    
+    //edgeU8U4.realDistribution.push_back(0.0);
+    //edgeU8U4.realDistribution.push_back(0.0);
+    //edgeU8U4.realDistribution.push_back(0.7);
+    edgeU8U4.realDistribution=new double[3];
+	edgeU8U4.realDistribution[0]=0.0;
+	edgeU8U4.realDistribution[1]=0.0;
+	edgeU8U4.realDistribution[2]=0.7;
+
     Edge edgeU6U7;
     edgeU6U7.sourceNode = &node6;
     edgeU6U7.targetNode = &node7;
-    edgeU6U7.realDistribution.push_back(0.6);
-    edgeU6U7.realDistribution.push_back(0.0);
-    edgeU6U7.realDistribution.push_back(0.2);
-    
+    //edgeU6U7.realDistribution.push_back(0.6);
+    //edgeU6U7.realDistribution.push_back(0.0);
+    //edgeU6U7.realDistribution.push_back(0.2);
+    edgeU6U7.realDistribution=new double[3];
+	edgeU6U7.realDistribution[0]=0.6;
+	edgeU6U7.realDistribution[1]=0.0;
+	edgeU6U7.realDistribution[2]=0.2;
+
     Edge edgeU7U6;
     edgeU7U6.sourceNode = &node7;
     edgeU7U6.targetNode = &node6;
-    edgeU7U6.realDistribution.push_back(0.6);
-    edgeU7U6.realDistribution.push_back(0.0);
-    edgeU7U6.realDistribution.push_back(0.2);
-    
+    //edgeU7U6.realDistribution.push_back(0.6);
+    //edgeU7U6.realDistribution.push_back(0.0);
+    //edgeU7U6.realDistribution.push_back(0.2);
+    edgeU7U6.realDistribution=new double[3];
+	edgeU7U6.realDistribution[0]=0.6;
+	edgeU7U6.realDistribution[1]=0.0;
+	edgeU7U6.realDistribution[2]=0.2;
+
     Edge edgeU7U8;
     edgeU7U8.sourceNode = &node7;
     edgeU7U8.targetNode = &node8;
-    edgeU7U8.realDistribution.push_back(0.1);
-    edgeU7U8.realDistribution.push_back(0.0);
-    edgeU7U8.realDistribution.push_back(0.8);
-    
+    //edgeU7U8.realDistribution.push_back(0.1);
+    //edgeU7U8.realDistribution.push_back(0.0);
+    //edgeU7U8.realDistribution.push_back(0.8);
+    edgeU7U8.realDistribution=new double[3];
+	edgeU7U8.realDistribution[0]=0.1;
+	edgeU7U8.realDistribution[1]=0.0;
+	edgeU7U8.realDistribution[2]=0.8;
+
     Edge edgeU8U7;
     edgeU8U7.sourceNode = &node8;
     edgeU8U7.targetNode = &node7;
-    edgeU8U7.realDistribution.push_back(0.1);
-    edgeU8U7.realDistribution.push_back(0.0);
-    edgeU8U7.realDistribution.push_back(0.8);
-    
+    //edgeU8U7.realDistribution.push_back(0.1);
+    //edgeU8U7.realDistribution.push_back(0.0);
+    //edgeU8U7.realDistribution.push_back(0.8);
+    edgeU8U7.realDistribution=new double[3];
+	edgeU8U7.realDistribution[0]=0.1;
+	edgeU8U7.realDistribution[1]=0.0;
+	edgeU8U7.realDistribution[2]=0.8;
+
     node1.neighbourEdge.push_back(&edgeU1U3);
     node1.neighbourEdge.push_back(&edgeU1U2);
     node1.neighbourEdge.push_back(&edgeU1U5);

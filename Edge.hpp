@@ -22,7 +22,7 @@ public:
     
     Node* targetNode;
     //topic分布
-    vector<double> realDistribution;
+    double* realDistribution;
     Node* sourceNode;
     
     double weight;

@@ -324,7 +324,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 				double minsig = INFMAX;
 				for (int i = 0; i < PL.size(); i++)
 				{
-					double sig = delta_sigma_v_S_gama(PL[i], S_i, q.topicDistribution);
+					double sig = delta_sigma_v_S_gamma(PL[i], S_i, q.topicDistribution);
 					if(sig<minsig){
 						minsig=sig;
 						minlocation=i;

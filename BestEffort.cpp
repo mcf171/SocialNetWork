@@ -64,12 +64,17 @@ void precomputationBased(Graph& g)
         vector<Edge*>::iterator edgeIter;
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
             Edge* edge = *edgeIter;
-            vector<double>::iterator distanceIter;
+            //vector<double>::iterator distanceIter;
             double maxDistance = 0;
-            for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
-                if(*distanceIter > maxDistance)
-                    maxDistance = *distanceIter;
-            }
+            //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
+            //    if(*distanceIter > maxDistance)
+            //        maxDistance = *distanceIter;
+            //}
+			for (int i = 0; i < DIM; i++)
+			{
+				if(edge->realDistribution[i] > maxDistance)
+                    maxDistance = edge->realDistribution[i];
+			}
             edge->distance = maxDistance;
             edge->weight = maxDistance;
         }
@@ -104,12 +109,17 @@ void localGraphBased(Graph& g,double theta, Query q)
         vector<Edge*>::iterator edgeIter;
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
             Edge* edge = *edgeIter;
-            vector<double>::iterator distanceIter;
+            //vector<double>::iterator distanceIter;
             double maxDistance = 0;
-            for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
-                if(*distanceIter > maxDistance)
-                    maxDistance = *distanceIter;
-            }
+            //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
+            //    if(*distanceIter > maxDistance)
+            //        maxDistance = *distanceIter;
+            //}
+			for (int i = 0; i < DIM; i++)
+			{
+				if(edge->realDistribution[i] > maxDistance)
+                    maxDistance = edge->realDistribution[i];
+			}
             edge->distance = maxDistance;
             edge->weight = maxDistance;
         }
@@ -146,12 +156,17 @@ void neighborhoodBased(Graph& g)
         vector<Edge*>::iterator edgeIter;
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
             Edge* edge = *edgeIter;
-            vector<double>::iterator distanceIter;
+            //vector<double>::iterator distanceIter;
             double maxDistance = 0;
-            for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
-                if(*distanceIter > maxDistance)
-                    maxDistance = *distanceIter;
-            }
+            //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
+            //    if(*distanceIter > maxDistance)
+            //        maxDistance = *distanceIter;
+            //}
+			for (int i = 0; i < DIM; i++)
+			{
+				if(edge->realDistribution[i] > maxDistance)
+                    maxDistance = edge->realDistribution[i];
+			}
             edge->distance = maxDistance;
             edge->weight = maxDistance;
         }

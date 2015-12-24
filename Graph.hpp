@@ -11,6 +11,9 @@
 #include <vector>
 
 #include <queue>
+#include "Node.hpp";
+#include "Edge.hpp";
+#include "Tree.hpp";
 
 using namespace std;
 
@@ -20,10 +23,9 @@ class Edge;
 class Graph{
     
 public:
-    
     vector<Node> nodes;
-    vector<Edge> edges;
-    Node findNode(int number);
+	vector<Edge> edges;
+	Node findNode(int number);
     Edge findeEdgeFromTwoNode(Node sourceNode, Node targetNode);
 };
 
@@ -37,7 +39,7 @@ double hat_delta_p_u(Tree* tree);
 
 //double delta_sigma_v_S_gama(Tree* tree,vector<Node> S_i, vector<double> gamma);
 
-double delta_sigma_v_S_gama(Node v, vector<Node> S_i, double* gamma);
+double delta_sigma_v_S_gamma(Node v, vector<Node> S_i, double* gamma);
 
 double sigma(vector<Node> nodes, Graph g);
 
