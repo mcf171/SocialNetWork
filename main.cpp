@@ -35,7 +35,8 @@ int main(int argc, const char * argv[]) {
     //te = *test;
     //
     testEstInfUB();
-    double result = 0.46*0.25088+0.72*0.7308+0.4*1.08227+0.4*1.30157 + 0.46+0.72+0.4+0.4;
+    double result = 0.8+0.7+0.6+0.36+0.56+0.35+0.448;
+//    double result = 0.46*0.25088+0.72*0.7308+0.4*1.08227+0.4*1.30157 + 0.46+0.72+0.4+0.4;
     cout<<result <<endl;
 	//Graph g;
 	//topicSampleOffline(g, 0.1, 5, 0.5);
@@ -420,18 +421,19 @@ void testEstInfUB()
     g.nodes.push_back(node7);
     g.nodes.push_back(node8);
     
-    /*
+    
     
     precomputationBased(g);
     
     calculateGraph(g);
-    */
-
+    
+/*
     Node test = g.findNode(1);
     Query q(3,0.01);
     double topicDistribution []= {0.2,0.8,0};
     q.topicDistribution = topicDistribution;
     localGraphBased(g, 0.4,q);
+ */
     cout<<"test"<<endl;
     
 }

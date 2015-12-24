@@ -11,5 +11,5 @@
 
 enum status {initial, bounded, exact};
 
-
+enum algorithm {precomputation, localGraph, neighborhood};
 #endif /* ConstantFile_h */
