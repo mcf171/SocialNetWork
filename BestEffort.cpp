@@ -95,7 +95,7 @@ void precomputationBased(Graph& g)
         
 		Dijkstra(g, nodeIter->second,nodeIter->second.MIA);
         
-        cout<<g.nodes[1].MIA->node->number<<endl;
+        //cout<<g.nodes[1].MIA->node->number<<endl;
     }
     calculateGraph(g);
     

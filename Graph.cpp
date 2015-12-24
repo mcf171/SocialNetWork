@@ -107,25 +107,28 @@ double hat_delta_p_u(Tree* tree)
  * @param MIA，需要构建的MIA树
  * @param g 社交网络图
  */
-void Dijkstra(Graph g,Node startNode,Tree* MIA)
+void Dijkstra(Graph g, Node inputNode,Tree* MIA)
 {
     //S记录已经存在在MIA模型中的节点
+
+	Node* startNode = new Node(inputNode);
+
     map<int, Node> S;
-	S[startNode.number]=startNode;
+	S[startNode->number]=*startNode;
     
     //构建优先队列从而挑选出当前到以后节点集合S中最小的路径，temp是用于辅助输出，可以没有。
     priority_queue<Edge*,vector<Edge*>,EdgeCompare> edges,temp;
     map<int,Edge*>::iterator iterEdge;
     
     //首先设置Node到自己的距离为1
-    for(iterEdge = startNode.neighbourEdge.begin(); iterEdge != startNode.neighbourEdge.end(); iterEdge++){
+    for(iterEdge = startNode->neighbourEdge.begin(); iterEdge != startNode->neighbourEdge.end(); iterEdge++){
 		(iterEdge->second)->distance = 1;
         edges.push(iterEdge->second);
     }
     
 
     //初始化MIA的第一个节点为自己
-    MIA->node = &startNode;
+    MIA->node = startNode;
     MIA->node->influence = 1;
     
     //当还存在边的时候，即可能还有节点可以加入S时进行循环构建
