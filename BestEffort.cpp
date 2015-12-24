@@ -22,7 +22,7 @@ double hat_delta_theta(Node u,map<int, Node>S,Query q)
     
     if (S.size() != 0) {
         
-        result = (1-calAP(u, S, q))*result;
+        result = (1-u.ap_node_S_gamma)*result;
     }
     
     return  result;
@@ -71,7 +71,7 @@ void precomputationBased(Graph& g)
 		Node node = nodeIter->second;
         
         map<int, Edge*>::iterator edgeIter;
-        
+        (*nodeIter).ap_node_S_gamma = 1.0;
         //获取节点的每个邻边
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
 			Edge* edge = edgeIter->second;
@@ -85,6 +85,7 @@ void precomputationBased(Graph& g)
 			}
             edge->distance = maxDistance;
             edge->weight = maxDistance;
+            edge->isVisited = false;
         }
     }
     
@@ -119,7 +120,9 @@ void getLocalGraph(Tree tree,double theta,vector<Node> &nodes){
 void localGraphBased(Graph& g,double theta, Query q)
 {
     map<int, Node>::iterator nodeIter;
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
+    precomputationBased(g);
+/*
+for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
 		Node node = nodeIter->second;
         
         map<int,Edge*>::iterator edgeIter;
@@ -140,6 +143,8 @@ void localGraphBased(Graph& g,double theta, Query q)
             edge->weight = maxDistance;
         }
     }
+*/
+
     //得到每个User的hat_gama;
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
@@ -263,7 +268,7 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,alg
     //K次循环找到所有合适的种子
     for (int i = 0; i < q.k ; i++)
     {
-        vector<Node>::iterator itertor;
+
         
         while (!H.empty())
         {
@@ -294,7 +299,14 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,alg
             else if (exact == u.currentStatus)
             {
 				S[u.number]=u;
-                updateAP();
+                vector<Node>::iterator itertor;
+                for (itertor = g.nodes.begin(); itertor != g.nodes.end(); itertor ++) {
+                    
+                    if(!findNode(S, *itertor))
+                       (*itertor).ap_node_S_gamma =  calAP(*itertor, S, q);
+                    
+                }
+                
                 break;
             }
         }//end while    
@@ -335,6 +347,17 @@ void initEdge(Graph g)
 }
 
 
+double sigma(vector<Node> nodes, Graph g ,Query q)
+{
+    
+    vector<Node>::iterator itertor;
+    double result = 0;
+    for(itertor = g.nodes.begin(); itertor != g.nodes.end() ; itertor ++)
+        calAP(*itertor, nodes, q );
+    
+    return 0;
+}
+
 /*
 	CALCMARGIN
  */
@@ -370,17 +393,11 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
 					break;
 				}
 			}
-			//TODO:visited
+
 			if(pedge && pedge->isVisited){
 				continue;
 			}
 
-            //Edge edge = g.findeEdgeFromTwoNode(w, v);
-            //if(edge.isVisited)
-            //Node v = *(edge.targetNode);
-            //Node old_v = v;
-            //if (edge.isVisited)
-            //    continue;
             
             double influence = w.influence * calPP(w, v);
             
@@ -392,8 +409,6 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
                 if (!findNodeInM(v, M))
                     M.push(v);
                 else
-                    //adjustM(old_v, influence, M);
-					//TODO: ??????
 					adjustM(v, influence, M);
             }
         }
@@ -406,12 +421,12 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
 
 
 
-/*
-	Update ap(v|S,r) for each v in V - S
- */
-void updateAP()
+
+
+double delta_sigma_v_S_gamma(Node v, vector<Node> S_i, Query q, double theta, Graph g)
 {
-    //TODO
+    CalcMargin(v, g, theta, q, S_i);
+    return 1;
 }
 
 double prodChild(Tree* node,map<int, Node> S)
@@ -440,13 +455,18 @@ double calAP(Node& u, map<int, Node> S, Query &q)
 {
     double res = 0.0;
     
-    if(findKey(S, u.number))
+    if (S.size() == 0) 
+//if(findKey(S, u.number))
+{
         res = 1;
-    else
-    {
-        res = prodChild(u.MIA, S);
+    }else{
+        if(findNode(S, u))
+            res = 1;
+        else
+        {
+            res = prodChild(u.MIA, S);
+        }
     }
-    
     return res;
 }
 

@@ -50,7 +50,8 @@ double calAP(Node& u, map<int, Node> S, Query &q);
 
 double hat_delta_theta(Node u,map<int, Node>S,Query q);
 
-void updateAP();
+double delta_sigma_v_S_gamma(Node v, vector<Node> S_i, Query q, double theta, Graph g);
+double sigma(vector<Node> nodes, Graph g ,Query q);
 double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S);
 
 #endif /* BestEffort_h */

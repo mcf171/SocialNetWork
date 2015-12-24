@@ -42,6 +42,7 @@ public:
     double weight;
     double influence;
     
+    double ap_node_S_gamma;
     double hat_delta_sigma_p;
     //Node在图中的序号
     int number;
