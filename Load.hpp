@@ -1,17 +1,7 @@
 #ifndef Load_h
 #define Load_h
 
-#define NNODE 10
-#define NEDGE 35
-#define NSAMPLE 500
-#define DIM 3
 
-#define NODE_PATH "../SocialNetWorkGit/data/nodetest.txt"
-#define EDGE_PATH "../SocialNetWorkGit/data/edgetest.txt"
-#define PROP_PATH "../SocialNetWorkGit/data/proptest.txt"
-#define SAMPLE_PATH "../SocialNetWorkGit/data/samples.txt"
-
-#define INFMAX 100000000
 
 #include <vector>
 #include <iostream>
@@ -20,6 +10,7 @@
 #include <string> 
 #include <fstream>
 #include <sstream>
+#include "ConstantFile.h"
 
 using namespace std;
 

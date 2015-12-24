@@ -22,6 +22,10 @@ Edge::Edge(int idnum, Node* source, Node* target, double* realdistribution)
 	this->targetNodeId = target->number;
 	this->realDistribution = realdistribution;
 	source->insertEdge(this->targetNodeId, this);
+
+	this->weight=0;
+    this->distance=INFMAX;
+    this->isVisited=false;
 }
 
 bool Edge::operator == (const Edge& target)
