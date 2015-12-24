@@ -160,7 +160,6 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		//TODO:Save
 		fout<<topicDistributions[i].sigma;
 		for (int j = 0; j < topicDistributions[i].S.size(); j++)
 		{
@@ -246,7 +245,6 @@ vector<Query> loadSampleOfflineResult(double theta, int K, double Epsilon)
 
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		//TODO:Save
 		Query q(K,Epsilon);
 		fin>>q.sigma;
 		for (int j = 0; j < K; j++)
