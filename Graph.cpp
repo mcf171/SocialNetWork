@@ -100,7 +100,7 @@ void calculateGraph(Graph& g)
         
 		double distance = hat_delta_p_u((nodeItera->second).MIA);
         (nodeItera->second).influence = distance - 1;
-        cout<<"the weight of "<<(nodeItera->second).number<<" is :"<<distance-1<<endl;
+       // cout<<"the weight of "<<(nodeItera->second).number<<" is :"<<distance-1<<endl;
     }
 }
 
