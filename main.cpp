@@ -36,6 +36,8 @@ int main(int argc, const char * argv[]) {
 	//Graph g;
 	//topicSampleOffline(g, 0.1, 5, 0.5);
 
+	Graph g;
+
     return 0;
 }
 /*
