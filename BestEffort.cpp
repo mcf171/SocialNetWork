@@ -369,6 +369,7 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, vector<Node> S)
 					break;
 				}
 			}
+			//TODO:visited
 			if(pedge && pedge->isVisited){
 				continue;
 			}
