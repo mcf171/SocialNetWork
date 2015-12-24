@@ -19,10 +19,12 @@ class Query{
     
 public:
 	    
-	//vector<double> topicDistribution;
+	//参数
 	double* topicDistribution;
     int k;//number of seed
     double epsilon;
+
+	//输出的结果
 	vector <int> S;
 	double sigma;
 
