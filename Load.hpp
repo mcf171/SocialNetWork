@@ -6,9 +6,9 @@
 #define NSAMPLE 500
 #define DIM 3
 
-#define NODE_PATH "../SocialNetWorkGit/data/nodetest.txt"
-#define EDGE_PATH "../SocialNetWorkGit/data/edgetest.txt"
-#define PROP_PATH "../SocialNetWorkGit/data/proptest.txt"
+#define NODE_PATH "../SocialNetWorkGit/data/paper_nodetest.txt"
+#define EDGE_PATH "../SocialNetWorkGit/data/paper_edgetest.txt"
+#define PROP_PATH "../SocialNetWorkGit/data/paper_proptest.txt"
 #define SAMPLE_PATH "../SocialNetWorkGit/data/samples.txt"
 
 #define INFMAX 100000000
