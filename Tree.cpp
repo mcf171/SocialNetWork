@@ -15,16 +15,54 @@ Tree::~Tree()
 
 }
 
-void Tree::getAllNode(vector<Node> &nodes)
+void Tree::getAllNode(vector<Node> &nodes,Node node)
 {
     
-    nodes.push_back(*this->node);
-    
+    if (this->node->number != node.number) {
+        
+        nodes.push_back(*this->node);
+    }
     for (auto treeNext : this->nextNode)
     {
-        treeNext->getAllNode(nodes);
+        treeNext->getAllNode(nodes,node);
     }
+}
+
+
+Tree* findNodes(Tree* tree, Node* node){
     
+    Tree* result = nullptr;
+    vector<Tree*> nextNode = tree->nextNode;
+    vector<Tree*>::iterator treeItero;
+    bool exist = false;
+
+    
+    if(findKey(tree->seeds, node->number))
+        result = tree;
+    else
+        for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++) {
+            
+            if(exist)
+                break;
+            
+            Tree* tempNode = *treeItero;
+            
+            if(tempNode->node == node)
+            {
+                result = tempNode;
+                
+            }else{
+                
+                result = findNode(tempNode,node);
+                
+            }
+            if (result != nullptr) {
+                exist = true;
+                break;
+            }
+            
+        }
+    return result;
 }
 
 Tree* findNode(Tree* tree, Node* node){

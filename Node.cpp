@@ -37,7 +37,7 @@ void Node::insertEdge(int targetPoint, Edge* edge)
 {
 	this->neighbourEdge[targetPoint]=edge;
 }
-/*
+
 bool findNode(vector<Node> nodes, Node node)
 {
     
@@ -49,7 +49,7 @@ bool findNode(vector<Node> nodes, Node node)
     return exists;
     
 }
-*/
+
 bool findKey(map<int, Node> S, int key)
 {
 	map<int, Node>::iterator iter = S.find(key);

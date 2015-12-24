@@ -43,7 +43,8 @@ int main(int argc, const char * argv[]) {
     double topicDistribution []= {0.2,0.8,0};
     q.topicDistribution = topicDistribution;
     
-//    bestEffort(g, q, 0.4, precomputation);
-    precomputationBased(g);
+   map<int, Node>* S =  bestEffort(g, q, 0.4, precomputation);
+    
+//    precomputationBased(g);
     return 0;
 }

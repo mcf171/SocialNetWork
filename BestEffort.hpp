@@ -31,10 +31,11 @@ void getLocalGraph(Tree tree,double theta,vector<Node> &nodes);
 void localGraphBased(Graph& g,double theta,Query q);
 void neighborhoodBased(Graph& g);
 double estInfUB(Node node, Graph g, double theta);
-void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,algorithm chooseAlgorithm);
-void bestEffortOnline(Graph g ,Query q, double theta,algorithm chooseAlgorithm);
 
-vector<Node> bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorithm);
+void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,algorithm chooseAlgorithm);
+map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,algorithm chooseAlgorithm);
+
+map<int, Node>* bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorithm);
 
 void precomputationBased(Graph& g);
 void preprocessOnline(Graph&g, Query q);
@@ -44,11 +45,13 @@ double calDetaUSR(map<int, Node>&V, double theta);
 void adjustM(Node& oldNode, double new_inf, priority_queue<Node>& M);
 bool findNodeInM(const Node & findNode,  priority_queue<Node> M);
 
-double calPP(Node w, Node v);
-double prodChild(Tree* node,vector<Node>S);
+double calPP(Edge edge, Query q);
+double calPP(Node sourceNode,Node targetNode, Query q);
+
+double prodChild(Tree* node,map<int, Node> S,Query q);
 double calAP(Node& u, map<int, Node> S, Query &q);
 
-double hat_delta_theta(Node u,map<int, Node>S,Query q);
+double hat_delta_sigma(Node u,map<int, Node>S,Query q, algorithm choosAlgorithm);
 
 double delta_sigma_v_S_gamma(Node v, map<int, Node> S_i, Query q, double theta, Graph g);
 double sigma(map<int, Node> nodes, Graph g ,Query q);
