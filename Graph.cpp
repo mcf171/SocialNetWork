@@ -90,9 +90,10 @@ double hat_delta_p_u(Tree* tree)
  * @param MIA，需要构建的MIA树
  * @param g 社交网络图
  */
-void Dijkstra(Node& startNode,Tree* MIA)
+void Dijkstra(Node startNode,Tree* MIA)
 {
     //S记录已经存在在MIA模型中的节点
+    
     vector<Node> S;
     S.push_back(startNode);
     
@@ -103,6 +104,7 @@ void Dijkstra(Node& startNode,Tree* MIA)
     //首先设置Node到自己的距离为1
     for(iterEdge = startNode.neighbourEdge.begin(); iterEdge != startNode.neighbourEdge.end(); iterEdge++){
         (*iterEdge)->distance = 1;
+        //cout<<(*iterEdge)->sourceNode->number<<" number"<< endl;
         edges.push(*iterEdge);
     }
     
@@ -117,7 +119,7 @@ void Dijkstra(Node& startNode,Tree* MIA)
         
         Edge* edge = edges.top();
         edges.pop();
-        
+ 
         //边的两端只要有一个节点不在集合S中则加入MIA中
         if(!findNode(S, *(edge)->targetNode) || !findNode(S, *(edge)->sourceNode)){
             
@@ -146,7 +148,7 @@ void Dijkstra(Node& startNode,Tree* MIA)
                 }
             }
             
-            
+            /*
             long size = edges.size();
             temp = edges;
             for(int i = 0 ; i < size; i ++)
@@ -156,7 +158,7 @@ void Dijkstra(Node& startNode,Tree* MIA)
                 temp.pop();
             }
             cout<<"------"<<endl;
-            
+            */
             
         }
     }

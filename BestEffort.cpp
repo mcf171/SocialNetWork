@@ -96,6 +96,7 @@ void precomputationBased(Graph& g)
         Dijkstra( *nodeIter,&(*nodeIter->MIA));
 
     }
+    calculateGraph(g);
     
     //cout<<"create MIA";
 }
@@ -209,11 +210,15 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
     }
 
     //将计算后的节点插入优先队列
-    for(auto node : g.nodes){
-        node.influence = node.hat_delta_sigma_p;
-        bestEffort.L.push(node);
+    vector<Node>::iterator iter;
+    for (iter = g.nodes.begin(); iter != g.nodes.end(); iter++) {
+
+        if (chooseAlgorithm == localGraph)
+            (*iter).influence = (*iter).hat_delta_sigma_p;
+
+        bestEffort.L.push((*iter));
     }
-    
+
     
 }
 

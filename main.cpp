@@ -19,7 +19,7 @@ using namespace std;
 
 void testBestEffort();
 
-Graph getGraph();
+Graph* getGraph();
 
 void testFindNode();
 
@@ -31,7 +31,7 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     
     
-    testBestEffort();
+    getGraph();
     
 	//Graph g;
 	//topicSampleOffline(g, 0.1, 5, 0.5);
@@ -45,8 +45,8 @@ void testBestEffort()
     double topicDistribution []= {0.2,0.8,0};
     q.topicDistribution = topicDistribution;
     
-    Graph g =getGraph();
-    bestEffort(g, q, 0.4, precomputation);
+    Graph* g =getGraph();
+    bestEffort(*g, q, 0.4, precomputation);
 
 }
 
@@ -124,7 +124,7 @@ void testPriorityQueueEdge()
         
 }
 
-Graph getGraph()
+Graph* getGraph()
 {
     
     Node node1;
@@ -417,15 +417,15 @@ Graph getGraph()
     node8.neighbourEdge.push_back(&edgeU8U4);
     node8.neighbourEdge.push_back(&edgeU8U7);
     
-    Graph g;
-    g.nodes.push_back(node1);
-    g.nodes.push_back(node2);
-    g.nodes.push_back(node3);
-    g.nodes.push_back(node4);
-    g.nodes.push_back(node5);
-    g.nodes.push_back(node6);
-    g.nodes.push_back(node7);
-    g.nodes.push_back(node8);
+    Graph* g = new Graph();
+    g->nodes.push_back(node1);
+    g->nodes.push_back(node2);
+    g->nodes.push_back(node3);
+    g->nodes.push_back(node4);
+    g->nodes.push_back(node5);
+    g->nodes.push_back(node6);
+    g->nodes.push_back(node7);
+    g->nodes.push_back(node8);
     
     /*
     
@@ -434,6 +434,12 @@ Graph getGraph()
     calculateGraph(g);
     */
 
+    Query q(3,0.01);
+    double topicDistribution []= {0.2,0.8,0};
+    q.topicDistribution = topicDistribution;
+    
+    vector<Node> node = bestEffort(*g, q, 0.4, precomputation);
+    
     
     return g;
 }
