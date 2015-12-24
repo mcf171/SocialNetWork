@@ -30,7 +30,7 @@ Edge Graph::findeEdgeFromTwoNode(Node sourceNode, Node targetNode)
 }
 */
 
-Graph::Graph()
+void Graph::Load()
 {
 	int* nodedata = new int[NNODE];
 	int* edgedata = new int[NEDGE*2];
@@ -39,13 +39,15 @@ Graph::Graph()
 
 	for (int i = 0; i < NNODE; i++)
 	{
-		nodes[nodedata[i]]=Node(nodedata[i]);
+		Node* node = new Node(nodedata[i]);
+		nodes[nodedata[i]]=*node;
 	}
 	for (int i = 0; i < NEDGE; i++)
 	{
 		int sourceId=edgedata[2*i];
 		int targetId=edgedata[2*i+1];
-		edges.push_back(Edge(i,&nodes[sourceId],&nodes[targetId],&propdata[DIM*i]));
+		Edge* edge = new Edge(i,&nodes[sourceId],&nodes[targetId],&propdata[DIM*i]);
+		edges.push_back(*edge);
 	}
 
 }

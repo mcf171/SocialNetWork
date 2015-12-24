@@ -26,7 +26,7 @@ public:
     
 
 
-	Graph();
+	void Load();
 
     //保存社交网络中所有的用户
     //vector<Node> nodes;
