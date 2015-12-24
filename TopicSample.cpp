@@ -322,7 +322,9 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 				double minsig = INFMAX;
 				for (int i = 0; i < PL.size(); i++)
 				{
-					double sig = delta_sigma_v_S_gamma(PL[i], S_i, q.topicDistribution);
+
+                    // can't guarantee it's true...
+					double sig = delta_sigma_v_S_gamma(PL[i], S_i ,q,theta,g);
 					if(sig<minsig){
 						minsig=sig;
 						minlocation=i;
@@ -335,7 +337,9 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 
 			vector<Node> nowUnion(S_i);
 			nowUnion.insert(nowUnion.end(),PL.begin(),PL.end());
-			qResult->sigma = sigma(nowUnion, g);
+            
+            //sigma是不是还要传个Q
+			//qResult->sigma = sigma(nowUnion, g);
 
 			if (qResult->sigma > q.epsilon * upperBound->sigma ){
 				for (int i = 0; i < lowerBound->S.size(); i++)
