@@ -42,6 +42,7 @@ Node Graph::findNode(int number)
 
 double sigma(vector<Node> nodes, Graph g)
 {
+	//TODO
     return 0;
 }
 
@@ -61,8 +62,9 @@ double getLocalDistance(Tree* tree, double theta)
     return distance;
 }
 
-double delta_sigma_v_S_gama(Tree* tree,vector<Node> S_i, vector<double> gamma)
+double delta_sigma_v_S_gamma(Node v, vector<Node> S_i, double* gamma)
 {
+	//TODO
     return 1;
 }
 
@@ -119,7 +121,7 @@ void Dijkstra(Node& startNode)
             targetNode->currentStatus = initial;
             treeNext->node = targetNode;
             treeNext->node->weight = edge->weight;
-            treeNext->node->realTopicDistribute = edge->realDistribution;
+            //treeNext->node->realTopicDistribute = edge->realDistribution;
             treeNext->node->influence = edge->distance*sourceNode->node->influence;
             sourceNode->nextNode.push_back(treeNext);
             

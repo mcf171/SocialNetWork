@@ -64,12 +64,17 @@ void precomputationBased(Graph& g)
         vector<Edge*>::iterator edgeIter;
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
             Edge* edge = *edgeIter;
-            vector<double>::iterator distanceIter;
+            //vector<double>::iterator distanceIter;
             double maxDistance = 0;
-            for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
-                if(*distanceIter > maxDistance)
-                    maxDistance = *distanceIter;
-            }
+            //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
+            //    if(*distanceIter > maxDistance)
+            //        maxDistance = *distanceIter;
+            //}
+			for (int i = 0; i < DIM; i++)
+			{
+				if(edge->realDistribution[i] > maxDistance)
+                    maxDistance = edge->realDistribution[i];
+			}
             edge->distance = maxDistance;
             edge->weight = maxDistance;
         }
@@ -104,12 +109,17 @@ void localGraphBased(Graph& g,double theta, Query q)
         vector<Edge*>::iterator edgeIter;
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
             Edge* edge = *edgeIter;
-            vector<double>::iterator distanceIter;
+            //vector<double>::iterator distanceIter;
             double maxDistance = 0;
-            for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
-                if(*distanceIter > maxDistance)
-                    maxDistance = *distanceIter;
-            }
+            //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
+            //    if(*distanceIter > maxDistance)
+            //        maxDistance = *distanceIter;
+            //}
+			for (int i = 0; i < DIM; i++)
+			{
+				if(edge->realDistribution[i] > maxDistance)
+                    maxDistance = edge->realDistribution[i];
+			}
             edge->distance = maxDistance;
             edge->weight = maxDistance;
         }
@@ -146,12 +156,17 @@ void neighborhoodBased(Graph& g)
         vector<Edge*>::iterator edgeIter;
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
             Edge* edge = *edgeIter;
-            vector<double>::iterator distanceIter;
+            //vector<double>::iterator distanceIter;
             double maxDistance = 0;
-            for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
-                if(*distanceIter > maxDistance)
-                    maxDistance = *distanceIter;
-            }
+            //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
+            //    if(*distanceIter > maxDistance)
+            //        maxDistance = *distanceIter;
+            //}
+			for (int i = 0; i < DIM; i++)
+			{
+				if(edge->realDistribution[i] > maxDistance)
+                    maxDistance = edge->realDistribution[i];
+			}
             edge->distance = maxDistance;
             edge->weight = maxDistance;
         }
@@ -301,14 +316,26 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, vector<Node> S)
         C_W.clear();
         w.MIA->getAllNode(C_W);
         
-        for (auto v: C_W)//v belongs to C(w)
+        for (Node v: C_W)//v belongs to C(w)
         {
-            Edge edge = g.findeEdgeFromTwoNode(w, v);
-            if(edge.isVisited)
-            Node v = *(edge.targetNode);
-            Node old_v = v;
-            if (edge.isVisited)
-                continue;
+			vector<Edge*>::iterator iter;
+			Edge* pedge=NULL;
+			for(iter = w.neighbourEdge.begin();iter != w.neighbourEdge.end();iter++){
+				Edge* pedge= *iter;
+				if(pedge->targetNode->number==v.number){
+					break;
+				}
+			}
+			if(pedge && pedge->isVisited){
+				continue;
+			}
+
+            //Edge edge = g.findeEdgeFromTwoNode(w, v);
+            //if(edge.isVisited)
+            //Node v = *(edge.targetNode);
+            //Node old_v = v;
+            //if (edge.isVisited)
+            //    continue;
             
             double influence = w.influence * calPP(w, v);
             
@@ -320,7 +347,9 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, vector<Node> S)
                 if (!findNodeInM(v, M))
                     M.push(v);
                 else
-                    adjustM(old_v, influence, M);
+                    //adjustM(old_v, influence, M);
+					//TODO: ??????
+					adjustM(v, influence, M);
             }
         }
     }//end while

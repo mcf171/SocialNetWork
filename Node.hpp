@@ -25,7 +25,7 @@ public:
     vector<Edge*> dijkstraEdge;
     
     Tree* MIA;
-    vector<double> realTopicDistribute;
+    //vector<double> realTopicDistribute;
     ~Node();
     status currentStatus;
     //Node的影响力
