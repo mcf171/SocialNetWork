@@ -14,7 +14,7 @@ void LoadGraphData(int* nodedata, int* edgedata, double* propdata){
 	for (int i = 0; i < NNODE; i++)
 	{
 		fnode>>nodedata[i];
-		cout<<nodedata[i]<<endl;
+		//cout<<nodedata[i]<<endl;
 	}
 
 
@@ -23,7 +23,7 @@ void LoadGraphData(int* nodedata, int* edgedata, double* propdata){
 	for (int i = 0; i < NEDGE; i++)
 	{
 		fedge>>edgedata[i*2]>>edgedata[i*2+1];
-		cout<<edgedata[i*2]<<endl;
+		//cout<<edgedata[i*2]<<endl;
 	}
 
 
@@ -35,7 +35,7 @@ void LoadGraphData(int* nodedata, int* edgedata, double* propdata){
 		{
 			fprop>>propdata[i*DIM+j];
 		}
-		cout<<propdata[i*DIM]<<endl;
+		//cout<<propdata[i*DIM]<<endl;
 	}
 
 
@@ -53,7 +53,7 @@ void LoadSampleData(double* sampledata){
 		{
 			fsample>>sampledata[i*DIM+j];
 		}
-		cout<<sampledata[i*DIM]<<endl;
+		//cout<<sampledata[i*DIM]<<endl;
 	}
 
 

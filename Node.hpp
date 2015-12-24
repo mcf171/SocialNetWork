@@ -32,7 +32,7 @@ public:
     Tree* MIA;
     Node();
     Node(int num);
-
+	void Init();
     ~Node();
 
 	void insertEdge(int targetPoint, Edge* edge);
