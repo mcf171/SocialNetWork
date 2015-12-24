@@ -38,6 +38,12 @@ int main(int argc, const char * argv[]) {
 
 	Graph g;
 	g.Load();
-
+    
+    Query q(3,0.01);
+    double topicDistribution []= {0.2,0.8,0};
+    q.topicDistribution = topicDistribution;
+    
+//    bestEffort(g, q, 0.4, precomputation);
+    precomputationBased(g);
     return 0;
 }

@@ -20,8 +20,7 @@ Node::Node(){
 Node::Node(int num)
 {
 	this->number = num;
-	this->MIA = new Tree();
-	Init();
+    Init();
 }
 
 void Node::Init(){
@@ -31,6 +30,7 @@ void Node::Init(){
 	ap_node_S_gamma=0;
     hat_delta_sigma_p=0;
 	deta_u=0;
+    MIA = new Tree();
 }
 
 void Node::insertEdge(int targetPoint, Edge* edge)

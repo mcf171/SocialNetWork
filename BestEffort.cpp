@@ -48,7 +48,7 @@ void preprocessOnline(Graph&g, Query q)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-		Dijkstra( nodeIter->second,(nodeIter->second.MIA));
+		Dijkstra(g, nodeIter->second,(nodeIter->second.MIA));
     }
 }
 
@@ -93,8 +93,9 @@ void precomputationBased(Graph& g)
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-		Dijkstra( nodeIter->second,(nodeIter->second.MIA));
-
+		Dijkstra(g, nodeIter->second,nodeIter->second.MIA);
+        
+        cout<<g.nodes[1].MIA->node->number<<endl;
     }
     calculateGraph(g);
     
@@ -150,7 +151,7 @@ for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
     {
         
-        Dijkstra( nodeIter->second,(nodeIter->second.MIA));
+        Dijkstra(g, nodeIter->second,(nodeIter->second.MIA));
         double distance = getLocalDistance(nodeIter->second.MIA, theta);
 
      //   cout<<"the hat_gama of "<<(*nodeIter).number<<" is :"<<distance<<endl;
@@ -171,34 +172,7 @@ for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
 
 void neighborhoodBased(Graph& g)
 {
-    map<int, Node>::iterator nodeIter;
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
-        Node node = nodeIter->second;
-        
-        map<int, Edge*>::iterator edgeIter;
-        for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
-            Edge* edge = edgeIter->second;
-            //vector<double>::iterator distanceIter;
-            double maxDistance = 0;
-            //for (distanceIter = edge->realDistribution.begin(); distanceIter != edge->realDistribution.end(); distanceIter++) {
-            //    if(*distanceIter > maxDistance)
-            //        maxDistance = *distanceIter;
-            //}
-			for (int i = 0; i < DIM; i++)
-			{
-				if(edge->realDistribution[i] > maxDistance)
-                    maxDistance = edge->realDistribution[i];
-			}
-            edge->distance = maxDistance;
-            edge->weight = maxDistance;
-        }
-    }
-    
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
-    {
-        
-        Dijkstra( nodeIter->second,(nodeIter->second.MIA));
-    }
+   
 }
 
 double estInfUB(Node node, Graph g, double theta)

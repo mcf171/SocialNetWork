@@ -11,6 +11,7 @@ void LoadGraphData(int* nodedata, int* edgedata, double* propdata){
 
 	//int* nodedata = new int[NNODE];
 
+    
 	for (int i = 0; i < NNODE; i++)
 	{
 		fnode>>nodedata[i];
