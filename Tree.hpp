@@ -10,6 +10,7 @@
 #define Tree_h
 
 #include <vector>
+#include <map>
 
 using namespace std;
 class Node;
@@ -19,11 +20,13 @@ class Tree
 public:
     Node* node;
     
+    map<int, Node> seeds;
+    
     vector<Tree*> nextNode;
     
-    void getAllNode(vector<Node> &nodes);
+    void getAllNode(vector<Node> &nodes,Node node);
     ~Tree();
 };
-
+Tree* findNodes(Tree* tree, Node* node);
 Tree* findNode(Tree* tree, Node* node);
 #endif /* Tree_h */

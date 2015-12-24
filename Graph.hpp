@@ -20,12 +20,12 @@ using namespace std;
 class Node;
 class Tree;
 class Edge;
+class Query;
+
 class Graph{
     
 public:
     
-
-
 	void Load();
 
     //保存社交网络中所有的用户
@@ -38,6 +38,8 @@ public:
     //从图中根据number找到用户
 	Node findNode(int number);
     
+    void changeGraph(Query q);
+    
     //从图中根据两个用户找到边
    // Edge findeEdgeFromTwoNode(Node sourceNode, Node targetNode);
 };
@@ -46,9 +48,13 @@ double getLocalDistance(Tree* startNode, double theta);
 
 void Dijkstra(Graph g,Node startNode,Tree* MIA);
 
+void Dijkstra(Graph g, Tree* MIA,map<int, Node> seeds);
+
 void calculateGraph(Graph& g);
 
 double hat_delta_p_u(Tree* tree);
+
+
 
 //double delta_sigma_v_S_gama(Tree* tree,vector<Node> S_i, vector<double> gamma);
 

@@ -14,15 +14,19 @@
 #include "Tree.hpp"
 #include <vector>
 
-double hat_delta_theta(Node u,map<int, Node>S,Query q)
+double hat_delta_sigma(Node u,map<int, Node>S,Query q, algorithm choosAlgorithm)
 {
     double result = 0;
     
-    result = hat_delta_p_u(u.MIA) - 1;
-    
-    if (S.size() != 0) {
+    if (choosAlgorithm == precomputation) {
+
+        result = hat_delta_p_u(u.MIA) - 1;
         
-        result = (1-u.ap_node_S_gamma)*result;
+        if (S.size() != 0) {
+            
+            result = (1-u.ap_node_S_gamma)*result;
+        }
+
     }
     
     return  result;
@@ -195,8 +199,6 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
 {
     
     //获取图中所有的Users
-    map<int, Node> nodes = g.nodes;
-    
 
     if (chooseAlgorithm == precomputation) {
         //precomputaion算法
@@ -208,10 +210,11 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
     }
 
     //将计算后的节点插入优先队列
-	for (map<int, Node>::iterator iter=nodes.begin(); iter!=nodes.end(); iter++)  
+	for (map<int, Node>::iterator iter=g.nodes.begin(); iter!=g.nodes.end(); iter++)
     {  
 		if (chooseAlgorithm == localGraph)
 			iter->second.influence = iter->second.hat_delta_sigma_p;
+
         bestEffort.L.push(iter->second);
     }  
 
@@ -224,20 +227,20 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
  * 在线部分主要计算在给定主题分布下的精确上界
  */
 
-void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,algorithm chooseAlgorithm)
+map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,algorithm chooseAlgorithm)
 {
     //Initial an empty heap H and set S
-    auto &H = bestEffort.H;
-    map<int, Node> S;
+
+    map<int, Node>* S = new map<int, Node>;
     
-    auto &L = bestEffort.L;
+
     //初始化一个空的最大堆
-    while (!H.empty()) {
-        H.pop();
+    while (!bestEffort.H.empty()) {
+        bestEffort.H.pop();
     }
 
-    S.clear();
-    //预处理在线节点针对LocalGraph算法，如果不是LocalGraph算法，进行注释
+    S->clear();
+    //预处理在线节点针对LocalGraph算法，如果不是LocalGraph算法
     if(chooseAlgorithm == localGraph)
         preprocessOnline(g, q);
     
@@ -246,47 +249,49 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,alg
     {
 
         
-        while (!H.empty())
+        do
         {
             //从离线的优先队列中和最大堆中考虑是否加入新的元素
-            insertCandidates(L, H);
+            insertCandidates(bestEffort.L, bestEffort.H);
             
             //从堆顶取一个元素
-            Node u = H.top();
-            H.pop();
+            Node u = bestEffort.H.top();
+            bestEffort.H.pop();
             
             //如果是初始状态那么久进一步计算在gama主题分布下的上界
             if (initial == u.currentStatus)
             {
-                double sigma_new = hat_delta_theta(u, S, q);
+                double sigma_new = hat_delta_sigma(u, *S, q,chooseAlgorithm);
                 u.currentStatus = bounded;
                 u.influence = sigma_new;
-                H.push(u);
+                bestEffort.H.push(u);
             }
             //如果已经是gamga主题分布下的上界则计算精确的上界
             else if (bounded == u.currentStatus)
             {
-                double sigma_new = CalcMargin(u, g, theta, q, S);
+                double sigma_new = CalcMargin(u, g, theta, q, *S);
                 u.currentStatus = exact;
                 u.influence = sigma_new;
-                H.push(u);
+                bestEffort.H.push(u);
             }
             //如果已经是精确上界则直接弹出
             else if (exact == u.currentStatus)
             {
-				S[u.number]=u;
+				(*S)[u.number]=u;
                 map<int,Node>::iterator itertor;
                 for (itertor = g.nodes.begin(); itertor != g.nodes.end(); itertor ++) {
                     
-					if(!findKey(S, itertor->second.number))
-                       itertor->second.ap_node_S_gamma =  calAP(itertor->second, S, q);
+					if(!findKey(*S, itertor->second.number))
+                       itertor->second.ap_node_S_gamma =  calAP(itertor->second, *S, q);
                     
                 }
                 
                 break;
             }
-        }//end while    
+        }while (!bestEffort.H.empty());//end while
     }//end for
+    
+    return S;
 }
 
 
@@ -295,8 +300,8 @@ void bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,alg
  */
 void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H)
 {
-    //return if L or H is empty
-    if (L.empty() || H.empty())
+    //return if L is empty
+    if (L.empty())
     {
         return;
     }
@@ -304,15 +309,11 @@ void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H)
     //insertion process until H.top > L.top
     while (!L.empty())
     {
-        if (H.top() <= L.top())
-        {
+        if (H.empty() || H.top() <= L.top()) {
             H.push(L.top());
             L.pop();
-        }
-        else
-        {
+        }else
             break;
-        }
     }
 }
 
@@ -334,6 +335,7 @@ double sigma(map<int, Node> nodes, Graph g ,Query q)
     return 0;
 }
 
+
 /*
 	CALCMARGIN
  */
@@ -341,6 +343,22 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
 {
     double res = 0.0;
     
+    
+    g.changeGraph(gamma);
+    
+    Node* u_ = new Node(u);
+    
+    u_ = &g.nodes[u.number];
+
+    u_->MIA->nextNode.clear();
+    Dijkstra(g, *u_,u_->MIA);
+    
+    //cout<<g.nodes[1].MIA->node->number<<endl;
+
+    res = hat_delta_p_u(u.MIA);
+    u.influence = res - 1;
+
+    /*
     priority_queue<Node> M;
     u.influence = 1;
     u.deta_u = 1 - calAP(u, S, gamma);
@@ -357,14 +375,14 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
         
         vector<Node> C_W;
         C_W.clear();
-        w.MIA->getAllNode(C_W);
+        w.MIA->getAllNode(C_W,w);
         
         for (Node v: C_W)//v belongs to C(w)
         {
 			map<int, Edge*>::iterator iter;
 			Edge* pedge=NULL;
 			for(iter = w.neighbourEdge.begin();iter != w.neighbourEdge.end();iter++){
-				Edge* pedge= iter->second;
+				pedge= iter->second;
 				if(pedge->targetNode->number==v.number){
 					break;
 				}
@@ -375,12 +393,12 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
 			}
 
             
-            double influence = w.influence * calPP(w, v);
+            double influence = w.influence * calPP(*pedge,gamma);
             
             if (!findNodeInM(v, M) || influence > v.influence)
             {
                 v.influence = influence;
-                v.deta_u = w.deta_u * calPP(w, v) *calAP(v, S, gamma);
+                v.deta_u = w.deta_u * calPP(*pedge,gamma) *calAP(v, S, gamma);
                 
                 if (!findNodeInM(v, M))
                     M.push(v);
@@ -391,7 +409,7 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
     }//end while
     
     res = calDetaUSR(g.nodes, theta);
-    
+    */
     return res;
 }
 
@@ -405,7 +423,7 @@ double delta_sigma_v_S_gamma(Node v, map<int, Node> S_i, Query q, double theta, 
     return 1;
 }
 
-double prodChild(Tree* node,map<int, Node> S)
+double prodChild(Tree* node,map<int, Node> S,Query q)
 {
     double ap = 0;
     
@@ -416,8 +434,8 @@ double prodChild(Tree* node,map<int, Node> S)
         vector<Tree*>::iterator iterator;
         double childAp = 1;
         for (iterator = node->nextNode.begin(); iterator != node->nextNode.end(); iterator++) {
-            
-            childAp *=(1-prodChild(*iterator, S)*calPP(*((*iterator)->node),*node->node));
+
+            childAp *=(1-prodChild(*iterator, S,q)*calPP(*((*iterator)->node),*node->node,q));
         }
     }
     
@@ -430,35 +448,50 @@ double prodChild(Tree* node,map<int, Node> S)
 double calAP(Node& u, map<int, Node> S, Query &q)
 {
     double res = 0.0;
-    
+    //if(findKey(S, u.number))
     if (S.size() == 0) 
-//if(findKey(S, u.number))
-{
+
+    {
         res = 1;
     }else{
 		if(findKey(S, u.number))
             res = 1;
         else
         {
-            res = prodChild(u.MIA, S);
+            res = prodChild(u.MIA, S,q);
         }
     }
     return res;
 }
 
 
-
+double calPP(Node sourceNode,Node targetNode, Query q)
+{
+    
+    map<int, Edge*>::iterator iter;
+    
+    for (iter=sourceNode.neighbourEdge.begin(); iter!=sourceNode.neighbourEdge.end(); iter++)
+    {
+        if (iter->second->sourceNode->number == sourceNode.number&&  iter->second->targetNode->number)
+            break;
+    }
+    double p = 0;
+    if (iter != sourceNode.neighbourEdge.end()) {
+        p = iter->second->realDistribution[0]*q.topicDistribution[0]+iter->second->realDistribution[1]*q.topicDistribution[1]+iter->second->realDistribution[2]*q.topicDistribution[2];
+    }
+    return p;
+}
 /*
 	calculate the pp(w,v|r)
  */
-double calPP(Node w, Node v)
+double calPP(Edge edge, Query q)
 {
  
+    double p = 0;
     
-  
-    Tree* tree = findNode(w.MIA, &v);
+     p = edge.realDistribution[0]*q.topicDistribution[0]+edge.realDistribution[1]*q.topicDistribution[1]+edge.realDistribution[2]*q.topicDistribution[2];
     
-    return tree->node->influence;
+    return p;
 }
 
 /*
@@ -520,7 +553,7 @@ double calDetaUSR(map<int, Node>&V, double theta)
 /**
  * bestEffort算法入口，输入为一个图G，查询语句Q，以及用户定义的theta,最后一个参数是要选择的上界计算算法
  */
-vector<Node> bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorithm)
+map<int, Node>* bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorithm)
 {
     vector<Node> node;
     
@@ -529,9 +562,9 @@ vector<Node> bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorith
     
     //首先进行离线处理
     bestEffortOffline(g, theta, bestEffort,q,chooseAlgorithm);
-    
+
     //进行在线处理
-    bestEffortOnline(g, q, theta, bestEffort,chooseAlgorithm);
+   map<int, Node>* S = bestEffortOnline(g, q, theta, bestEffort,chooseAlgorithm);
     
-    return node;
+    return S;
 }

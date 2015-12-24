@@ -78,7 +78,7 @@ public:
     }
 };
 
-//bool findNode(vector<Node> nodes, Node node);
+bool findNode(vector<Node> nodes, Node node);
 
 bool findKey(map<int, Node> S, int key);
 
