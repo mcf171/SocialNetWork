@@ -65,6 +65,12 @@ Tree* findNodes(Tree* tree, Node* node){
     return result;
 }
 
+/*
+ * 利用深度优先进行遍历树，查找节点Node在Tree中的位置
+ * @param MIA，目前构建的MIA树
+ * @param node 查询的node节点
+ * @return Tree* 返回找到的位置
+ */
 Tree* findNode(Tree* tree, Node* node){
     
     Tree* result = nullptr;

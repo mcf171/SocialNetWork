@@ -14,6 +14,15 @@
 #include "Tree.hpp"
 #include <vector>
 
+
+/*
+ * 计算在给定主题下的上界
+ * @param u 给定点
+ * @param S，种子集合
+ * @param q，查询语句
+ * @param chooseAlgorithm，用户选择算法
+ */
+
 double hat_delta_sigma(Node u,map<int, Node>S,Query q, algorithm choosAlgorithm)
 {
     double result = 0;
@@ -71,12 +80,12 @@ void precomputationBased(Graph& g)
     //对于图中的每个节点都将边设置为最大的topic值
     for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
 
-        //获取每个节点
+        //获取社交网络图中每个节点
 		Node node = nodeIter->second;
         
         map<int, Edge*>::iterator edgeIter;
 		nodeIter->second.ap_node_S_gamma = 1.0;
-        //获取节点的每个邻边
+        //获取节点的每个邻边将边的权重设置为最大的topic
         for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
 			Edge* edge = edgeIter->second;
 
@@ -101,6 +110,9 @@ void precomputationBased(Graph& g)
         
         //cout<<g.nodes[1].MIA->node->number<<endl;
     }
+    
+    //构建完每个节点的MIA之后可以计算每个节点的影响力上界。
+    
     calculateGraph(g);
     
     //cout<<"create MIA";
@@ -225,14 +237,17 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
 
 /*
  * 在线部分主要计算在给定主题分布下的精确上界
+ * @param g 社交网络图
+ * @param q，查询语句
+ * @param theta，用户定义的阈值
+ * @param bestEffort，bestEffort变量，保存优先队列和最大堆
+ * @param chooseAlgorithm，用户选择算法
  */
-
 map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,algorithm chooseAlgorithm)
 {
-    //Initial an empty heap H and set S
 
+    //S保存种子
     map<int, Node>* S = new map<int, Node>;
-    
 
     //初始化一个空的最大堆
     while (!bestEffort.H.empty()) {
@@ -283,7 +298,6 @@ map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bes
                     
 					if(!findKey(*S, itertor->second.number))
                        itertor->second.ap_node_S_gamma =  calAP(itertor->second, *S, q);
-                    
                 }
                 
                 break;
@@ -337,84 +351,38 @@ double sigma(map<int, Node> nodes, Graph g ,Query q)
 
 
 /*
-	CALCMARGIN
+ * 计算在给定主题下的精确上界
+ * @param u 给定点
+ * @param g 社交网络图
+ * @param theta，用户定义阈值
+ * @param gama，查询语句
+ * @param S，种子集合
  */
 double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
 {
     double res = 0.0;
     
-    
+    //首先将网络中所有的边权值修改为给定主题下的权值
     g.changeGraph(gamma);
     
+    //从新的图中获取点u
     Node* u_ = new Node(u);
     
     u_ = &g.nodes[u.number];
 
     u_->MIA->nextNode.clear();
+    
+    //构建在新图中u的MIA
     Dijkstra(g, *u_,u_->MIA);
     
-    //cout<<g.nodes[1].MIA->node->number<<endl;
 
+    //计算MIA模型的上界
     res = hat_delta_p_u(u.MIA);
     u.influence = res - 1;
 
-    /*
-    priority_queue<Node> M;
-    u.influence = 1;
-    u.deta_u = 1 - calAP(u, S, gamma);
     
-    M.push(u);
-    
-    while (!M.empty())
-    {
-        Node w = M.top();
-        M.pop();
-        
-		if (findKey(S, w.number) || w.influence < theta)
-            continue;
-        
-        vector<Node> C_W;
-        C_W.clear();
-        w.MIA->getAllNode(C_W,w);
-        
-        for (Node v: C_W)//v belongs to C(w)
-        {
-			map<int, Edge*>::iterator iter;
-			Edge* pedge=NULL;
-			for(iter = w.neighbourEdge.begin();iter != w.neighbourEdge.end();iter++){
-				pedge= iter->second;
-				if(pedge->targetNode->number==v.number){
-					break;
-				}
-			}
-
-			if(pedge && pedge->isVisited){
-				continue;
-			}
-
-            
-            double influence = w.influence * calPP(*pedge,gamma);
-            
-            if (!findNodeInM(v, M) || influence > v.influence)
-            {
-                v.influence = influence;
-                v.deta_u = w.deta_u * calPP(*pedge,gamma) *calAP(v, S, gamma);
-                
-                if (!findNodeInM(v, M))
-                    M.push(v);
-                else
-					adjustM(v, influence, M);
-            }
-        }
-    }//end while
-    
-    res = calDetaUSR(g.nodes, theta);
-    */
-    return res;
+    return res-1;
 }
-
-
-
 
 
 double delta_sigma_v_S_gamma(Node v, map<int, Node> S_i, Query q, double theta, Graph g)
@@ -550,8 +518,12 @@ double calDetaUSR(map<int, Node>&V, double theta)
 }
 
 
-/**
+/*
  * bestEffort算法入口，输入为一个图G，查询语句Q，以及用户定义的theta,最后一个参数是要选择的上界计算算法
+ * @param g 社交网络图
+ * @param q 查询语句
+ * @param theta 用户自定义阈值
+ * @param chooseAlgorithm 用户选择算法
  */
 map<int, Node>* bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorithm)
 {
@@ -564,7 +536,7 @@ map<int, Node>* bestEffort(Graph g, Query q, double theta, algorithm chooseAlgor
     bestEffortOffline(g, theta, bestEffort,q,chooseAlgorithm);
 
     //进行在线处理
-   map<int, Node>* S = bestEffortOnline(g, q, theta, bestEffort,chooseAlgorithm);
+    map<int, Node>* S = bestEffortOnline(g, q, theta, bestEffort,chooseAlgorithm);
     
     return S;
 }
