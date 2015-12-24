@@ -14,6 +14,20 @@
 #include "Edge.hpp"
 using namespace std;
 
+Edge Graph::findeEdgeFromTwoNode(Node sourceNode, Node targetNode)
+{
+    
+    Edge edge;
+    edge.sourceNode = &sourceNode;
+    edge.targetNode = &targetNode;
+    vector<Edge>::iterator iter;
+    iter = find(this->edges.begin(), this->edges.end(), edge);
+    if( iter != (this->edges.end()))
+        edge = *iter;
+    
+    return edge;
+}
+
 Node Graph::findNode(int number)
 {
     Node node;
@@ -105,6 +119,7 @@ void Dijkstra(Node& startNode)
             targetNode->currentStatus = initial;
             treeNext->node = targetNode;
             treeNext->node->weight = edge->weight;
+            treeNext->node->realTopicDistribute = edge->realDistribution;
             treeNext->node->influence = edge->distance*sourceNode->node->influence;
             sourceNode->nextNode.push_back(treeNext);
             

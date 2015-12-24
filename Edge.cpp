@@ -12,6 +12,12 @@
 Edge::~Edge(){
    
 }
+
+bool Edge::operator == (const Edge& target)
+{
+    return this->targetNode->number == target.targetNode->number && this->sourceNode->number == target.sourceNode->number;
+}
+
 bool findEdge(vector<Edge> edges, Edge edge)
 {
     

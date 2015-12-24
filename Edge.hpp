@@ -29,15 +29,19 @@ public:
     double distance;
     bool isVisited;
     ~Edge();
+    /*
     bool operator == (const Edge& target)
     {
         return this->targetNode == target.targetNode;
     }
-    
+    */
     bool operator != (const Edge& target)
     {
         return this->targetNode != target.targetNode;
     }
+    
+    bool operator == (const Edge& target);
+    
     bool operator < ( const Edge& target)
     {
         return this->distance > target.distance;

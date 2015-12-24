@@ -20,8 +20,8 @@ public:
     Node* node;
     
     vector<Tree*> nextNode;
-
     
+    void getAllNode(vector<Node> &nodes);
     ~Tree();
 };
 

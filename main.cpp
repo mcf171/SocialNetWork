@@ -319,8 +319,8 @@ void testEstInfUB()
     g.nodes.push_back(node7);
     g.nodes.push_back(node8);
     
-    
     /*
+    
     precomputationBased(g);
     
     calculateGraph(g);
