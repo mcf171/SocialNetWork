@@ -366,7 +366,7 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, vector<Node> S)
  */
 void updateAP()
 {
-    
+    //TODO
 }
 
 double prodChild(Tree* node,vector<Node>S)
