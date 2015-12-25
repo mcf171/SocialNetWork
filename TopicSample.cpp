@@ -71,7 +71,7 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 	//}
 
 	stringstream ss;
-	ss<<"K"<<K<<"T"<<theta<<".tso";
+	ss<<TSO_DIR<<"K"<<K<<"T"<<theta<<".tso";
 	string ofname;
 	ss>>ofname;
 
@@ -97,13 +97,13 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 /*
  *  找到最近的上下界
  */
-bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBound, Query* lowerBound)
+bool findClosestBound(Query q, vector<Query> topicDistributions, Query** upperBound, Query** lowerBound)
 {
 	double upperDist = INFMAX;
 	double lowerDist = INFMAX;
 
-	upperBound=NULL;
-	lowerBound=NULL;
+	*upperBound=NULL;
+	*lowerBound=NULL;
 
 	vector<int> lowerBoundIds;
 
@@ -115,7 +115,7 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 			if(dKL<upperDist)
 			{
 				upperDist=dKL;
-				upperBound = &topicDistributions[i];
+				*upperBound = &(topicDistributions[i]);
 			}
 		}
 		else if(topicDistributions[i].isLowerBound(q))
@@ -124,22 +124,22 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query* upperBou
 		}
 	}
 
-	if(upperBound==NULL) return false;
+	if(*upperBound==NULL) return false;
 
-	upperBound = new Query(*upperBound);//新对象
+	*upperBound = new Query(**upperBound);//新对象
 
 	for (int i = 0; i < lowerBoundIds.size(); i++)
 	{
-		double dKL = upperBound->dKL(topicDistributions[lowerBoundIds[i]]);
+		double dKL = (*upperBound)->dKL(topicDistributions[lowerBoundIds[i]]);
 		if(dKL<lowerDist)
 		{
 			lowerDist=dKL;
-			lowerBound = &topicDistributions[lowerBoundIds[i]];
+			*lowerBound = &(topicDistributions[lowerBoundIds[i]]);
 		}
 	}
 	if(lowerBound==NULL) return false;
 
-	lowerBound = new Query(*lowerBound);//新对象
+	*lowerBound = new Query(**lowerBound);//新对象
 
 	return true;
 
@@ -154,7 +154,7 @@ vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsil
 
 
 	stringstream ss;
-	ss<<"K"<<K<<"T"<<theta<<".tso";
+	ss<<TSO_DIR<<"K"<<K<<"T"<<theta<<".tso";
 	string ifname;
 	ss>>ifname;
 
@@ -201,7 +201,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 	
 	vector<Query> Samples = loadSampleOfflineResult(g, theta, K, Epsilon);
     
-	bool getBound = findClosestBound(q, Samples, upperBound, lowerBound);
+	bool getBound = findClosestBound(q, Samples, &upperBound, &lowerBound);
     
 	if(!getBound)
 	{

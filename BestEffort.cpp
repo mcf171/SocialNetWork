@@ -261,7 +261,14 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
         bestEffort.L.push(iter->second);
     }  
     
-    ofstream f(L_TXT);
+
+	stringstream ss;
+	ss<<BEO_DIR<<"A"<<chooseAlgorithm<<"T"<<theta<<".beo";
+	string ofname;
+	ss>>ofname;
+
+    ofstream f(ofname);
+
     priority_queue<Node> temp = bestEffort.L;
     while (!temp.empty()) {
         
@@ -274,7 +281,7 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
 }
 
 
-void initL(BestEffort& bestEffort,Graph g, algorithm chooseAlgorithm)
+void initL(BestEffort& bestEffort,Graph g, double theta, algorithm chooseAlgorithm)
 {
     
     if (chooseAlgorithm == precomputation) {
@@ -307,8 +314,26 @@ void initL(BestEffort& bestEffort,Graph g, algorithm chooseAlgorithm)
 
     }
     
-    fstream f(L_TXT);
+
+	stringstream ss;
+	ss<<BEO_DIR<<"A"<<chooseAlgorithm<<"T"<<theta<<".beo";
+	string ifname;
+	ss>>ifname;
+
+    fstream f;
     
+	f.open(ifname);
+
+	if(!f){
+		cout<<ifname<<" not found. Running BestEffortOffline ..."<<endl;
+		//TODO
+		//bestEffortOffline(g,theta,bestEffort,
+		cout<<"TopicSampleOffline finished."<<endl;
+		cout<<ifname<<" saved."<<endl;
+	}
+
+
+
     while (!bestEffort.L.empty()) {
         bestEffort.L.pop();
     }
