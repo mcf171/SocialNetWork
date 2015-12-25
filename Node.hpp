@@ -27,7 +27,6 @@ public:
 
     //vector<Edge*> neighbourEdge;
 	map<int, Edge*> neighbourEdge;
-    vector<Edge*> dijkstraEdge;
     
     Tree* MIA;
     Node();

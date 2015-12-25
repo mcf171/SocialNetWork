@@ -15,22 +15,11 @@
 #include "Load.hpp"
 #include "Query.h";
 using namespace std;
-/*
-Edge Graph::findeEdgeFromTwoNode(Node sourceNode, Node targetNode)
-{
-    
-    Edge edge;
-    edge.sourceNode = &sourceNode;
-    edge.targetNode = &targetNode;
-    vector<Edge>::iterator iter;
-    iter = find(this->edges.begin(), this->edges.end(), edge);
-    if( iter != (this->edges.end()))
-        edge = *iter;
-    
-    return edge;
-}
-*/
 
+/*
+ * 根据给定主题改变图中所有的边权重
+ * @param q 查询语句
+ */
 void Graph::changeGraph(Query q){
     map<int,Node>::iterator nodeItera;
     
@@ -92,18 +81,32 @@ double getLocalDistance(Tree* tree, double theta)
 }
 
 
+/*
+ * 在构建了每个节点的MIA之后可以计算每个节点的影响力上界
+ * @param g 社交网络图
+ */
 
 void calculateGraph(Graph& g)
 {
     map<int,Node>::iterator nodeItera;
+    
     for (nodeItera = g.nodes.begin(); nodeItera != g.nodes.end(); nodeItera++) {
         
+        //计算影响力
 		double distance = hat_delta_p_u((nodeItera->second).MIA);
+        
+        //因为在上一个函数中多算了自己的影响力，所以减去自己的影响力
         (nodeItera->second).influence = distance - 1;
-        cout<<"the weight of "<<(nodeItera->second).number<<" is :"<<distance-1<<endl;
+        
+        //下述代码为了调试
+       // cout<<"the weight of "<<(nodeItera->second).number<<" is :"<<distance-1<<endl;
     }
 }
 
+/*
+ * 计算MIA树的影响力
+ * @param tree，MIA树
+ */
 double hat_delta_p_u(Tree* tree)
 {
 
@@ -111,7 +114,8 @@ double hat_delta_p_u(Tree* tree)
     vector<Tree*>::iterator nextNodeIter;
     
     for ( nextNodeIter = tree->nextNode.begin(); nextNodeIter != tree->nextNode.end(); nextNodeIter++) {
-        
+
+        //迭代计算子树的影响力
         distance += hat_delta_p_u(*nextNodeIter);
     }
     
@@ -121,6 +125,7 @@ double hat_delta_p_u(Tree* tree)
 /*
  * 利用Dijstra的思想构建一个基于节点node的MIA模型
  * @param MIA，需要构建的MIA树
+ * @param inputNode，需要构建MIA的节点
  * @param g 社交网络图
  */
 void Dijkstra(Graph g, Node inputNode,Tree* MIA)
@@ -130,15 +135,16 @@ void Dijkstra(Graph g, Node inputNode,Tree* MIA)
 	Node* startNode = new Node(inputNode);
 
     map<int, Node> S;
+    //现将根节点放入S中
 	S[startNode->number]=*startNode;
     
     //构建优先队列从而挑选出当前到以后节点集合S中最小的路径，temp是用于辅助输出，可以没有。
     priority_queue<Edge*,vector<Edge*>,EdgeCompare> edges,temp;
     map<int,Edge*>::iterator iterEdge;
     
-    //首先设置Node到自己的距离为1
+    //首先将所有的邻边加入优先队列edges中
     for(iterEdge = startNode->neighbourEdge.begin(); iterEdge != startNode->neighbourEdge.end(); iterEdge++){
-		//(iterEdge->second)->distance = 1;
+
         edges.push(iterEdge->second);
     }
     
@@ -158,22 +164,33 @@ void Dijkstra(Graph g, Node inputNode,Tree* MIA)
 		if(!findKey(S, edge->targetNodeId) || !findKey(S, edge->sourceNodeId)){
             
             //下面则是构建MIA模型中的一个点
+            //首先获取边的源节点，查找源节点在MIA中的位置
             Tree* sourceNode = findNode(MIA,edge->sourceNode);
+            
+            //创建节点的下一层节点
             Tree* treeNext = new Tree();
+            
+            //获取目标节点
 			Node* targetNode = new Node(*edge->targetNode);
-            //targetNode->neighbourEdge = edge->targetNode->neighbourEdge;
-            //targetNode->number = edge->targetNode->number;
+            
+            //将节点状态设置为initial
             targetNode->currentStatus = initial;
+            
+            //下一层节点设置为目标节点
             treeNext->node = targetNode;
+            
+            //设置下一层节点的权重
             treeNext->node->weight = edge->weight;
-            //treeNext->node->realTopicDistribute = edge->realDistribution;
+
+            //如果是根节点则直接赋予权重，否则需要用当前节点到根节点的距离*权重
             if (sourceNode->node->number == startNode->number) 
                 treeNext->node->influence = edge->weight;
             else
                 treeNext->node->influence = edge->distance*edge->weight;
+            
+            //设置源节点的下一层节点
             sourceNode->nextNode.push_back(treeNext);
             
-            sourceNode->node->dijkstraEdge.push_back(edge);
             S[edge->targetNodeId] = *edge->targetNode;
             
             //这一步是对于新加入的点同时将这个点的可达的点全部加入Edge中
@@ -185,6 +202,7 @@ void Dijkstra(Graph g, Node inputNode,Tree* MIA)
                 }
             }
             
+            //下面代码是为了测试用的
             /*
             long size = edges.size();
             temp = edges;
@@ -253,7 +271,6 @@ void Dijkstra(Graph g, Tree* MIA,map<int, Node> seeds)
             treeNext->node->influence = edge->distance*edge->weight;
             sourceNode->nextNode.push_back(treeNext);
             
-            sourceNode->node->dijkstraEdge.push_back(edge);
             S[edge->targetNodeId] = *edge->targetNode;
             
             //这一步是对于新加入的点同时将这个点的可达的点全部加入Edge中
