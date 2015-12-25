@@ -29,7 +29,7 @@ void Graph::changeGraph(Query q){
         
         for (edgeItera = nodeItera->second.neighbourEdge.begin(); edgeItera != nodeItera->second.neighbourEdge.end(); edgeItera++) {
             
-            //cout<< edgeItera->second->realDistribution[0]<<" "<< edgeItera->second->realDistribution[1]<<" "<<edgeItera->second->realDistribution[2]<<endl;
+           
             edgeItera->second->weight = edgeItera->second->realDistribution[0] * q.topicDistribution[0] + edgeItera->second->realDistribution[1] * q.topicDistribution[1]+edgeItera->second->realDistribution[2] * q.topicDistribution[2];
         }
     }
@@ -103,6 +103,8 @@ void calculateGraph(Graph& g)
     }
 }
 
+
+
 /*
  * 计算MIA树的影响力
  * @param tree，MIA树
@@ -110,7 +112,11 @@ void calculateGraph(Graph& g)
 double hat_delta_p_u(Tree* tree)
 {
 
-    double distance = tree->node->influence;
+    double distance = 0.0;
+    
+    if(tree->node != nullptr)
+        distance +=tree->node->influence;
+    
     vector<Tree*>::iterator nextNodeIter;
     
     for ( nextNodeIter = tree->nextNode.begin(); nextNodeIter != tree->nextNode.end(); nextNodeIter++) {
@@ -197,7 +203,7 @@ void Dijkstra(Graph g, Node inputNode,Tree* MIA)
             for(iterEdge = edge->targetNode->neighbourEdge.begin(); iterEdge != edge->targetNode->neighbourEdge.end(); iterEdge ++)
             {
 				if(!findKey(S, iterEdge->second->targetNodeId) || !findKey(S, iterEdge->second->sourceNodeId)){
-                    iterEdge->second->distance = iterEdge->second->distance*sourceNode->node->influence;
+                    iterEdge->second->distance = iterEdge->second->distance*treeNext->node->influence;
                     edges.push(iterEdge->second);
                 }
             }
@@ -238,7 +244,7 @@ void Dijkstra(Graph g, Tree* MIA,map<int, Node> seeds)
     for (iterNode = seeds.begin();  iterNode != seeds.end();  iterNode++) {
         
         for(iterEdge = iterNode->second.neighbourEdge.begin(); iterEdge != iterNode->second.neighbourEdge.end(); iterEdge++){
-            (iterEdge->second)->distance = 1;
+
             edges.push(iterEdge->second);
         }
         iterNode->second.influence = 1;
@@ -259,16 +265,29 @@ void Dijkstra(Graph g, Tree* MIA,map<int, Node> seeds)
         if(!findKey(S, edge->targetNodeId) || !findKey(S, edge->sourceNodeId)){
             
             //下面则是构建MIA模型中的一个点
-            Tree* sourceNode = findNodes(MIA,edge->sourceNode);
+            Tree* sourceNode = findSeedsNodes(MIA,edge->sourceNode);
+            //创建节点的下一层节点
             Tree* treeNext = new Tree();
+            
+            //获取目标节点
             Node* targetNode = new Node(*edge->targetNode);
-            //targetNode->neighbourEdge = edge->targetNode->neighbourEdge;
-            //targetNode->number = edge->targetNode->number;
+            
+            //将节点状态设置为initial
             targetNode->currentStatus = initial;
+            
+            //下一层节点设置为目标节点
             treeNext->node = targetNode;
+            
+            //设置下一层节点的权重
             treeNext->node->weight = edge->weight;
-            //treeNext->node->realTopicDistribute = edge->realDistribution;
-            treeNext->node->influence = edge->distance*edge->weight;
+            
+            //如果是根节点则直接赋予权重，否则需要用当前节点到根节点的距离*权重
+            if (sourceNode->node == nullptr)
+                treeNext->node->influence = edge->weight;
+            else
+                treeNext->node->influence = edge->distance*edge->weight;
+            
+            //设置源节点的下一层节点
             sourceNode->nextNode.push_back(treeNext);
             
             S[edge->targetNodeId] = *edge->targetNode;
@@ -277,11 +296,12 @@ void Dijkstra(Graph g, Tree* MIA,map<int, Node> seeds)
             for(iterEdge = edge->targetNode->neighbourEdge.begin(); iterEdge != edge->targetNode->neighbourEdge.end(); iterEdge ++)
             {
                 if(!findKey(S, iterEdge->second->targetNodeId) || !findKey(S, iterEdge->second->sourceNodeId)){
-                    iterEdge->second->distance = iterEdge->second->distance*sourceNode->node->influence;
+                    iterEdge->second->distance = iterEdge->second->distance*treeNext->node->influence;
                     edges.push(iterEdge->second);
                 }
             }
             
+            //下面代码是为了测试用的
             /*
              long size = edges.size();
              temp = edges;
@@ -293,6 +313,7 @@ void Dijkstra(Graph g, Tree* MIA,map<int, Node> seeds)
              }
              cout<<"------"<<endl;
              */
+            
             
         }
         

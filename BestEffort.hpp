@@ -32,6 +32,7 @@ public:
 };
 
 void initL(BestEffort& bestEffort,Graph g,algorithm chooseAlgorithm);
+void resetEdgeDistance(Graph& g);
 
 void getLocalGraph(Tree tree,double theta,vector<Node> &nodes);
 void localGraphBased(Graph& g,double theta,Query q);
