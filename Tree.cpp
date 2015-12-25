@@ -9,6 +9,11 @@
 #include "Tree.hpp"
 #include "Node.hpp"
 
+Tree::Tree()
+{
+   node=NULL;
+}
+
 Tree::~Tree()
 {
    

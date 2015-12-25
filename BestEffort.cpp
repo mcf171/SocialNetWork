@@ -279,8 +279,8 @@ void initL(BestEffort* bestEffort,Graph g, double theta, algorithm chooseAlgorit
 	if(!f){
 		cout<<ifname<<" not found. Running BestEffortOffline ..."<<endl;
 		//TODO
-		//bestEffortOffline(g,theta,bestEffort,
-		cout<<"TopicSampleOffline finished."<<endl;
+		bestEffort->bestEffortOffline();
+		cout<<"BestEffortOffline finished."<<endl;
 		cout<<ifname<<" saved."<<endl;
 	}
 
@@ -329,12 +329,14 @@ void BestEffort::bestEffortOffline()
     }
     
     //将计算后的节点插入优先队列
+	int i=0;
     for (map<int, Node>::iterator iter=g.nodes.begin(); iter!=g.nodes.end(); iter++)
     {
         if (chooseAlgorithm == localGraph)
             iter->second.influence = iter->second.hat_delta_sigma_p;
-        
         this->L.push(iter->second);
+		cout<<i<<"..."<<endl;
+		i++;
     }
     
     
@@ -524,6 +526,10 @@ double prodChild(Tree* node,map<int, Node> S,Query q)
 {
     double ap = 0;
     
+	if(node==NULL){
+		//TODO
+	}
+
 	if(findKey(S, node->node->number))
         ap = 1;
     else
