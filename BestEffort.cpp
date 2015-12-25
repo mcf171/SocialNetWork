@@ -344,9 +344,9 @@ double sigma(map<int, Node> nodes, Graph g ,Query q)
     map<int, Node>::iterator itertor;
     double result = 0;
     for(itertor = g.nodes.begin(); itertor != g.nodes.end() ; itertor ++)
-        calAP(itertor->second, nodes, q );
+        result+=calAP(itertor->second, nodes, q );
     
-    return 0;
+    return result;
 }
 
 

@@ -33,7 +33,7 @@ using namespace std;
 
 
 //调用BestEffort，离线计算每一个采样点的S和sigma值，保存在Query的She sigma两个属性中，传出来
-vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata);
+vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata);
 
 //离线部分主函数调用queryMinning，计算并存盘
 void topicSampleOffline(Graph g, double theta, int K, double Epsilon);
@@ -54,6 +54,6 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon);
  *  下面这两个没什么用
  */
 
-void topiSample(Graph g,Query q, double theta, int K, double Epsilon);
+//Query* topicSample(Graph g,Query q, double theta, int K, double Epsilon);
 
 #endif /* TopicSample_h */
