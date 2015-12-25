@@ -24,8 +24,14 @@ public:
     
     priority_queue<Node> L;
     priority_queue<Node> H;
+    
+    BestEffort(){
+        
+    }
     //priority_queue<Node*> L;
 };
+
+void initL(BestEffort& bestEffort,Graph g,algorithm chooseAlgorithm);
 
 void getLocalGraph(Tree tree,double theta,vector<Node> &nodes);
 void localGraphBased(Graph& g,double theta,Query q);

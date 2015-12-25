@@ -43,12 +43,18 @@ int main(int argc, const char * argv[]) {
 
     q.topicDistribution = topicDistribution;
     
+    BestEffort* bestEffort = new BestEffort();
     //调用bestEffort返回k个种子
-    //map<int, Node>* S =  bestEffort(g, q, theta, precomputation);
+    //离线部分生成优先队列的文件L.txt注意修改路径
+    
+    //bestEffortOffline(g, theta, *bestEffort, q, precomputation);
+    
+    //只要有L.txt文件在线部分独立执行
+    map<int, Node>* S =  bestEffortOnline(g, q, theta, *bestEffort, precomputation);
     
 //    precomputationBased(g);
 
-	Query* qResult = topicSampleOnline(g,q,theta,K,Epsilon);
+//Query* qResult = topicSampleOnline(g,q,theta,K,Epsilon);
 
 
     return 0;

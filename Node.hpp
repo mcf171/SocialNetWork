@@ -76,6 +76,7 @@ public:
         return this->influence <= target.influence;
     }
 };
+Node findNode(map<int, Node> S, int key);
 
 bool findNode(vector<Node> nodes, Node node);
 
