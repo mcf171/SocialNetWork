@@ -30,13 +30,15 @@ double hat_delta_sigma(Node u,map<int, Node>S,Query q, algorithm choosAlgorithm)
     double result = 0;
     
     if (choosAlgorithm == precomputation) {
-
+        /*
         result = hat_delta_p_u(u.MIA) - 1;
         
         if (S.size() != 0) {
             
             result = (1-u.ap_node_S_gamma)*result;
         }
+         */
+        return u.influence;
 
     }
     
