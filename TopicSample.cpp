@@ -41,8 +41,10 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
 		{
 			q->S[iter->first]=iter->second;
+			q->sigma+=iter->second.influence;
 		}
-		q->sigma=sigma(*tempS,g,*q);
+		//q->sigma=sigma(*tempS,g,*q);
+
 		topicDistributions->push_back(*q);
         cout<<i<<"..."<<endl;
 	}
@@ -237,7 +239,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		for(int i = 0 ; i < q.k; i ++)
 		{
 			//从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
-            BestEffort* bestEffort = new BestEffort(g, *q1, theta,precomputation);
+            BestEffort* bestEffort = new BestEffort(g, *q1, theta, precomputation);
 
             map<int, Node>* umap = bestEffort->bestEffortOnline();
 			Node u = umap->begin()->second;

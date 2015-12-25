@@ -45,6 +45,8 @@ int main(int argc, const char * argv[]) {
 
     q.topicDistribution = topicDistribution;
     
+	/*
+
     BestEffort* bestEffort = new BestEffort(g, q,theta, precomputation);
     //调用bestEffort返回k个种子
     //离线部分生成优先队列的文件L.txt注意修改路径
@@ -66,6 +68,7 @@ int main(int argc, const char * argv[]) {
     double influence= sigma(seeds, g, q);
     
 //    precomputationBased(g);
+	*/
 
 	Query* qResult = topicSampleOnline(g,q,theta,K,Epsilon);
 

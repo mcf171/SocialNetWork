@@ -18,6 +18,8 @@ class Node;
 class Tree
 {
 public:
+	Tree();
+
     Node* node;
     
     map<int, Node> seeds;
