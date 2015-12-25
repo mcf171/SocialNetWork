@@ -12,6 +12,8 @@
 #include "Node.hpp"
 #include "Edge.hpp"
 #include "Tree.hpp"
+#include <fstream>
+
 #include <vector>
 
 
@@ -229,11 +231,72 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
 
         bestEffort.L.push(iter->second);
     }  
-
+    
+    ofstream f(L_TXT);
+    priority_queue<Node> temp = bestEffort.L;
+    while (!temp.empty()) {
+        
+        Node node =temp.top();
+        temp.pop();
+        f<<node.number<<" "<<node.influence<<endl;
+    }
+    f.close();
     
 }
 
 
+void initL(BestEffort& bestEffort,Graph g, algorithm chooseAlgorithm)
+{
+    
+    if (chooseAlgorithm == precomputation) {
+        map<int, Node>::iterator nodeIter;
+        
+        //对于图中的每个节点都将边设置为最大的topic值
+        for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
+            
+            //获取社交网络图中每个节点
+            Node node = nodeIter->second;
+            
+            map<int, Edge*>::iterator edgeIter;
+            nodeIter->second.ap_node_S_gamma = 1.0;
+            //获取节点的每个邻边将边的权重设置为最大的topic
+            for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
+                Edge* edge = edgeIter->second;
+                
+                double maxDistance = 0;
+                
+                for (int i = 0; i < DIM; i++)
+                {
+                    if(edge->realDistribution[i] > maxDistance)
+                        maxDistance = edge->realDistribution[i];
+                }
+                edge->distance = maxDistance;
+                edge->weight = maxDistance;
+                edge->isVisited = false;
+            }
+        }
+
+    }
+    
+    fstream f(L_TXT);
+    
+    while (!bestEffort.L.empty()) {
+        bestEffort.L.pop();
+    }
+    
+    int number;
+    double influence;
+    
+    while (!f.eof()) {
+        f>>number>>influence;
+        
+        Node node = findNode(g.nodes, number);
+        node.influence = influence;
+        Dijkstra(g, node,node.MIA);
+        bestEffort.L.push(node);
+    }
+    
+}
 
 /*
  * 在线部分主要计算在给定主题分布下的精确上界
@@ -246,6 +309,7 @@ void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,alg
 map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,algorithm chooseAlgorithm)
 {
 
+    initL(bestEffort,g,chooseAlgorithm);
     //S保存种子
     map<int, Node>* S = new map<int, Node>;
 

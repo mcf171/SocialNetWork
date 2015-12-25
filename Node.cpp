@@ -50,6 +50,20 @@ bool findNode(vector<Node> nodes, Node node)
     
 }
 
+Node findNode(map<int, Node> S, int key)
+{
+
+    Node node;
+    map<int, Node>::iterator iter = S.find(key);
+    if(iter!=S.end())
+    {
+        return iter->second;
+    }
+    
+    return node;
+    
+}
+
 bool findKey(map<int, Node> S, int key)
 {
 	map<int, Node>::iterator iter = S.find(key);
