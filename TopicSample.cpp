@@ -71,7 +71,7 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 	//}
 
 	stringstream ss;
-	ss<<"K"<<K<<"T"<<theta<<".tso";
+	ss<<TSO_DIR<<"K"<<K<<"T"<<theta<<".tso";
 	string ofname;
 	ss>>ofname;
 
@@ -154,7 +154,7 @@ vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsil
 
 
 	stringstream ss;
-	ss<<"K"<<K<<"T"<<theta<<".tso";
+	ss<<TSO_DIR<<"K"<<K<<"T"<<theta<<".tso";
 	string ifname;
 	ss>>ifname;
 
