@@ -81,6 +81,10 @@ double getLocalDistance(Tree* tree, double theta)
 }
 
 
+
+
+
+
 /*
  * 在构建了每个节点的MIA之后可以计算每个节点的影响力上界
  * @param g 社交网络图
