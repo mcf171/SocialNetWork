@@ -32,15 +32,14 @@ vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double*
 		Query q(K,Epsilon);
 		q.topicDistribution = sampledata+i*DIM*sizeof(double);
 		//计算每个的S
-        //TODO
-		/*
-        vector<Node> tempS = bestEffort(g, q, theta, precomputation);
-		for (vector<Node>::iterator iter = tempS.begin();iter!=tempS.end();iter++)
+		
+        map<int, Node>* tempS = bestEffort(g, q, theta, precomputation);
+		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
 		{
-			q.S[iter->number]=*iter;
+			q.S[iter->first]=iter->second;
 		}
 		topicDistributions.push_back(q);
-         */
+        
 	}
 
     return topicDistributions;
@@ -223,17 +222,18 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		for(int i = 0 ; i < q.k; i ++)
 		{
 			//从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
-            //TODO
-            map<int, Node>* u = bestEffort(g, *q1, theta,precomputation);
-            /*
-			qResult->S[u[0].number]=u[0];
-			S_i[u[0].number]=u[0];
+            map<int, Node>* umap = bestEffort(g, *q1, theta,precomputation);
+
+			Node u = umap->begin()->second;
+
+			qResult->S[u.number]=u;
+			S_i[u.number]=u;
 
 			//vector<int>::const_iterator iter = findIntIter(lowerBound->S,u[0].number);
 
-			if(findKey(PL,u[0].number))
+			if(findKey(PL,u.number))
 			{
-				PL.erase(PL.find(u[0].number));
+				PL.erase(PL.find(u.number));
 			}
 			else
 			{
@@ -253,19 +253,19 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 				
 			}
 
-            */
-			map<int, Node> nowUnion = map<int, Node>(S_i);
+            
+			map<int, Node>* nowUnion = new map<int, Node>();
 			for (map<int, Node>::iterator iter= PL.begin();iter!=PL.end();iter++)
 				{
-					nowUnion[iter->first]=iter->second;
+					(*nowUnion)[iter->first]=iter->second;
 				}
 			for (map<int, Node>::iterator iter= S_i.begin();iter!=S_i.end();iter++)
 				{
-					nowUnion[iter->first]=iter->second;
+					(*nowUnion)[iter->first]=iter->second;
 				}
             
             //sigma是不是还要传个Q
-			qResult->sigma = sigma(nowUnion, g, q);
+			qResult->sigma = sigma(*nowUnion, g, q);
 
 			if (qResult->sigma > q.epsilon * upperBound->sigma ){
 				for (map<int, Node>::iterator iter= PL.begin();iter!=PL.end();iter++)
