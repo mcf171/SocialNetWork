@@ -13,7 +13,7 @@
 #include "Tree.hpp"
 #include "Edge.hpp"
 #include "Load.hpp"
-#include "Query.h";
+#include "Query.h"
 using namespace std;
 
 /*
