@@ -22,24 +22,25 @@
 
 
 
-vector<Query> queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata){
+vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata){
     
-    vector<Query> topicDistributions;
+    vector<Query>* topicDistributions = new vector<Query>();
 
 
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		Query q(K,Epsilon);
-		q.topicDistribution = sampledata+i*DIM*sizeof(double);
+		Query* q = new Query(K,Epsilon);
+		q->topicDistribution = sampledata+i*DIM*sizeof(double);
 		//计算每个的S
 		
-        map<int, Node>* tempS = bestEffort(g, q, theta, precomputation);
+        map<int, Node>* tempS = bestEffort(g, *q, theta, precomputation);
 		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
 		{
-			q.S[iter->first]=iter->second;
+			q->S[iter->first]=iter->second;
 		}
-		topicDistributions.push_back(q);
-        
+		q->sigma=sigma(*tempS,g,*q);
+		topicDistributions->push_back(*q);
+        cout<<i<<"..."<<endl;
 	}
 
     return topicDistributions;
@@ -55,7 +56,7 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 	//直接从预先聚类好的结果文件读进来
 
     //首先从log中挖掘可能的主题分布
-    vector<Query> topicDistributions = queryMinning(g, theta, K, Epsilon, sampledata);//P
+    vector<Query>* topicDistributions = queryMinning(g, theta, K, Epsilon, sampledata);//P
 
 	//Json::Value root;
 	//for (int i = 0; i < NSAMPLE; i++)
@@ -70,7 +71,7 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 	//}
 
 	stringstream ss;
-	ss<<"K"<<K<<"T"<<theta;
+	ss<<"K"<<K<<"T"<<theta<<".tso";
 	string ofname;
 	ss>>ofname;
 
@@ -78,8 +79,8 @@ void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
 
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		fout<<topicDistributions[i].sigma;
-		for (map<int,Node>::iterator iter = topicDistributions[i].S.begin(); iter!=topicDistributions[i].S.end(); iter++)
+		fout<<(*topicDistributions)[i].sigma;
+		for (map<int,Node>::iterator iter = (*topicDistributions)[i].S.begin(); iter!=(*topicDistributions)[i].S.end(); iter++)
 		{
 			fout<<" "<<iter->first;
 		}
@@ -153,11 +154,20 @@ vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsil
 
 
 	stringstream ss;
-	ss<<"K"<<K<<"T"<<theta;
+	ss<<"K"<<K<<"T"<<theta<<".tso";
 	string ifname;
 	ss>>ifname;
 
-	ifstream fin(ifname);
+	ifstream fin;
+	fin.open(ifname);
+
+	if(!fin){
+		cout<<ifname<<" not found. Running TopicSampleOffline ..."<<endl;
+		topicSampleOffline(g,theta,K,Epsilon);
+		cout<<"TopicSampleOffline finished."<<endl;
+		cout<<ifname<<" saved."<<endl;
+	}
+
 
 	vector<Query> result;
 
@@ -170,6 +180,7 @@ vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsil
 			int nodeid;
 			fin>>nodeid;
 			q.S[nodeid]=NULL;
+			q.topicDistribution=&sampledata[i*DIM];
 		}
 
 		result.push_back(q);
@@ -279,12 +290,16 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		return qResult;
 	}
 }
-
-void topiSample(Graph g,Query q, double theta, int K, double Epsilon)
+/*
+Query* topicSample(bool doOffline, Graph g,Query q, double theta, int K, double Epsilon)
 {
 	//offline
-	topicSampleOffline(g, theta, K, Epsilon);
+	if(doOffline){
+		topicSampleOffline(g, theta, K, Epsilon);
+	}
 	//online
-    topicSampleOnline(g, q, theta, K, Epsilon);
+    Query* qResult = topicSampleOnline(g, q, theta, K, Epsilon);
+	return qResult;
 }
+*/
 
