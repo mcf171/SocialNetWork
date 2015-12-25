@@ -21,7 +21,6 @@
 //#define PROP_PATH "/Users/wangjue/Documents/project/c++ project1/SocialNetwork/SocialNetWork/SocialNetWork/data/paper_proptest.txt"
 //#define SAMPLE_PATH "/Users/wangjue/Documents/project/c++ project1/SocialNetwork/SocialNetWork/SocialNetWork/data/samples.txt"
 
-
 #define NODE_PATH "../SocialNetWorkGit/data/paper_nodetest.txt"
 #define EDGE_PATH "../SocialNetWorkGit/data/paper_edgetest.txt"
 #define PROP_PATH "../SocialNetWorkGit/data/paper_proptest.txt"
