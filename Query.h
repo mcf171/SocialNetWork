@@ -28,7 +28,7 @@ public:
 	double sigma;
 
 
-	Query(int K, int Epsilon)
+	Query(int K, double Epsilon)
 	{
 		k=K;
 		epsilon=Epsilon;
@@ -80,6 +80,7 @@ public:
 		double res=0;
 		for (int i = 0; i < DIM; i++)
 		{
+			if(gamma.topicDistribution[i]==0 || topicDistribution[i]==0)continue;
 			res += gamma.topicDistribution[i] * log(gamma.topicDistribution[i]/topicDistribution[i]);
 		}
 		return res;
