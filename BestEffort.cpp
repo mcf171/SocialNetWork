@@ -417,13 +417,14 @@ map<int, Node>* BestEffort::bestEffortOnline()
             else if (exact == u.currentStatus)
             {
 				(*S)[u.number]=u;
+                /*
                 map<int,Node>::iterator itertor;
                 for (itertor = g.nodes.begin(); itertor != g.nodes.end(); itertor ++) {
                     
 					if(!findKey(*S, itertor->second.number))
                        itertor->second.ap_node_S_gamma =  calAP(itertor->second, *S, q);
                 }
-                
+                */
                 break;
             }
         }while (!this->H.empty());//end while
