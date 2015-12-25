@@ -47,10 +47,22 @@ int main(int argc, const char * argv[]) {
     //调用bestEffort返回k个种子
     //离线部分生成优先队列的文件L.txt注意修改路径
     
-    //bestEffortOffline(g, theta, *bestEffort, q, precomputation);
+    bestEffortOffline(g, theta, *bestEffort, q, precomputation);
     
     //只要有L.txt文件在线部分独立执行
     map<int, Node>* S =  bestEffortOnline(g, q, theta, *bestEffort, precomputation);
+    
+    map<int, Node> seeds;
+    Tree* tree = new Tree();
+    
+    seeds[g.nodes[1].number]  = g.nodes[1];
+   // seeds[g.nodes[2].number]  = g.nodes[2];
+    
+    tree->seeds = seeds;
+    
+    Dijkstra(g, tree,seeds);
+    
+    double influence= sigma(seeds, g, q);
     
 //    precomputationBased(g);
 

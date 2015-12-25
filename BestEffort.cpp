@@ -117,7 +117,36 @@ void precomputationBased(Graph& g)
     
     calculateGraph(g);
     
+    resetEdgeDistance(g);
     //cout<<"create MIA";
+}
+
+void resetEdgeDistance(Graph& g)
+{
+    
+    map<int, Node>::iterator nodeIter;
+    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
+        
+        //获取社交网络图中每个节点
+        Node node = nodeIter->second;
+        
+        map<int, Edge*>::iterator edgeIter;
+        nodeIter->second.ap_node_S_gamma = 1.0;
+        //获取节点的每个邻边将边的权重设置为最大的topic
+        for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
+            Edge* edge = edgeIter->second;
+            
+            double maxDistance = 0;
+            
+            for (int i = 0; i < DIM; i++)
+            {
+                if(edge->realDistribution[i] > maxDistance)
+                    maxDistance = edge->realDistribution[i];
+            }
+            edge->distance = edge->weight;
+            edge->isVisited = false;
+        }
+    }
 }
 
 void getLocalGraph(Tree tree,double theta,vector<Node> &nodes){
@@ -396,21 +425,28 @@ void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H)
 }
 
 
-void initEdge(Graph g)
-{
-    
-}
-
+/*
+* 计算在给定主题下的种子集合的精确上界
+* @param nodes，种子集合
+* @param g 社交网络图
+* @param gama，查询语句
+*/
 
 double sigma(map<int, Node> nodes, Graph g ,Query q)
 {
-    
+    /*
     map<int, Node>::iterator itertor;
     double result = 0;
     for(itertor = g.nodes.begin(); itertor != g.nodes.end() ; itertor ++)
         result+=calAP(itertor->second, nodes, q );
+    */
+    resetEdgeDistance(g);
+    preprocessOnline(g, q);
+    Tree* tree = new Tree();
+    Dijkstra(g, tree,nodes);
     
-    return result;
+    double influence = hat_delta_p_u(tree);
+    return influence;
 }
 
 

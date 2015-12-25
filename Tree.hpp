@@ -27,6 +27,6 @@ public:
     void getAllNode(vector<Node> &nodes,Node node);
     ~Tree();
 };
-Tree* findNodes(Tree* tree, Node* node);
+Tree* findSeedsNodes(Tree* tree, Node* node);
 Tree* findNode(Tree* tree, Node* node);
 #endif /* Tree_h */
