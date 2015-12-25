@@ -33,7 +33,11 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 		q->topicDistribution = sampledata+i*DIM*sizeof(double);
 		//计算每个的S
 		
-        map<int, Node>* tempS = bestEffort(g, *q, theta, precomputation);
+        
+        
+        BestEffort* bestEffort = new BestEffort(g, *q, theta,precomputation);
+        
+        map<int, Node>* tempS = bestEffort->bestEffortOnline();
 		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
 		{
 			q->S[iter->first]=iter->second;
@@ -233,8 +237,9 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		for(int i = 0 ; i < q.k; i ++)
 		{
 			//从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
-            map<int, Node>* umap = bestEffort(g, *q1, theta,precomputation);
+            BestEffort* bestEffort = new BestEffort(g, *q1, theta,precomputation);
 
+            map<int, Node>* umap = bestEffort->bestEffortOnline();
 			Node u = umap->begin()->second;
 
 			qResult->S[u.number]=u;

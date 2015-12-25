@@ -27,7 +27,7 @@ public:
 	map <int, Node> S;
 	double sigma;
 
-
+    Query(){};
 	Query(int K, double Epsilon)
 	{
 		k=K;

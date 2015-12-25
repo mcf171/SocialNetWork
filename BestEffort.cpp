@@ -1,5 +1,5 @@
 //
-//  BestEffort.cpp
+//  bestEffort->cpp
 //  SocialNetWork
 //
 //  Created by 王珏 on 15/12/23.
@@ -30,13 +30,15 @@ double hat_delta_sigma(Node u,map<int, Node>S,Query q, algorithm choosAlgorithm)
     double result = 0;
     
     if (choosAlgorithm == precomputation) {
-
+        /*
         result = hat_delta_p_u(u.MIA) - 1;
         
         if (S.size() != 0) {
             
             result = (1-u.ap_node_S_gamma)*result;
         }
+         */
+        return u.influence;
 
     }
     
@@ -229,59 +231,9 @@ double estInfUB(Node node, Graph g, double theta)
     return maxInfluence;
 }
 
-/*
- * 离线部分主要功能计算每个点的最大影响上界
- * 在Precomputation算法中是脱离了在线部分的查询Q，但是对于LocalGraph算法是需要结合在线查询的Q，但是只计算影响力大的点
- * @param g 社交网络图
- * @param theta 用户自定义阈值
- * @param bestEffort bestEffort算法对象
- * @param q 查询语句
- */
-
-void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,algorithm chooseAlgorithm)
-{
-    
-    //获取图中所有的Users
-
-    if (chooseAlgorithm == precomputation) {
-        //precomputaion算法
-        precomputationBased(g);
-    }
-    else if(chooseAlgorithm == localGraph){
-        //LocalGraph算法
-        localGraphBased(g, theta, q);
-    }
-
-    //将计算后的节点插入优先队列
-	for (map<int, Node>::iterator iter=g.nodes.begin(); iter!=g.nodes.end(); iter++)
-    {  
-		if (chooseAlgorithm == localGraph)
-			iter->second.influence = iter->second.hat_delta_sigma_p;
-
-        bestEffort.L.push(iter->second);
-    }  
-    
-
-	stringstream ss;
-	ss<<BEO_DIR<<"A"<<chooseAlgorithm<<"T"<<theta<<".beo";
-	string ofname;
-	ss>>ofname;
-
-    ofstream f(ofname);
-
-    priority_queue<Node> temp = bestEffort.L;
-    while (!temp.empty()) {
-        
-        Node node =temp.top();
-        temp.pop();
-        f<<node.number<<" "<<node.influence<<endl;
-    }
-    f.close();
-    
-}
 
 
-void initL(BestEffort& bestEffort,Graph g, double theta, algorithm chooseAlgorithm)
+void initL(BestEffort* bestEffort,Graph g, double theta, algorithm chooseAlgorithm)
 {
     
     if (chooseAlgorithm == precomputation) {
@@ -334,8 +286,8 @@ void initL(BestEffort& bestEffort,Graph g, double theta, algorithm chooseAlgorit
 
 
 
-    while (!bestEffort.L.empty()) {
-        bestEffort.L.pop();
+    while (!bestEffort->L.empty()) {
+        bestEffort->L.pop();
     }
     
     int number;
@@ -347,8 +299,60 @@ void initL(BestEffort& bestEffort,Graph g, double theta, algorithm chooseAlgorit
         Node node = findNode(g.nodes, number);
         node.influence = influence;
         Dijkstra(g, node,node.MIA);
-        bestEffort.L.push(node);
+        bestEffort->L.push(node);
     }
+    
+}
+
+
+/*
+ * 离线部分主要功能计算每个点的最大影响上界
+ * 在Precomputation算法中是脱离了在线部分的查询Q，但是对于LocalGraph算法是需要结合在线查询的Q，但是只计算影响力大的点
+ * @param g 社交网络图
+ * @param theta 用户自定义阈值
+ * @param bestEffort bestEffort算法对象
+ * @param q 查询语句
+ */
+
+void BestEffort::bestEffortOffline()
+{
+    
+    //获取图中所有的Users
+    
+    if (chooseAlgorithm == precomputation) {
+        //precomputaion算法
+        precomputationBased(g);
+    }
+    else if(chooseAlgorithm == localGraph){
+        //LocalGraph算法
+        // localGraphBased(g, theta, q);
+    }
+    
+    //将计算后的节点插入优先队列
+    for (map<int, Node>::iterator iter=g.nodes.begin(); iter!=g.nodes.end(); iter++)
+    {
+        if (chooseAlgorithm == localGraph)
+            iter->second.influence = iter->second.hat_delta_sigma_p;
+        
+        this->L.push(iter->second);
+    }
+    
+    
+    stringstream ss;
+    ss<<BEO_DIR<<"A"<<chooseAlgorithm<<"T"<<theta<<".beo";
+    string ofname;
+    ss>>ofname;
+    
+    ofstream f(ofname);
+    
+    priority_queue<Node> temp = this->L;
+    while (!temp.empty()) {
+        
+        Node node =temp.top();
+        temp.pop();
+        f<<node.number<<" "<<node.influence<<endl;
+    }
+    f.close();
     
 }
 
@@ -360,16 +364,16 @@ void initL(BestEffort& bestEffort,Graph g, double theta, algorithm chooseAlgorit
  * @param bestEffort，bestEffort变量，保存优先队列和最大堆
  * @param chooseAlgorithm，用户选择算法
  */
-map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,algorithm chooseAlgorithm)
+map<int, Node>* BestEffort::bestEffortOnline()
 {
 
-    initL(bestEffort,g,chooseAlgorithm);
+    initL(this,g,theta,chooseAlgorithm);
     //S保存种子
     map<int, Node>* S = new map<int, Node>;
 
     //初始化一个空的最大堆
-    while (!bestEffort.H.empty()) {
-        bestEffort.H.pop();
+    while (!this->H.empty()) {
+        this->H.pop();
     }
 
     S->clear();
@@ -385,11 +389,11 @@ map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bes
         do
         {
             //从离线的优先队列中和最大堆中考虑是否加入新的元素
-            insertCandidates(bestEffort.L, bestEffort.H);
+            insertCandidates(this->L, this->H);
             
             //从堆顶取一个元素
-            Node u = bestEffort.H.top();
-            bestEffort.H.pop();
+            Node u = this->H.top();
+            this->H.pop();
             
             //如果是初始状态那么久进一步计算在gama主题分布下的上界
             if (initial == u.currentStatus)
@@ -397,7 +401,7 @@ map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bes
                 double sigma_new = hat_delta_sigma(u, *S, q,chooseAlgorithm);
                 u.currentStatus = bounded;
                 u.influence = sigma_new;
-                bestEffort.H.push(u);
+                this->H.push(u);
             }
             //如果已经是gamga主题分布下的上界则计算精确的上界
             else if (bounded == u.currentStatus)
@@ -405,7 +409,7 @@ map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bes
                 double sigma_new = CalcMargin(u, g, theta, q, *S);
                 u.currentStatus = exact;
                 u.influence = sigma_new;
-                bestEffort.H.push(u);
+                this->H.push(u);
             }
             //如果已经是精确上界则直接弹出
             else if (exact == u.currentStatus)
@@ -420,7 +424,7 @@ map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bes
                 
                 break;
             }
-        }while (!bestEffort.H.empty());//end while
+        }while (!this->H.empty());//end while
     }//end for
     
     return S;
@@ -650,18 +654,4 @@ double calDetaUSR(map<int, Node>&V, double theta)
  * @param theta 用户自定义阈值
  * @param chooseAlgorithm 用户选择算法
  */
-map<int, Node>* bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorithm)
-{
-    vector<Node> node;
-    
-    BestEffort bestEffort;
-    
-    
-    //首先进行离线处理
-    bestEffortOffline(g, theta, bestEffort,q,chooseAlgorithm);
 
-    //进行在线处理
-    map<int, Node>* S = bestEffortOnline(g, q, theta, bestEffort,chooseAlgorithm);
-    
-    return S;
-}

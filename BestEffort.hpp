@@ -13,11 +13,14 @@
 #include <queue>
 #include <vector>
 #include "Query.h"
+#include "Graph.hpp"
 
-class Graph;
+
 using namespace std;
 
 class Node;
+class Graph;
+class Query;
 class BestEffort{
     
 public:
@@ -25,13 +28,25 @@ public:
     priority_queue<Node> L;
     priority_queue<Node> H;
     
-    BestEffort(){
+    Graph g;
+    Query q;
+    double theta;
+    algorithm chooseAlgorithm;
+    
+    BestEffort(Graph g,Query q, double theta, algorithm chooseAlgorithm){
         
+        this->g = g;
+        this->q = q;
+        this->theta = theta;
+        this->chooseAlgorithm = chooseAlgorithm;
     }
+    
+    void bestEffortOffline();
+    map<int, Node>* bestEffortOnline();
     //priority_queue<Node*> L;
 };
 
-void initL(BestEffort& bestEffort,Graph g,algorithm chooseAlgorithm);
+void initL(BestEffort* bestEffort,Graph g, double theta, algorithm chooseAlgorithm);
 void resetEdgeDistance(Graph& g);
 
 void getLocalGraph(Tree tree,double theta,vector<Node> &nodes);
@@ -39,10 +54,8 @@ void localGraphBased(Graph& g,double theta,Query q);
 void neighborhoodBased(Graph& g);
 double estInfUB(Node node, Graph g, double theta);
 
-void bestEffortOffline(Graph g, double theta, BestEffort& bestEffort,Query q,algorithm chooseAlgorithm);
-map<int, Node>* bestEffortOnline(Graph g ,Query q, double theta, BestEffort& bestEffort,algorithm chooseAlgorithm);
 
-map<int, Node>* bestEffort(Graph g, Query q, double theta, algorithm chooseAlgorithm);
+
 
 void precomputationBased(Graph& g);
 void preprocessOnline(Graph&g, Query q);
