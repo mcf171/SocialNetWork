@@ -391,7 +391,7 @@ map<int, Node>* BestEffort::bestEffortOnline()
         do
         {
             //从离线的优先队列中和最大堆中考虑是否加入新的元素
-            insertCandidates(this->L, this->H);
+            insertCandidates(this->L, this->H,q);
             
             //从堆顶取一个元素
             Node u = this->H.top();
@@ -437,7 +437,7 @@ map<int, Node>* BestEffort::bestEffortOnline()
 /*
 	Adding posible candidates from L
  */
-void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H)
+void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H,Query q)
 {
     //return if L is empty
     if (L.empty())
@@ -448,6 +448,12 @@ void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H)
     //insertion process until H.top > L.top
     while (!L.empty())
     {
+        if (!q.skipNodes.empty()) {
+            Node node = L.top();
+            if (findKey(q.skipNodes, node.number)) {
+                L.pop();
+            }
+        }
         if (H.empty() || H.top() <= L.top()) {
             H.push(L.top());
             L.pop();

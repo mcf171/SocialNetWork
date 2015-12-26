@@ -248,6 +248,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
             map<int, Node>* umap = bestEffort->bestEffortOnline();
 			Node u = umap->begin()->second;
 
+            q1->skipNodes[u.number] = u;
 			//qResult->S[u.number]=u;
 			S_i[u.number]=u;
 
