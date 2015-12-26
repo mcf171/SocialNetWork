@@ -33,10 +33,10 @@ int main(int argc, const char * argv[]) {
     
     //从文件加载Graph
 	
-    double Epsilon = 0.8;
+    double Epsilon = 0.2;
     //创建查询语句
     
-    double topicDistribution []= {0.2, 0.3, 0.5};
+    double topicDistribution []= {0.9,0.9,0.9};
 
 
 	double theta=0.99;
@@ -91,5 +91,6 @@ int main(int argc, const char * argv[]) {
 
 	cout<<"end."<<endl;
 
-    return 0;
+
+	return 0;
 }

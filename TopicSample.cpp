@@ -91,7 +91,7 @@ void topicSampleOffline(Graph* g, double theta, int K, double Epsilon){
 	//}
 
 	stringstream ss;
-	ss<<TSO_DIR<<"K"<<K<<"T"<<theta<<".tso";
+	ss<<TSO_DIR<<"S"<<NSAMPLE<<"K"<<K<<"T"<<theta<<".tso";
 	string ofname;
 	ss>>ofname;
 
@@ -176,7 +176,7 @@ vector<Query> loadSampleOfflineResult(Graph* g, double theta, int K, double Epsi
 
 
 	stringstream ss;
-	ss<<TSO_DIR<<"K"<<K<<"T"<<theta<<".tso";
+	ss<<TSO_DIR<<"S"<<NSAMPLE<<"K"<<K<<"T"<<theta<<".tso";
 	string ifname;
 	ss>>ifname;
 
