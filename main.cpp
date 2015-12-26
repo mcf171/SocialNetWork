@@ -35,7 +35,9 @@ int main(int argc, const char * argv[]) {
 	
     double Epsilon = 0.8;
     //创建查询语句
-        double topicDistribution []= {0.2, 0.3, 0.5};
+    
+
+    double topicDistribution []= {0.2, 0.3, 0.5};
 
 
 	double theta=0.99;
