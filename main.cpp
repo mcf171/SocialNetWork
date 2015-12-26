@@ -44,8 +44,11 @@ int main(int argc, const char * argv[]) {
 	Query q(K,Epsilon,theta);
 
     q.topicDistribution = topicDistribution;
-    
+
 	/*
+     BestEffort* bestEffort = new BestEffort(&g, &q, theta, precomputation);
+     bestEffort->bestEffortOffline();
+     map<int, Node>* S = bestEffort->bestEffortOnline();
 
     BestEffort* bestEffort = new BestEffort(g, q,theta, precomputation);
     //调用bestEffort返回k个种子
