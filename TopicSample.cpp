@@ -41,9 +41,9 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
 		{
 			q->S[iter->first]=iter->second;
-			q->sigma+=iter->second.influence;
+			//q->sigma+=iter->second.influence;
 		}
-		//q->sigma=sigma(*tempS,g,*q);
+		q->sigma=sigma(*tempS,g,*q);
 
 		topicDistributions->push_back(*q);
         cout<<i<<"..."<<endl;
