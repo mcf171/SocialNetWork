@@ -33,7 +33,7 @@ int main(int argc, const char * argv[]) {
     
     //从文件加载Graph
 	
-    double Epsilon = 0.7;
+    double Epsilon = 0.8;
     //创建查询语句
     
     double topicDistribution []= {0.9,0.9,0.9};

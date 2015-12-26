@@ -265,7 +265,9 @@ Query* topicSampleOnline(Graph* g,Query q){
 		return lowerBound;
     }else{
     
-		
+		cout<<"UpperBound: "<<upperBound->sigma<<endl;
+		cout<<"LowerBound: "<<lowerBound->sigma<<endl;
+
 		map<int, Node> S_i;
 		map<int, Node> PL;
 		for (map<int, Node>::iterator iter= lowerBound->S.begin();iter!=lowerBound->S.end();iter++)
