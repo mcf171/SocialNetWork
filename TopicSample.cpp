@@ -199,9 +199,11 @@ vector<Query> loadSampleOfflineResult(Graph* g, double theta, int K, double Epsi
 		cout<<ifname<<" saved."<<endl;
 		cout<<endl;
 
-		fin.open(ifname);
 	}
 
+	while(!fin){
+		fin.open(ifname);
+	}
 
 	vector<Query> result;
 

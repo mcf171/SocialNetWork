@@ -33,7 +33,7 @@ int main(int argc, const char * argv[]) {
     
     //从文件加载Graph
 	
-    double Epsilon = 0.2;
+    double Epsilon = 0.7;
     //创建查询语句
     
     double topicDistribution []= {0.9,0.9,0.9};
@@ -41,7 +41,7 @@ int main(int argc, const char * argv[]) {
 
 	double theta=0.99;
 
-	int K=3;
+	int K=10;
 
 	
 

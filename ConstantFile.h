@@ -53,8 +53,8 @@
 #define NODE_PATH "../SocialNetWorkGit/data/dblp/nodes_dblp_512776.txt"
 #define EDGE_PATH "../SocialNetWorkGit/data/dblp/edges_dblp_1049866.txt"
 #define PROP_PATH "../SocialNetWorkGit/data/dblp/props_dblp_1049866.txt"
-#define SAMPLE_PATH "../SocialNetWorkGit/data/samples25.txt"
-#define NSAMPLE 25
+#define SAMPLE_PATH "../SocialNetWorkGit/data/samples5.txt"
+#define NSAMPLE 5
 #define BEO_DIR "../SocialNetWorkGit/data/dblp/beo/"
 #define TSO_DIR "../SocialNetWorkGit/data/dblp/tso/"
 #define NNODE 512776
