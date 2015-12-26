@@ -318,9 +318,11 @@ void BestEffort::Load()
 	for (int i = 0; i < NNODE; i++)
 	{
 		f>>number>>influence;
-		Node* pnode = new Node(findNode(g->nodes, number));
+		cout<<1;
+		Node* pnode = new Node(g->nodes[number]);
+		cout<<2;
         pnode->influence = influence;
-        pnode->MIA = Dijkstra(*pnode, pnode->MIA,q->theta);
+        //pnode->MIA = Dijkstra(*pnode, pnode->MIA,q->theta);
 		this->LBackup.push_back(pnode);
 	}
 	f.close();

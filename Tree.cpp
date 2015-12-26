@@ -36,8 +36,7 @@ Tree::~Tree()
 
 bool findKey(map<int, Tree*> S, int key)
 {
-	map<int, Tree*>::iterator iter = S.find(key);
-	if(iter!=S.end())
+	if(S.count(key)>0)
 	{
 		return true;
 	}
