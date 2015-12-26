@@ -49,7 +49,6 @@ Tree* findSeedsNodes(Tree* tree, Node* node){
     Tree* result = nullptr;
     map<int, Tree*> nextNode = tree->nextNode;
     map<int,Tree*>::iterator treeItero;
-    bool exist = false;
     
     if(tree->node == nullptr){
         if(findKey(tree->seeds, node->number))
@@ -71,20 +70,7 @@ Tree* findSeedsNodes(Tree* tree, Node* node){
             
     }
     else{
-        if(tree->node->number == node->number)
-            result = tree;
-        else
-        {
-           if(findKey(nextNode,node->number))
-				result = nextNode[node->number];
-			else{
-
-				for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++) 
-
-					result = findNode(treeItero->second,node);
-
-				}
-			}
+            result  = findNode(tree,node);
         }
     
     return result;
@@ -102,7 +88,7 @@ Tree* findNode(Tree* tree, Node* node){
     Tree* result = nullptr;
 	map<int, Tree*> nextNode = tree->nextNode;
     map<int,Tree*>::iterator treeItero;
-    bool exist = false;
+
     if(tree->node->number == node->number)
         result = tree;
     else{
@@ -111,10 +97,13 @@ Tree* findNode(Tree* tree, Node* node){
 				result = nextNode[node->number];
 		else{
 
-			for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++) 
+                for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++) {
 
-				result = findNode(treeItero->second,node);
-
+                    result = findNode(treeItero->second,node);
+                    if (result!= nullptr) {
+                        break;
+                    }
+                }
 			}
 		}
 	

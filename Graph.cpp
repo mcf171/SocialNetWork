@@ -180,7 +180,7 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
     priority_queue<Edge*,vector<Edge*>,EdgeCompare> edges,temp;
     map<int,Edge*>::iterator iterEdge;
     
-	cout<<4;
+
 
     //首先将所有的邻边加入优先队列edges中
     for(iterEdge = startNode->neighbourEdge.begin(); iterEdge != startNode->neighbourEdge.end(); iterEdge++){
@@ -193,7 +193,7 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
     MIA->node = startNode;
     MIA->node->influence = 1;
     
-	cout<<5;
+
 
     //当还存在边的时候，即可能还有节点可以加入S时进行循环构建
     while (!edges.empty())
@@ -205,7 +205,7 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
 			break;
         //边的两端只要有一个节点不在集合S中则加入MIA中
 		if(!findKey(S, edge->targetNodeId) || !findKey(S, edge->sourceNodeId)){
-            cout<<7;
+
             //下面则是构建MIA模型中的一个点
             //首先获取边的源节点，查找源节点在MIA中的位置
             Tree* sourceNode = findNode(MIA,edge->sourceNode);
@@ -261,7 +261,7 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
         }
 
     }
-	cout<<6;
+
     return  MIA;
      
 };
@@ -280,7 +280,7 @@ Tree* Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
     map<int,Edge*>::iterator iterEdge;
     map<int,Node>::iterator iterNode;
 
-	cout<<1;
+
     //首先设置Node到自己的距离为1
     for (iterNode = seeds.begin();  iterNode != seeds.end();  iterNode++) {
         
@@ -296,7 +296,7 @@ Tree* Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
     //初始化MIA的第一个节点为自己
     MIA->seeds = seeds;
 
-    cout<<2;
+
     //当还存在边的时候，即可能还有节点可以加入S时进行循环构建
     while (!edges.empty())
     {
@@ -362,7 +362,7 @@ Tree* Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
         }
         
     }
-	cout<<3<<endl;
+
     return MIA;
     
 };
