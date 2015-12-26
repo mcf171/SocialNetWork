@@ -20,25 +20,35 @@ Tree::~Tree()
 
 }
 
-void Tree::getAllNode(vector<Node> &nodes,Node node)
-{
-    
-    if (this->node->number != node.number) {
-        
-        nodes.push_back(*this->node);
-    }
-    for (auto treeNext : this->nextNode)
-    {
-        treeNext->getAllNode(nodes,node);
-    }
-}
+//void Tree::getAllNode(vector<Node> &nodes,Node node)
+//{
+//    
+//    if (this->node->number != node.number) {
+//        
+//        nodes.push_back(*this->node);
+//    }
+//    for (auto treeNext : this->nextNode)
+//    {
+//        treeNext->getAllNode(nodes,node);
+//    }
+//}
 
+
+bool findKey(map<int, Tree*> S, int key)
+{
+	map<int, Tree*>::iterator iter = S.find(key);
+	if(iter!=S.end())
+	{
+		return true;
+	}
+	return false;
+}
 
 Tree* findSeedsNodes(Tree* tree, Node* node){
     
     Tree* result = nullptr;
-    vector<Tree*> nextNode = tree->nextNode;
-    vector<Tree*>::iterator treeItero;
+    map<int, Tree*> nextNode = tree->nextNode;
+    map<int,Tree*>::iterator treeItero;
     bool exist = false;
     
     if(tree->node == nullptr){
@@ -46,28 +56,17 @@ Tree* findSeedsNodes(Tree* tree, Node* node){
             result = tree;
         else
         {
-            for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++) {
+			if(findKey(nextNode,node->number))
+				result = nextNode[node->number];
+			else{
+				for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++) {
                 
-                if(exist)
-                    break;
-                
-                Tree* tempNode = *treeItero;
-                
-                if(tempNode->node == node)
-                {
-                    result = tempNode;
-                    
-                }else{
-                    
-                    result = findNode(tempNode,node);
-                    
-                }
-                if (result != nullptr) {
-                    exist = true;
-                    break;
-                }
-                
-            }
+					Tree* tempNode = treeItero->second;
+
+					result = findNode(tempNode,node);
+             
+				}
+			}
         }
             
     }
@@ -76,31 +75,18 @@ Tree* findSeedsNodes(Tree* tree, Node* node){
             result = tree;
         else
         {
-            for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++)
-            {
-                
-                if(exist)
-                    break;
-                
-                Tree* tempNode = *treeItero;
-                
-                if(tempNode->node == node)
-                {
-                    result = tempNode;
-                    
-                }else{
-                    
-                    result = findNode(tempNode,node);
-                    
-                }
-                if (result != nullptr) {
-                    exist = true;
-                    break;
-                }
-                
-            }
+           if(findKey(nextNode,node->number))
+				result = nextNode[node->number];
+			else{
+
+				for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++) 
+
+					result = findNode(treeItero->second,node);
+
+				}
+			}
         }
-    }
+    
     return result;
 }
 
@@ -114,34 +100,24 @@ Tree* findSeedsNodes(Tree* tree, Node* node){
 Tree* findNode(Tree* tree, Node* node){
     
     Tree* result = nullptr;
-    vector<Tree*> nextNode = tree->nextNode;
-    vector<Tree*>::iterator treeItero;
+	map<int, Tree*> nextNode = tree->nextNode;
+    map<int,Tree*>::iterator treeItero;
     bool exist = false;
     if(tree->node->number == node->number)
         result = tree;
-    else
-        for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++) {
-            
-            if(exist)
-                break;
-            
-            Tree* tempNode = *treeItero;
+    else{
 
-            if(tempNode->node == node)
-            {
-                result = tempNode;
-                
-            }else{
-                
-                result = findNode(tempNode,node);
-                
-            }
-            if (result != nullptr) {
-                exist = true;
-                break;
-            }
-            
-        }
+		if(findKey(nextNode,node->number))
+				result = nextNode[node->number];
+		else{
+
+			for (treeItero = nextNode.begin(); treeItero != nextNode.end(); treeItero++) 
+
+				result = findNode(treeItero->second,node);
+
+			}
+		}
+	
     return result;
 }
 

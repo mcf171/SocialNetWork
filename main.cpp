@@ -37,7 +37,7 @@ int main(int argc, const char * argv[]) {
     //创建查询语句
     
     double topicDistribution []= {0.2,0.8,0};
-	double theta=0;
+	double theta=0.8;
 	int K=3;
 	double Epsilon = 0.8;
 
@@ -73,7 +73,7 @@ int main(int argc, const char * argv[]) {
 //    precomputationBased(g);
 	*/
 
-	Query* qResult = topicSampleOnline(&g,q,theta,K,Epsilon);
+	Query* qResult = topicSampleOnline(&g,q);
 
 	cout<<endl;
 	cout<<"Result:"<<endl;

@@ -218,7 +218,7 @@ vector<Query> loadSampleOfflineResult(Graph* g, double theta, int K, double Epsi
 }
 
 
-Query* topicSampleOnline(Graph* g,Query q, double theta, int K, double Epsilon){
+Query* topicSampleOnline(Graph* g,Query q){
 
 
     
@@ -233,7 +233,7 @@ Query* topicSampleOnline(Graph* g,Query q, double theta, int K, double Epsilon){
 
 
 
-	vector<Query> Samples = loadSampleOfflineResult(g, theta, K, Epsilon);
+	vector<Query> Samples = loadSampleOfflineResult(g, q.theta, q.k, q.epsilon);
     
 	start = clock();
 	bool getBound = findClosestBound(q, Samples, &upperBound, &lowerBound);
@@ -268,7 +268,7 @@ Query* topicSampleOnline(Graph* g,Query q, double theta, int K, double Epsilon){
 		q1->sigma=0;
 		q1->S.clear();
 
-		BestEffort* bestEffort = new BestEffort(g, q1, theta, precomputation);
+		BestEffort* bestEffort = new BestEffort(g, q1, q1->theta, precomputation);
 
 
 		for(int i = 0 ; i < q.k; i ++)
@@ -296,7 +296,7 @@ Query* topicSampleOnline(Graph* g,Query q, double theta, int K, double Epsilon){
 				{
 
                     // can't guarantee it's true...
-					double sig = delta_sigma_v_S_gamma(iter->second, S_i ,q,theta,g);
+					double sig = delta_sigma_v_S_gamma(iter->second, S_i ,q,q.theta,g);
 					if(sig<minsig){
 						minsig=sig;
 						minpoint=iter->second.number;

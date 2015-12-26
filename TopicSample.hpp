@@ -48,7 +48,7 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query** upperBo
 vector<Query> loadSampleOfflineResult(Graph* g, double theta, int K, double Epsilon);
 
 //在线部分，Algorithm 5
-Query* topicSampleOnline(Graph* g,Query q, double theta, int K, double Epsilon);
+Query* topicSampleOnline(Graph* g,Query q);
 
 /*
  *  下面这两个没什么用

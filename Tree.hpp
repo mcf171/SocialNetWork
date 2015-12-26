@@ -24,11 +24,12 @@ public:
     
     map<int, Node> seeds;
     
-    vector<Tree*> nextNode;
+    map<int, Tree*> nextNode;
     
-    void getAllNode(vector<Node> &nodes,Node node);
+    //void getAllNode(vector<Node> &nodes,Node node);
     ~Tree();
 };
 Tree* findSeedsNodes(Tree* tree, Node* node);
 Tree* findNode(Tree* tree, Node* node);
+bool findKey(map<int, Tree*> S, int key);
 #endif /* Tree_h */

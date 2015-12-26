@@ -111,12 +111,13 @@ void precomputationBased(Graph* g, Query q)
 		
     for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
-        
+        cout<<i<<"..."<<endl;
+
 		nodeIter->second.MIA = Dijkstra(nodeIter->second,nodeIter->second.MIA,q.theta);
         
         //cout<<g.nodes[1].MIA->node->number<<endl;
-		if(i%100==0)cout<<i<<"..."<<endl;
-
+		//if(i%100==0)cout<<i<<"..."<<endl;
+		
 		i++;
     }
     
@@ -162,9 +163,10 @@ void getLocalGraph(Tree tree,double theta,vector<Node> &nodes){
         nodes.push_back(*tree.node);
     
     vector<Tree*>::iterator iterator;
+	/*
     for (iterator = tree.nextNode.begin(); iterator != tree.nextNode.end(); iterator++)
         getLocalGraph(*(*iterator), theta, nodes);
-    
+    */
 }
 
 /*
@@ -573,7 +575,7 @@ double delta_sigma_v_S_gamma(Node v, map<int, Node> S_i, Query q, double theta, 
 {
     return CalcMargin(v, g, theta, q, S_i);
 }
-
+/*
 double prodChild(Tree* node,map<int, Node> S,Query q)
 {
     double ap = 0;
@@ -596,10 +598,11 @@ double prodChild(Tree* node,map<int, Node> S,Query q)
     
     return ap;
 }
-
+*/
 /*
 	calculate the ap(u|S,r) i.e. equation (4) in paper
  */
+/*
 double calAP(Node& u, map<int, Node> S, Query &q)
 {
     double res = 0.0;
@@ -618,7 +621,7 @@ double calAP(Node& u, map<int, Node> S, Query &q)
     }
     return res;
 }
-
+*/
 
 double calPP(Node sourceNode,Node targetNode, Query q)
 {
