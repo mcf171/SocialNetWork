@@ -40,6 +40,15 @@ void Graph::Load()
 	int* nodedata = new int[NNODE];
 	int* edgedata = new int[NEDGE*2];
 	double* propdata = new double[NEDGE*DIM];
+
+	clock_t start,finish;
+	double totalTime;
+
+	
+	cout<<"Loading Graph Data ..."<<endl;
+
+	start = clock();
+
 	LoadGraphData(nodedata,edgedata,propdata);
 
 	for (int i = 0; i < NNODE; i++)
@@ -52,9 +61,24 @@ void Graph::Load()
 		int sourceId=edgedata[2*i];
 		int targetId=edgedata[2*i+1];
 		Edge* edge = new Edge(i,&nodes[sourceId],&nodes[targetId],&propdata[DIM*i]);
+
+		double maxDistance = 0;   
+        for (int i = 0; i < DIM; i++)
+        {
+            if(edge->realDistribution[i] > maxDistance)
+                maxDistance = edge->realDistribution[i];
+        }
+        edge->distance = maxDistance;
+        edge->weight = maxDistance;
+
+
 		edges.push_back(*edge);
 	}
 
+	finish = clock();
+	totalTime = (double)(finish-start)/1000.0;
+
+	cout<<"Graph Loaded in "<<totalTime<<" s."<<endl;
 }
 
 Node Graph::findNode(int number)

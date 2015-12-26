@@ -34,7 +34,6 @@ int main(int argc, const char * argv[]) {
     //从文件加载Graph
 	g.Load();
     
-	cout<<"Graph Loaded."<<endl;
     //创建查询语句
     
     double topicDistribution []= {0.2,0.8,0};

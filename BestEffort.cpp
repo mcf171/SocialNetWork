@@ -234,7 +234,9 @@ double estInfUB(Node node, Graph g, double theta)
 
 void BestEffort::Load()
 {
+	/*
     if (chooseAlgorithm == precomputation) {
+
         map<int, Node>::iterator nodeIter;
         
         //对于图中的每个节点都将边设置为最大的topic值
@@ -261,8 +263,9 @@ void BestEffort::Load()
                 edge->isVisited = false;
             }
         }
-
+		
     }
+	*/
 
 	stringstream ss;
 	ss<<BEO_DIR<<"A"<<chooseAlgorithm<<"T"<<theta<<".beo";
