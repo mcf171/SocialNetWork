@@ -64,7 +64,7 @@ void preprocessOnline(Graph* g, Query q)
     for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         
-		Dijkstra(nodeIter->second,(nodeIter->second.MIA));
+		Dijkstra(nodeIter->second,(nodeIter->second.MIA),q.theta);
     }
 }
 
@@ -75,11 +75,11 @@ void preprocessOnline(Graph* g, Query q)
  * @param g 社交网络图
  */
 
-void precomputationBased(Graph* g)
+void precomputationBased(Graph* g, Query q)
 {
     
     map<int, Node>::iterator nodeIter;
-
+	/*
     //对于图中的每个节点都将边设置为最大的topic值
     for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++) {
 
@@ -104,14 +104,20 @@ void precomputationBased(Graph* g)
             edge->isVisited = false;
         }
     }
-    
+    */
+
     //对每个节点计算构建MIA
+	int i=0;		
+		
     for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         
-		Dijkstra(nodeIter->second,nodeIter->second.MIA);
+		Dijkstra(nodeIter->second,nodeIter->second.MIA,q.theta);
         
         //cout<<g.nodes[1].MIA->node->number<<endl;
+		if(i%100==0)cout<<i<<"..."<<endl;
+
+		i++;
     }
     
     //构建完每个节点的MIA之后可以计算每个节点的影响力上界。
@@ -170,7 +176,7 @@ void getLocalGraph(Tree tree,double theta,vector<Node> &nodes){
 void localGraphBased(Graph* g,double theta, Query q)
 {
     map<int, Node>::iterator nodeIter;
-    precomputationBased(g);
+    precomputationBased(g, q);
 /*
 for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
 		Node node = nodeIter->second;
@@ -199,7 +205,7 @@ for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
     for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         
-        Dijkstra(nodeIter->second,(nodeIter->second.MIA));
+        Dijkstra(nodeIter->second,(nodeIter->second.MIA),q.theta);
         double distance = getLocalDistance(nodeIter->second.MIA, theta);
 
      //   cout<<"the hat_gama of "<<(*nodeIter).number<<" is :"<<distance<<endl;
@@ -312,7 +318,7 @@ void BestEffort::Load()
 		f>>number>>influence;
 		Node* pnode = new Node(findNode(g->nodes, number));
         pnode->influence = influence;
-        Dijkstra(*pnode, pnode->MIA);
+        Dijkstra(*pnode, pnode->MIA,q->theta);
 		this->LBackup.push_back(pnode);
 	}
 	f.close();
@@ -355,7 +361,7 @@ void BestEffort::bestEffortOffline()
     
     if (chooseAlgorithm == precomputation) {
         //precomputaion算法
-        precomputationBased(g);
+        precomputationBased(g, *q);
     }
     else if(chooseAlgorithm == localGraph){
         //LocalGraph算法
@@ -363,16 +369,13 @@ void BestEffort::bestEffortOffline()
     }
     
     //将计算后的节点插入优先队列
-	int i=0;
+
     for (map<int, Node>::iterator iter=g->nodes.begin(); iter!=g->nodes.end(); iter++)
     {
         if (chooseAlgorithm == localGraph)
             iter->second.influence = iter->second.hat_delta_sigma_p;
         this->L.push(iter->second);
-		
-		if(i%100==0)cout<<i<<"..."<<endl;
 
-		i++;
     }
     
     
@@ -519,7 +522,7 @@ double sigma(map<int, Node> nodes, Graph* g ,Query q)
     resetEdgeDistance(g);
     g->changeGraph(q);
     Tree* tree = new Tree();
-    Dijkstra(tree,nodes);
+    Dijkstra(tree,nodes,q.theta);
     
     double influence = hat_delta_p_u(tree);
     return influence;
@@ -549,7 +552,7 @@ double CalcMargin(Node u, Graph* g, double theta, Query gamma, map<int, Node> S)
     u_->MIA->nextNode.clear();
     
     //构建在新图中u的MIA
-    Dijkstra(*u_,u_->MIA);
+    Dijkstra(*u_,u_->MIA,gamma.theta);
     
 
     //计算MIA模型的上界

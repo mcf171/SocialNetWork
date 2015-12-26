@@ -58,7 +58,7 @@ double estInfUB(Node node, Graph* g, double theta);
 
 
 
-void precomputationBased(Graph* g);
+void precomputationBased(Graph* g, Query q);
 void preprocessOnline(Graph* g, Query q);
 
 void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H,Query q);

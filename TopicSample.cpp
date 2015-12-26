@@ -29,7 +29,7 @@ vector<Query>* queryMinning(Graph* g, double theta, int K, double Epsilon, doubl
         cout<<endl;
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		Query* q = new Query(K,Epsilon);
+		Query* q = new Query(K,Epsilon, theta);
 		q->topicDistribution = &(sampledata[i*DIM]);
 		//计算每个的S
         double* p = q->topicDistribution;
@@ -200,7 +200,7 @@ vector<Query> loadSampleOfflineResult(Graph* g, double theta, int K, double Epsi
 
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		Query q(K,Epsilon);
+		Query q(K,Epsilon, theta);
 		fin>>q.sigma;
 		for (int j = 0; j < K; j++)
 		{
@@ -225,7 +225,7 @@ Query* topicSampleOnline(Graph* g,Query q, double theta, int K, double Epsilon){
     //找到与离线系统中上下界最接近的上下界    
     Query* upperBound=NULL;
 	Query* lowerBound=NULL;
-	Query* qResult = new Query(q.k, q.epsilon);
+	Query* qResult = new Query(q.k, q.epsilon, q.theta);
 	double nowSigma = 0;
 
 	clock_t start,finish;

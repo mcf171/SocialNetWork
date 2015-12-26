@@ -46,9 +46,9 @@ public:
 
 double getLocalDistance(Tree* startNode, double theta);
 
-void Dijkstra(Node startNode,Tree* MIA);
+void Dijkstra(Node startNode,Tree* MIA,double theta);
 
-void Dijkstra(Tree* MIA,map<int, Node> seeds);
+void Dijkstra(Tree* MIA,map<int, Node> seeds,double theta);
 
 void calculateGraph(Graph* g);
 

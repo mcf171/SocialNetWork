@@ -22,7 +22,7 @@ public:
 	double* topicDistribution;
     int k;//number of seed
     double epsilon;
-
+	double theta;
 	//输出的结果
 	map <int, Node> S;
 	double sigma;
@@ -31,10 +31,11 @@ public:
 
 
     Query(){};
-	Query(int K, double Epsilon)
+	Query(int K, double Epsilon,double Theta)
 	{
 		k=K;
 		epsilon=Epsilon;
+		theta=Theta;
 		sigma=0;
 	}
 /*
