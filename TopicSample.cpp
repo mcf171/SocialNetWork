@@ -26,16 +26,18 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
     
     vector<Query>* topicDistributions = new vector<Query>();
 
-
+        cout<<endl;
 	for (int i = 0; i < NSAMPLE; i++)
 	{
 		Query* q = new Query(K,Epsilon);
 		q->topicDistribution = &(sampledata[i*DIM]);
 		//计算每个的S
-		
-        
+        double* p = q->topicDistribution;
+
+        cout<<"topic distribution :"<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
         
         BestEffort* bestEffort = new BestEffort(g, *q, theta,precomputation);
+        
         
         map<int, Node>* tempS = bestEffort->bestEffortOnline();
 		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
@@ -44,9 +46,9 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 			//q->sigma+=iter->second.influence;
 		}
 		q->sigma=sigma(*tempS,g,*q);
-
+        cout<<"sigma :"<<q->sigma<<endl;
 		topicDistributions->push_back(*q);
-        cout<<i<<"..."<<endl;
+        //cout<<i<<"..."<<endl;
 	}
 
     return topicDistributions;
