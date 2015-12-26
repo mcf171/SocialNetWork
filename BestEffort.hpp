@@ -60,7 +60,7 @@ double estInfUB(Node node, Graph g, double theta);
 void precomputationBased(Graph& g);
 void preprocessOnline(Graph&g, Query q);
 
-void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H);
+void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H,Query q);
 double calDetaUSR(map<int, Node>&V, double theta);
 void adjustM(Node& oldNode, double new_inf, priority_queue<Node>& M);
 bool findNodeInM(const Node & findNode,  priority_queue<Node> M);
