@@ -63,7 +63,9 @@ Tree* findSeedsNodes(Tree* tree, Node* node){
 					Tree* tempNode = treeItero->second;
 
 					result = findNode(tempNode,node);
-             
+                    if (result!= nullptr) {
+                        break;
+                    }
 				}
 			}
         }
