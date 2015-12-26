@@ -12,7 +12,7 @@
 #include <time.h>
 
 
-#define NSAMPLE 500
+#define NSAMPLE 100
 #define DIM 3
 
 

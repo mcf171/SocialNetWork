@@ -28,9 +28,11 @@ void Graph::changeGraph(Query q){
         map<int,Edge*>::iterator edgeItera;
         
         for (edgeItera = nodeItera->second.neighbourEdge.begin(); edgeItera != nodeItera->second.neighbourEdge.end(); edgeItera++) {
-            
-           
-            edgeItera->second->weight = edgeItera->second->realDistribution[0] * q.topicDistribution[0] + edgeItera->second->realDistribution[1] * q.topicDistribution[1]+edgeItera->second->realDistribution[2] * q.topicDistribution[2];
+            edgeItera->second->weight =0;
+			for (int i = 0; i < DIM; i++)
+			{
+				edgeItera->second->weight += edgeItera->second->realDistribution[i] * q.topicDistribution[i];
+			}
         }
     }
 }
