@@ -142,8 +142,12 @@ void Dijkstra(Graph g, Node inputNode,Tree* MIA)
 {
     //S记录已经存在在MIA模型中的节点
 
+    if (MIA != nullptr) {
+        MIA = new Tree();
+    }
+    
 	Node* startNode = new Node(inputNode);
-
+    
     map<int, Node> S;
     //现将根节点放入S中
 	S[startNode->number]=*startNode;
@@ -247,12 +251,14 @@ void Dijkstra(Graph g, Tree* MIA,map<int, Node> seeds)
     //首先设置Node到自己的距离为1
     for (iterNode = seeds.begin();  iterNode != seeds.end();  iterNode++) {
         
+        S[iterNode->second.number] = iterNode->second;
         for(iterEdge = iterNode->second.neighbourEdge.begin(); iterEdge != iterNode->second.neighbourEdge.end(); iterEdge++){
 
-            edges.push(iterEdge->second);
+            if(!findKey(S, iterEdge->second->targetNodeId) || !findKey(S, iterEdge->second->sourceNodeId))
+                edges.push(iterEdge->second);
         }
         iterNode->second.influence = 1;
-        S[iterNode->second.number] = iterNode->second;
+
     }
     //初始化MIA的第一个节点为自己
     MIA->seeds = seeds;

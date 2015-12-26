@@ -473,7 +473,7 @@ double sigma(map<int, Node> nodes, Graph g ,Query q)
         result+=calAP(itertor->second, nodes, q );
     */
     resetEdgeDistance(g);
-    preprocessOnline(g, q);
+    g.changeGraph(q);
     Tree* tree = new Tree();
     Dijkstra(g, tree,nodes);
     
@@ -519,8 +519,7 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
 
 double delta_sigma_v_S_gamma(Node v, map<int, Node> S_i, Query q, double theta, Graph g)
 {
-    CalcMargin(v, g, theta, q, S_i);
-    return 1;
+    return CalcMargin(v, g, theta, q, S_i);
 }
 
 double prodChild(Tree* node,map<int, Node> S,Query q)
