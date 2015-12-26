@@ -134,6 +134,7 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query** upperBo
 		if(topicDistributions[i].isUpperBound(q))
 		{
 			double dKL = topicDistributions[i].dKL(q);
+			//cout<<dKL<<endl;
 			if(dKL<upperDist)
 			{
 				upperDist=dKL;
@@ -150,9 +151,13 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query** upperBo
 
 	*upperBound = new Query(**upperBound);//新对象
 
+	//cout<<"--------------------"<<endl;
+
 	for (int i = 0; i < lowerBoundIds.size(); i++)
 	{
 		double dKL = (*upperBound)->dKL(topicDistributions[lowerBoundIds[i]]);
+		//cout<<dKL<<" "<<topicDistributions[lowerBoundIds[i]].topicDistribution[0]<<topicDistributions[lowerBoundIds[i]].topicDistribution[1]<<topicDistributions[lowerBoundIds[i]].topicDistribution[2]<<endl;
+
 		if(dKL<lowerDist)
 		{
 			lowerDist=dKL;
@@ -257,6 +262,11 @@ Query* topicSampleOnline(Graph* g,Query q){
 		//which can not happen if we put in 000 and 111
 	}
 	else if (lowerBound->sigma > q.epsilon * upperBound->sigma ) {
+		    
+		cout<<"UpperBound: "<<upperBound->sigma<<endl;
+		cout<<"LowerBound: "<<lowerBound->sigma<<endl;
+
+
         //如果找到的边界满足不等式直接返回种子集合
 		finish = clock();
 		totalTime = (double)(finish-start)/1000.0;
@@ -264,9 +274,10 @@ Query* topicSampleOnline(Graph* g,Query q){
 
 		return lowerBound;
     }else{
-    
+		    
 		cout<<"UpperBound: "<<upperBound->sigma<<endl;
 		cout<<"LowerBound: "<<lowerBound->sigma<<endl;
+
 
 		map<int, Node> S_i;
 		map<int, Node> PL;

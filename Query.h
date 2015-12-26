@@ -79,13 +79,28 @@ public:
 		return true;
 	}
 
+	//double dKL(Query gamma)
+	//{
+	//	double res=0;
+	//	for (int i = 0; i < DIM; i++)
+	//	{
+	//		if(topicDistribution[i]==0)continue;
+	//		else if(gamma.topicDistribution[i]==0){
+	//			res += INFMAX;
+	//		}else{
+	//			res -= gamma.topicDistribution[i] * log(gamma.topicDistribution[i]/topicDistribution[i]);
+	//		}
+	//	}
+	//	return res;
+	//}
+
 	double dKL(Query gamma)
 	{
 		double res=0;
 		for (int i = 0; i < DIM; i++)
 		{
-			if(gamma.topicDistribution[i]==0 || topicDistribution[i]==0)continue;
-			res += gamma.topicDistribution[i] * log(gamma.topicDistribution[i]/topicDistribution[i]);
+			//res += abs(gamma.topicDistribution[i]-topicDistribution[i]);
+			res += (gamma.topicDistribution[i]-topicDistribution[i])*(gamma.topicDistribution[i]-topicDistribution[i]);
 		}
 		return res;
 	}
