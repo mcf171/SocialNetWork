@@ -32,19 +32,22 @@ int main(int argc, const char * argv[]) {
 	Graph g;
     
     //从文件加载Graph
-	g.Load();
+	
     
     //创建查询语句
     
     double topicDistribution []= {0.2,0.8,0};
-	double theta=0;
+	double theta=0.99;
+
 	int K=3;
+
 	double Epsilon = 0.8;
 
 	Query q(K,Epsilon,theta);
 
     q.topicDistribution = topicDistribution;
 
+	g.Load(q);
 	/*
      BestEffort* bestEffort = new BestEffort(&g, &q, theta, precomputation);
      bestEffort->bestEffortOffline();

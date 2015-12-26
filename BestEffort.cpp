@@ -111,12 +111,12 @@ void precomputationBased(Graph* g, Query q)
 		
     for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
-        cout<<i<<"..."<<endl;
+        //cout<<i<<"..."<<endl;
 
 		nodeIter->second.MIA = Dijkstra(nodeIter->second,nodeIter->second.MIA,q.theta);
         
         //cout<<g.nodes[1].MIA->node->number<<endl;
-		//if(i%100==0)cout<<i<<"..."<<endl;
+		if(i%100==0)cout<<i<<"..."<<endl;
 		
 		i++;
     }
