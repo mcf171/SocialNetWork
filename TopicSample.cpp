@@ -22,24 +22,29 @@
 
 
 
-vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata){
+vector<Query>* queryMinning(Graph* g, double theta, int K, double Epsilon, double* sampledata){
     
     vector<Query>* topicDistributions = new vector<Query>();
 
         cout<<endl;
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		Query* q = new Query(K,Epsilon);
+		Query* q = new Query(K,Epsilon, theta);
 		q->topicDistribution = &(sampledata[i*DIM]);
 		//计算每个的S
         double* p = q->topicDistribution;
 
         //cout<<"topic distribution :"<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
         
+		
+
         BestEffort* bestEffort = new BestEffort(g, q, theta,precomputation);
         
-        
+
         map<int, Node>* tempS = bestEffort->bestEffortOnline();
+
+		
+
 		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
 		{
 			q->S[iter->first]=iter->second;
@@ -59,7 +64,7 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 /*
  *  主题采样离线部分
  */
-void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
+void topicSampleOffline(Graph* g, double theta, int K, double Epsilon){
 	double* sampledata = new double[NSAMPLE*DIM];
 
 	LoadSampleData(sampledata);
@@ -156,7 +161,7 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query** upperBo
 }
 
 
-vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsilon)
+vector<Query> loadSampleOfflineResult(Graph* g, double theta, int K, double Epsilon)
 {
 	//从文件中读取Offline结果
 	double* sampledata = new double[NSAMPLE*DIM];
@@ -195,7 +200,7 @@ vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsil
 
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		Query q(K,Epsilon);
+		Query q(K,Epsilon, theta);
 		fin>>q.sigma;
 		for (int j = 0; j < K; j++)
 		{
@@ -213,14 +218,14 @@ vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsil
 }
 
 
-Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
+Query* topicSampleOnline(Graph* g,Query q, double theta, int K, double Epsilon){
 
 
     
     //找到与离线系统中上下界最接近的上下界    
     Query* upperBound=NULL;
 	Query* lowerBound=NULL;
-	Query* qResult = new Query(q.k, q.epsilon);
+	Query* qResult = new Query(q.k, q.epsilon, q.theta);
 	double nowSigma = 0;
 
 	clock_t start,finish;
@@ -253,7 +258,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		map<int, Node> PL;
 		for (map<int, Node>::iterator iter= lowerBound->S.begin();iter!=lowerBound->S.end();iter++)
 		{
-			PL[iter->first]=g.findNode(iter->first);
+			PL[iter->first]=g->findNode(iter->first);
 		}
 
 
