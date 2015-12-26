@@ -126,8 +126,6 @@ void precomputationBased(Graph* g, Query q)
     
     calculateGraph(g);
     
-    //resetEdgeDistance(g);
-    //cout<<"create MIA";
 }
 
 //void resetEdgeDistance(Graph* g)
@@ -566,8 +564,7 @@ double sigma(map<int, Node> nodes, Graph* g ,Query q)
     for(itertor = g.nodes.begin(); itertor != g.nodes.end() ; itertor ++)
         result+=calAP(itertor->second, nodes, q );
     */
-    //resetEdgeDistance(g);
-    
+
     Tree* tree = new Tree();
     tree = Dijkstra(tree,nodes,q.theta);
     
