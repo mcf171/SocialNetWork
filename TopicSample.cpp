@@ -37,9 +37,9 @@ vector<Query>* queryMinning(Graph* g, double theta, int K, double Epsilon, doubl
 	{
 		
 		q->topicDistribution = &(sampledata[i*DIM]);
-		cout<<1;
+		
 		g->changeGraph(*q);
-		cout<<2;
+		
 		//计算每个的S
         double* p = q->topicDistribution;
 
@@ -48,14 +48,12 @@ vector<Query>* queryMinning(Graph* g, double theta, int K, double Epsilon, doubl
 
         map<int, Node>* tempS = bestEffort->bestEffortOnline();
 
-		cout<<3;
-
 		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
 		{
 			q->S[iter->first]=iter->second;
 			//q->sigma+=iter->second.influence;
 		}
-		cout<<4;
+	
 		q->sigma=sigma(*tempS,g,*q);
         //cout<<"sigma :"<<q->sigma<<endl;
 		

@@ -36,7 +36,7 @@ public:
 
 	vector<Node*>* L1;
 	vector<Node*>* L2;
-
+	bool loaded;
     
 
     BestEffort(Graph* g,Query* q, double theta, algorithm chooseAlgorithm);

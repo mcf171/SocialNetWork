@@ -249,6 +249,7 @@ BestEffort::BestEffort(Graph* g,Query* q, double theta, algorithm chooseAlgorith
 
 	this->L1 = new vector<Node*>();
 	this->L2 = new vector<Node*>();
+	this->loaded=false;
 }
 
 
@@ -345,8 +346,12 @@ void BestEffort::Load()
         pnode->influence = influence[i];
         //pnode->MIA = Dijkstra(*pnode, pnode->MIA,q->theta);
 		this->L1->push_back(pnode);
-	}
 
+		if(influence[i]<q->theta)break;
+
+	}
+	loaded=true;
+	cout<<"Nodes: "<<L1->size()<<endl;
 }
 
 void BestEffort::InitL()
@@ -358,7 +363,7 @@ void BestEffort::InitL()
     //    this->L = *release;
     //}
     
-	if(L1->size()==0)
+	if(!loaded)
 		this->Load();
 
 	else{
@@ -442,7 +447,7 @@ map<int, Node>* BestEffort::bestEffortOnline()
 {
 
     //initL(this,g,theta,chooseAlgorithm);
-	cout<<"111";
+	
 	this->InitL();
 
     //S保存种子
@@ -457,11 +462,11 @@ map<int, Node>* BestEffort::bestEffortOnline()
         this->H = *release;
     }
 
-    cout<<"ORz";
+    
     //预处理在线节点针对LocalGraph算法，如果不是LocalGraph算法
     if(chooseAlgorithm == localGraph)
         preprocessOnline(g, *q);
-    cout<<3;
+
     //K次循环找到所有合适的种子
     for (int i = 0; i < q->k ; i++)
     {
@@ -469,6 +474,7 @@ map<int, Node>* BestEffort::bestEffortOnline()
         
         do
         {
+			//cout<<L1->size()<<endl;
             //从离线的优先队列中和最大堆中考虑是否加入新的元素
             insertCandidates(*q);
             
@@ -483,7 +489,6 @@ map<int, Node>* BestEffort::bestEffortOnline()
                 u.currentStatus = bounded;
                 u.influence = sigma_new;
                 this->H.push(u);
-				cout<<4;
             }
             //如果已经是gamga主题分布下的上界则计算精确的上界
             else if (bounded == u.currentStatus)
@@ -492,11 +497,11 @@ map<int, Node>* BestEffort::bestEffortOnline()
                 u.currentStatus = exact;
                 u.influence = sigma_new;
                 this->H.push(u);
-				cout<<5;
             }
             //如果已经是精确上界则直接弹出
             else if (exact == u.currentStatus)
             {
+
 				(*S)[u.number]=u;
                 /*
                 map<int,Node>::iterator itertor;
@@ -509,8 +514,9 @@ map<int, Node>* BestEffort::bestEffortOnline()
                 break;
             }
         }while (!this->H.empty());//end while
+		//cout<<endl;
     }//end for
-    
+
     return S;
 }
 
@@ -583,7 +589,7 @@ double CalcMargin(Node u, Graph* g, double theta, Query gamma, map<int, Node> S)
     double res = 0.0;
     
     //首先将网络中所有的边权值修改为给定主题下的权值
-    g->changeGraph(gamma);
+    //g->changeGraph(gamma);
     
     //从新的图中获取点u
     Node* u_ = new Node(u);
