@@ -308,9 +308,12 @@ void BestEffort::Load()
 
 void BestEffort::InitL()
 {
-	
-    while (!this->L.empty()) {
-        this->L.pop();
+
+    if (!this->L.empty()) {
+        release = &this->L;
+        delete  release;
+        release = new priority_queue<Node>();
+        this->L = *release;
     }
     
 	if(LBackup.size()==0)
@@ -402,8 +405,11 @@ map<int, Node>* BestEffort::bestEffortOnline()
 
     //初始化一个空的最大堆
 	//TODO: 直接New 一个最大堆
-    while (!this->H.empty()) {
-        this->H.pop();
+    
+    if (!this->H.empty()) {
+
+        release = new priority_queue<Node>();
+        this->H = *release;
     }
 
     

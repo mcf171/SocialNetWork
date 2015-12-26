@@ -11,6 +11,7 @@
 
 Edge::~Edge(){
    
+   
 }
 
 Edge::Edge(int idnum, Node* source, Node* target, double* realdistribution)

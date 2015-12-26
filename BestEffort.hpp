@@ -27,6 +27,7 @@ public:
     
     priority_queue<Node> L;
     priority_queue<Node> H;
+    priority_queue<Node>* release;
     
     Graph g;
     Query* q;
@@ -42,6 +43,10 @@ public:
         this->q = q;
         this->theta = theta;
         this->chooseAlgorithm = chooseAlgorithm;
+        release = new priority_queue<Node>();
+        L = * release;
+        release = new priority_queue<Node>();
+        H = * release;
     }
     
 	void Load();
