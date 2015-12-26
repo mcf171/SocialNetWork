@@ -64,7 +64,7 @@ void preprocessOnline(Graph* g, Query q)
     for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         
-		Dijkstra(nodeIter->second,(nodeIter->second.MIA),q.theta);
+		nodeIter->second.MIA = Dijkstra(nodeIter->second,(nodeIter->second.MIA),q.theta);
     }
 }
 
@@ -112,7 +112,7 @@ void precomputationBased(Graph* g, Query q)
     for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         
-		Dijkstra(nodeIter->second,nodeIter->second.MIA,q.theta);
+		nodeIter->second.MIA = Dijkstra(nodeIter->second,nodeIter->second.MIA,q.theta);
         
         //cout<<g.nodes[1].MIA->node->number<<endl;
 		if(i%100==0)cout<<i<<"..."<<endl;
@@ -205,7 +205,7 @@ for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
     for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         
-        Dijkstra(nodeIter->second,(nodeIter->second.MIA),q.theta);
+        nodeIter->second.MIA = Dijkstra(nodeIter->second,(nodeIter->second.MIA),q.theta);
         double distance = getLocalDistance(nodeIter->second.MIA, theta);
 
      //   cout<<"the hat_gama of "<<(*nodeIter).number<<" is :"<<distance<<endl;
@@ -318,7 +318,7 @@ void BestEffort::Load()
 		f>>number>>influence;
 		Node* pnode = new Node(findNode(g->nodes, number));
         pnode->influence = influence;
-        Dijkstra(*pnode, pnode->MIA,q->theta);
+        pnode->MIA = Dijkstra(*pnode, pnode->MIA,q->theta);
 		this->LBackup.push_back(pnode);
 	}
 	f.close();
@@ -527,7 +527,7 @@ double sigma(map<int, Node> nodes, Graph* g ,Query q)
     resetEdgeDistance(g);
     g->changeGraph(q);
     Tree* tree = new Tree();
-    Dijkstra(tree,nodes,q.theta);
+    tree = Dijkstra(tree,nodes,q.theta);
     
     double influence = hat_delta_p_u(tree);
     return influence;
@@ -557,7 +557,7 @@ double CalcMargin(Node u, Graph* g, double theta, Query gamma, map<int, Node> S)
     u_->MIA->nextNode.clear();
     
     //构建在新图中u的MIA
-    Dijkstra(*u_,u_->MIA,gamma.theta);
+    u_->MIA = Dijkstra(*u_,u_->MIA,gamma.theta);
     
 
     //计算MIA模型的上界

@@ -162,7 +162,7 @@ double hat_delta_p_u(Tree* tree)
  * @param inputNode，需要构建MIA的节点
  * @param g 社交网络图
  */
-void Dijkstra(Node inputNode,Tree* MIA, double theta)
+Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
 {
     //S记录已经存在在MIA模型中的节点
 
@@ -197,7 +197,7 @@ void Dijkstra(Node inputNode,Tree* MIA, double theta)
         
         Edge* edge = edges.top();
         edges.pop();
-		if(edge ->distance < theta);
+		if(edge ->distance < theta)
 			break;
         //边的两端只要有一个节点不在集合S中则加入MIA中
 		if(!findKey(S, edge->targetNodeId) || !findKey(S, edge->sourceNodeId)){
@@ -257,14 +257,16 @@ void Dijkstra(Node inputNode,Tree* MIA, double theta)
         }
 
     }
-    
+    return  MIA;
      
 };
 
-void Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
+Tree* Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
 {
     //S记录已经存在在MIA模型中的节点
     
+    if(MIA!=nullptr)
+        MIA = new Tree();
     
     map<int, Node> S;
     
@@ -295,7 +297,7 @@ void Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
         
         Edge* edge = edges.top();
         edges.pop();
-        if(edge ->distance < theta);
+        if(edge ->distance < theta)
 			break;
         //边的两端只要有一个节点不在集合S中则加入MIA中
         if(!findKey(S, edge->targetNodeId) || !findKey(S, edge->sourceNodeId)){
@@ -354,7 +356,7 @@ void Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
         }
         
     }
-    
+    return MIA;
     
 };
 
