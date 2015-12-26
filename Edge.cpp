@@ -22,8 +22,6 @@ Edge::Edge(int idnum, Node* source, Node* target, double* realdistribution)
 	this->sourceNodeId = source->number;
 	this->targetNodeId = target->number;
 	this->realDistribution = realdistribution;
-	source->insertEdge(this->targetNodeId, this);
-
 	this->weight=0;
     this->distance=INFMAX;
     this->isVisited=false;

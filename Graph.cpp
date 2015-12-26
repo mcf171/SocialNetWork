@@ -35,7 +35,7 @@ void Graph::changeGraph(Query q){
     }
 }
 
-void Graph::Load()
+void Graph::Load(Query q)
 {
 	int* nodedata = new int[NNODE];
 	int* edgedata = new int[NEDGE*2];
@@ -71,8 +71,10 @@ void Graph::Load()
         edge->distance = maxDistance;
         edge->weight = maxDistance;
 
-
-		edges.push_back(*edge);
+		if(maxDistance >= q.theta){
+			edges.push_back(*edge);
+			nodes[sourceId].insertEdge(targetId, edge);
+		}
 	}
 
 	finish = clock();
@@ -171,7 +173,6 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
     }
     
 	Node* startNode = new Node(inputNode);
-    
     map<int, Node> S;
     //现将根节点放入S中
 	S[startNode->number]=*startNode;
@@ -194,7 +195,6 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
     MIA->node->influence = 1;
     
 
-
     //当还存在边的时候，即可能还有节点可以加入S时进行循环构建
     while (!edges.empty())
     {
@@ -205,11 +205,11 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
 			break;
         //边的两端只要有一个节点不在集合S中则加入MIA中
 		if(!findKey(S, edge->targetNodeId) || !findKey(S, edge->sourceNodeId)){
-
+			 
             //下面则是构建MIA模型中的一个点
             //首先获取边的源节点，查找源节点在MIA中的位置
             Tree* sourceNode = findNode(MIA,edge->sourceNode);
-            
+
             //创建节点的下一层节点
             Tree* treeNext = new Tree();
             
@@ -237,18 +237,27 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
             S[edge->targetNodeId] = *edge->targetNode;
             
             //这一步是对于新加入的点同时将这个点的可达的点全部加入Edge中
+		
+
             for(iterEdge = edge->targetNode->neighbourEdge.begin(); iterEdge != edge->targetNode->neighbourEdge.end(); iterEdge ++)
             {
-				if(!findKey(S, iterEdge->second->targetNodeId) || !findKey(S, iterEdge->second->sourceNodeId)){
+				//cout<<7;
+				if(!findKey(S, iterEdge->second->targetNodeId)){
                     iterEdge->second->distance = iterEdge->second->distance*treeNext->node->influence;
-                    edges.push(iterEdge->second);
+					//cout<<9;
+					if(iterEdge->second->distance > theta)
+						edges.push(iterEdge->second);
+					//cout<<8;
                 }
+				
+
             }
+			
             
             //下面代码是为了测试用的
             /*
             long size = edges.size();
-            temp = edges;
+            temp = 0edges;
             for(int i = 0 ; i < size; i ++)
             {
                 Edge* edge = temp.top();
@@ -261,7 +270,6 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
         }
 
     }
-
     return  MIA;
      
 };
@@ -339,8 +347,9 @@ Tree* Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
             //这一步是对于新加入的点同时将这个点的可达的点全部加入Edge中
             for(iterEdge = edge->targetNode->neighbourEdge.begin(); iterEdge != edge->targetNode->neighbourEdge.end(); iterEdge ++)
             {
-                if(!findKey(S, iterEdge->second->targetNodeId) || !findKey(S, iterEdge->second->sourceNodeId)){
+                if(!findKey(S, iterEdge->second->targetNodeId)){
                     iterEdge->second->distance = iterEdge->second->distance*treeNext->node->influence;
+					if(iterEdge->second->distance > theta)
                     edges.push(iterEdge->second);
                 }
             }

@@ -26,7 +26,7 @@ class Graph{
     
 public:
     
-	void Load();
+	void Load(Query q);
 
     //保存社交网络中所有的用户
     //vector<Node> nodes;
