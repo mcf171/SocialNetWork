@@ -70,7 +70,7 @@ int main(int argc, const char * argv[]) {
 //    precomputationBased(g);
 	*/
 
-	Query* qResult = topicSampleOnline(&g,q,theta,K,Epsilon);
+	Query* qResult = topicSampleOnline(&g,q);
 
 	cout<<endl;
 	cout<<"Result:"<<endl;
