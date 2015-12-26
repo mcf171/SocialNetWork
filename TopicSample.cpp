@@ -22,7 +22,7 @@
 
 
 
-vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double* sampledata){
+vector<Query>* queryMinning(Graph* g, double theta, int K, double Epsilon, double* sampledata){
     
     vector<Query>* topicDistributions = new vector<Query>();
 
@@ -39,7 +39,6 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 		
 
         BestEffort* bestEffort = new BestEffort(g, q, theta,precomputation);
-        cout<<222<<endl;
         
 
         map<int, Node>* tempS = bestEffort->bestEffortOnline();
@@ -65,7 +64,7 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 /*
  *  主题采样离线部分
  */
-void topicSampleOffline(Graph g, double theta, int K, double Epsilon){
+void topicSampleOffline(Graph* g, double theta, int K, double Epsilon){
 	double* sampledata = new double[NSAMPLE*DIM];
 
 	LoadSampleData(sampledata);
@@ -162,7 +161,7 @@ bool findClosestBound(Query q, vector<Query> topicDistributions, Query** upperBo
 }
 
 
-vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsilon)
+vector<Query> loadSampleOfflineResult(Graph* g, double theta, int K, double Epsilon)
 {
 	//从文件中读取Offline结果
 	double* sampledata = new double[NSAMPLE*DIM];
@@ -219,7 +218,7 @@ vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsil
 }
 
 
-Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
+Query* topicSampleOnline(Graph* g,Query q, double theta, int K, double Epsilon){
 
 
     
@@ -259,7 +258,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		map<int, Node> PL;
 		for (map<int, Node>::iterator iter= lowerBound->S.begin();iter!=lowerBound->S.end();iter++)
 		{
-			PL[iter->first]=g.findNode(iter->first);
+			PL[iter->first]=g->findNode(iter->first);
 		}
 
 

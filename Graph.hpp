@@ -46,11 +46,11 @@ public:
 
 double getLocalDistance(Tree* startNode, double theta);
 
-void Dijkstra(Graph g,Node startNode,Tree* MIA);
+void Dijkstra(Node startNode,Tree* MIA);
 
-void Dijkstra(Graph g, Tree* MIA,map<int, Node> seeds);
+void Dijkstra(Tree* MIA,map<int, Node> seeds);
 
-void calculateGraph(Graph& g);
+void calculateGraph(Graph* g);
 
 double hat_delta_p_u(Tree* tree);
 

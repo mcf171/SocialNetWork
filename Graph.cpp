@@ -114,11 +114,11 @@ double getLocalDistance(Tree* tree, double theta)
  * @param g 社交网络图
  */
 
-void calculateGraph(Graph& g)
+void calculateGraph(Graph* g)
 {
     map<int,Node>::iterator nodeItera;
     
-    for (nodeItera = g.nodes.begin(); nodeItera != g.nodes.end(); nodeItera++) {
+    for (nodeItera = g->nodes.begin(); nodeItera != g->nodes.end(); nodeItera++) {
         
         //计算影响力
 		double distance = hat_delta_p_u((nodeItera->second).MIA);
@@ -162,7 +162,7 @@ double hat_delta_p_u(Tree* tree)
  * @param inputNode，需要构建MIA的节点
  * @param g 社交网络图
  */
-void Dijkstra(Graph g, Node inputNode,Tree* MIA)
+void Dijkstra(Node inputNode,Tree* MIA)
 {
     //S记录已经存在在MIA模型中的节点
 
@@ -260,7 +260,7 @@ void Dijkstra(Graph g, Node inputNode,Tree* MIA)
      
 };
 
-void Dijkstra(Graph g, Tree* MIA,map<int, Node> seeds)
+void Dijkstra(Tree* MIA,map<int, Node> seeds)
 {
     //S记录已经存在在MIA模型中的节点
     

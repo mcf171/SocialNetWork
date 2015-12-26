@@ -45,10 +45,10 @@ double hat_delta_sigma(Node u,map<int, Node>S,Query q, algorithm choosAlgorithm)
 }
 
 //针对LocalGraph算法，当进行在线查询时进行重构MIA
-void preprocessOnline(Graph&g, Query q)
+void preprocessOnline(Graph* g, Query q)
 {
     map<int, Node>::iterator nodeIter;
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
+    for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++) {
 		Node node = nodeIter->second;
         
         map<int, Edge*>::iterator edgeIter;
@@ -61,10 +61,10 @@ void preprocessOnline(Graph&g, Query q)
         }
     }
     
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
+    for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         
-		Dijkstra(g, nodeIter->second,(nodeIter->second.MIA));
+		Dijkstra(nodeIter->second,(nodeIter->second.MIA));
     }
 }
 
@@ -75,13 +75,13 @@ void preprocessOnline(Graph&g, Query q)
  * @param g 社交网络图
  */
 
-void precomputationBased(Graph& g)
+void precomputationBased(Graph* g)
 {
     
     map<int, Node>::iterator nodeIter;
 
     //对于图中的每个节点都将边设置为最大的topic值
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
+    for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++) {
 
         //获取社交网络图中每个节点
 		Node node = nodeIter->second;
@@ -106,10 +106,10 @@ void precomputationBased(Graph& g)
     }
     
     //对每个节点计算构建MIA
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
+    for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         
-		Dijkstra(g, nodeIter->second,nodeIter->second.MIA);
+		Dijkstra(nodeIter->second,nodeIter->second.MIA);
         
         //cout<<g.nodes[1].MIA->node->number<<endl;
     }
@@ -122,11 +122,11 @@ void precomputationBased(Graph& g)
     //cout<<"create MIA";
 }
 
-void resetEdgeDistance(Graph& g)
+void resetEdgeDistance(Graph* g)
 {
     
     map<int, Node>::iterator nodeIter;
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
+    for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++) {
         
         //获取社交网络图中每个节点
         Node node = nodeIter->second;
@@ -167,7 +167,7 @@ void getLocalGraph(Tree tree,double theta,vector<Node> &nodes){
 * @param theta，用户自定义的阈值
 * @param q 在线
 */
-void localGraphBased(Graph& g,double theta, Query q)
+void localGraphBased(Graph* g,double theta, Query q)
 {
     map<int, Node>::iterator nodeIter;
     precomputationBased(g);
@@ -196,17 +196,17 @@ for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++) {
 */
 
     //得到每个User的hat_gama;
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
+    for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         
-        Dijkstra(g, nodeIter->second,(nodeIter->second.MIA));
+        Dijkstra(nodeIter->second,(nodeIter->second.MIA));
         double distance = getLocalDistance(nodeIter->second.MIA, theta);
 
      //   cout<<"the hat_gama of "<<(*nodeIter).number<<" is :"<<distance<<endl;
     }
     
     
-    for (nodeIter = g.nodes.begin(); nodeIter != g.nodes.end(); nodeIter ++)
+    for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++)
     {
         Node node = nodeIter->second;
         vector<Node> nodes;
@@ -232,15 +232,11 @@ double estInfUB(Node node, Graph g, double theta)
 
 
 
-BestEffort::BestEffort(Graph g,Query* q, double theta, algorithm chooseAlgorithm){
-    cout<<111<<endl;
+BestEffort::BestEffort(Graph* g,Query* q, double theta, algorithm chooseAlgorithm){
     this->g = g;
     this->q = q;
-	cout<<222<<endl;
     this->theta = theta;
-	cout<<333<<endl;
     this->chooseAlgorithm = chooseAlgorithm;
-	cout<<111<<endl;
 }
 
 
@@ -314,9 +310,9 @@ void BestEffort::Load()
 	for (int i = 0; i < NNODE; i++)
 	{
 		f>>number>>influence;
-		Node* pnode = new Node(findNode(g.nodes, number));
+		Node* pnode = new Node(findNode(g->nodes, number));
         pnode->influence = influence;
-        Dijkstra(g, *pnode, pnode->MIA);
+        Dijkstra(*pnode, pnode->MIA);
 		this->LBackup.push_back(pnode);
 	}
 	f.close();
@@ -368,7 +364,7 @@ void BestEffort::bestEffortOffline()
     
     //将计算后的节点插入优先队列
 	int i=0;
-    for (map<int, Node>::iterator iter=g.nodes.begin(); iter!=g.nodes.end(); iter++)
+    for (map<int, Node>::iterator iter=g->nodes.begin(); iter!=g->nodes.end(); iter++)
     {
         if (chooseAlgorithm == localGraph)
             iter->second.influence = iter->second.hat_delta_sigma_p;
@@ -512,7 +508,7 @@ void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H,Query q)
 * @param gama，查询语句
 */
 
-double sigma(map<int, Node> nodes, Graph g ,Query q)
+double sigma(map<int, Node> nodes, Graph* g ,Query q)
 {
     /*
     map<int, Node>::iterator itertor;
@@ -521,9 +517,9 @@ double sigma(map<int, Node> nodes, Graph g ,Query q)
         result+=calAP(itertor->second, nodes, q );
     */
     resetEdgeDistance(g);
-    g.changeGraph(q);
+    g->changeGraph(q);
     Tree* tree = new Tree();
-    Dijkstra(g, tree,nodes);
+    Dijkstra(tree,nodes);
     
     double influence = hat_delta_p_u(tree);
     return influence;
@@ -538,22 +534,22 @@ double sigma(map<int, Node> nodes, Graph g ,Query q)
  * @param gama，查询语句
  * @param S，种子集合
  */
-double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
+double CalcMargin(Node u, Graph* g, double theta, Query gamma, map<int, Node> S)
 {
     double res = 0.0;
     
     //首先将网络中所有的边权值修改为给定主题下的权值
-    g.changeGraph(gamma);
+    g->changeGraph(gamma);
     
     //从新的图中获取点u
     Node* u_ = new Node(u);
     
-    u_ = &g.nodes[u.number];
+    u_ = &(g->nodes[u.number]);
 
     u_->MIA->nextNode.clear();
     
     //构建在新图中u的MIA
-    Dijkstra(g, *u_,u_->MIA);
+    Dijkstra(*u_,u_->MIA);
     
 
     //计算MIA模型的上界
@@ -565,7 +561,7 @@ double CalcMargin(Node u, Graph g, double theta, Query gamma, map<int, Node> S)
 }
 
 
-double delta_sigma_v_S_gamma(Node v, map<int, Node> S_i, Query q, double theta, Graph g)
+double delta_sigma_v_S_gamma(Node v, map<int, Node> S_i, Query q, double theta, Graph* g)
 {
     return CalcMargin(v, g, theta, q, S_i);
 }
