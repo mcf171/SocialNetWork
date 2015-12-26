@@ -36,7 +36,7 @@ int main(int argc, const char * argv[]) {
     
     //创建查询语句
     
-    double topicDistribution []= {0.2,0.8,0};
+    double topicDistribution []= {0.2, 0.8, 0};
 	double theta=0;
 
 	int K=3;

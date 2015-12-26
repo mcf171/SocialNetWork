@@ -532,13 +532,13 @@ void BestEffort::insertCandidates(Query q)
 		Node* node = *(L1->begin());
 		if (!q.skipNodes.empty() && findKey(q.skipNodes, node->number) ){
 			L2->push_back(node);
-			L1->pop_back();
+			L1->erase(L1->begin());
 			continue;
         }
         if (H.empty() || H.top() <= *node) {
             H.push(*node);
             L2->push_back(node);
-			L1->pop_back();
+			L1->erase(L1->begin());
         }else
             break;
     }
