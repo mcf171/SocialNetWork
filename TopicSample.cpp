@@ -30,7 +30,7 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 	for (int i = 0; i < NSAMPLE; i++)
 	{
 		Query* q = new Query(K,Epsilon);
-		q->topicDistribution = sampledata+i*DIM*sizeof(double);
+		q->topicDistribution = &(sampledata[i*DIM]);
 		//计算每个的S
 		
         
