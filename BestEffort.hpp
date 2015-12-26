@@ -72,8 +72,8 @@ bool findNodeInM(const Node & findNode,  priority_queue<Node> M);
 double calPP(Edge edge, Query q);
 double calPP(Node sourceNode,Node targetNode, Query q);
 
-double prodChild(Tree* node,map<int, Node> S,Query q);
-double calAP(Node& u, map<int, Node> S, Query &q);
+//double prodChild(Tree* node,map<int, Node> S,Query q);
+//double calAP(Node& u, map<int, Node> S, Query &q);
 
 double hat_delta_sigma(Node u,map<int, Node>S,Query q, algorithm choosAlgorithm);
 
