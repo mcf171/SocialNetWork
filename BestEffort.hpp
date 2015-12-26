@@ -27,6 +27,7 @@ public:
     
     priority_queue<Node> L;
     priority_queue<Node> H;
+    priority_queue<Node>* release;
     
     Graph* g;
     Query* q;
