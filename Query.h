@@ -27,6 +27,9 @@ public:
 	map <int, Node> S;
 	double sigma;
 
+	map <int, Node> skipNodes;
+
+
     Query(){};
 	Query(int K, double Epsilon)
 	{

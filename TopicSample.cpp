@@ -30,7 +30,7 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 	for (int i = 0; i < NSAMPLE; i++)
 	{
 		Query* q = new Query(K,Epsilon);
-		q->topicDistribution = sampledata+i*DIM*sizeof(double);
+		q->topicDistribution = &(sampledata[i*DIM]);
 		//计算每个的S
         double* p = q->topicDistribution;
 
@@ -206,7 +206,9 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
     //找到与离线系统中上下界最接近的上下界    
     Query* upperBound=NULL;
 	Query* lowerBound=NULL;
-	
+	Query* qResult = new Query(q.k, q.epsilon);
+	double nowSigma = 0;
+
 	vector<Query> Samples = loadSampleOfflineResult(g, theta, K, Epsilon);
     
 	bool getBound = findClosestBound(q, Samples, &upperBound, &lowerBound);
@@ -221,7 +223,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		return lowerBound;
     }else{
     
-		Query* qResult = new Query(q.k, q.epsilon);
+		
 		map<int, Node> S_i;
 		map<int, Node> PL;
 		for (map<int, Node>::iterator iter= lowerBound->S.begin();iter!=lowerBound->S.end();iter++)
@@ -246,7 +248,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
             map<int, Node>* umap = bestEffort->bestEffortOnline();
 			Node u = umap->begin()->second;
 
-			qResult->S[u.number]=u;
+			//qResult->S[u.number]=u;
 			S_i[u.number]=u;
 
 			//vector<int>::const_iterator iter = findIntIter(lowerBound->S,u[0].number);
@@ -275,6 +277,8 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 
             
 			map<int, Node>* nowUnion = new map<int, Node>();
+
+
 			for (map<int, Node>::iterator iter= PL.begin();iter!=PL.end();iter++)
 				{
 					(*nowUnion)[iter->first]=iter->second;
@@ -285,17 +289,21 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 				}
             
             //sigma是不是还要传个Q
-			qResult->sigma = sigma(*nowUnion, g, q);
+			double nowSigma = sigma(*nowUnion, g, q);
 
-			if (qResult->sigma > q.epsilon * upperBound->sigma ){
-				for (map<int, Node>::iterator iter= PL.begin();iter!=PL.end();iter++)
-				{
-					qResult->S[iter->first]=iter->second;
-				}
+			if (nowSigma > q.epsilon * upperBound->sigma ){
+				//for (map<int, Node>::iterator iter= nowUnion->begin();iter!=nowUnion->end();iter++)
+				//{
+				//	qResult->S[iter->first]=iter->second;
+				//}
+				qResult->sigma=nowSigma;
+				qResult->S=*nowUnion;
 				return qResult;
 			}
 
 		}
+		qResult->sigma=nowSigma;
+		qResult->S=S_i;
 		return qResult;
 	}
 }
