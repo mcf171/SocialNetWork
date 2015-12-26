@@ -27,36 +27,42 @@ vector<Query>* queryMinning(Graph* g, double theta, int K, double Epsilon, doubl
     vector<Query>* topicDistributions = new vector<Query>();
 
         cout<<endl;
+		Query* q = new Query(K,Epsilon, theta);
+		
+
+		BestEffort* bestEffort = new BestEffort(g, q, theta,precomputation);
+
+
 	for (int i = 0; i < NSAMPLE; i++)
 	{
-		Query* q = new Query(K,Epsilon, theta);
+		
 		q->topicDistribution = &(sampledata[i*DIM]);
+		cout<<1;
+		g->changeGraph(*q);
+		cout<<2;
 		//计算每个的S
         double* p = q->topicDistribution;
 
         //cout<<"topic distribution :"<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
-        
-		
 
-        BestEffort* bestEffort = new BestEffort(g, q, theta,precomputation);
-        
 
         map<int, Node>* tempS = bestEffort->bestEffortOnline();
 
-		
+		cout<<3;
 
 		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
 		{
 			q->S[iter->first]=iter->second;
 			//q->sigma+=iter->second.influence;
 		}
+		cout<<4;
 		q->sigma=sigma(*tempS,g,*q);
         //cout<<"sigma :"<<q->sigma<<endl;
-
+		
 		topicDistributions->push_back(*q);
 
-        if(i%100==0)cout<<i<<"..."<<endl;
-        //cout<<i<<"..."<<endl;
+        //if(i%100==0)cout<<i<<"..."<<endl;
+        cout<<i<<"..."<<endl;
 	}
 
     return topicDistributions;
@@ -239,6 +245,9 @@ Query* topicSampleOnline(Graph* g,Query q){
 	vector<Query> Samples = loadSampleOfflineResult(g, q.theta, q.k, q.epsilon);
     
 	start = clock();
+
+	g->changeGraph(q);
+
 	bool getBound = findClosestBound(q, Samples, &upperBound, &lowerBound);
 
 
@@ -323,6 +332,7 @@ Query* topicSampleOnline(Graph* g,Query q){
 				}
             
             //sigma是不是还要传个Q
+			
 			nowSigma = sigma(*nowUnion, g, q);
 
 			if (nowSigma > q.epsilon * upperBound->sigma ){

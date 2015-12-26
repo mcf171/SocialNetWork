@@ -185,7 +185,7 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
 
     //首先将所有的邻边加入优先队列edges中
     for(iterEdge = startNode->neighbourEdge.begin(); iterEdge != startNode->neighbourEdge.end(); iterEdge++){
-
+		iterEdge->second->distance  = iterEdge->second->weight;
         edges.push(iterEdge->second);
     }
     
@@ -243,7 +243,7 @@ Tree* Dijkstra(Node inputNode,Tree* MIA, double theta)
             {
 				//cout<<7;
 				if(!findKey(S, iterEdge->second->targetNodeId)){
-                    iterEdge->second->distance = iterEdge->second->distance*treeNext->node->influence;
+                    iterEdge->second->distance = iterEdge->second->weight*treeNext->node->influence;
 					//cout<<9;
 					if(iterEdge->second->distance > theta)
 						edges.push(iterEdge->second);
@@ -294,7 +294,7 @@ Tree* Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
         
         S[iterNode->second.number] = iterNode->second;
         for(iterEdge = iterNode->second.neighbourEdge.begin(); iterEdge != iterNode->second.neighbourEdge.end(); iterEdge++){
-
+			iterEdge->second->distance  = iterEdge->second->weight;
             if(!findKey(S, iterEdge->second->targetNodeId) || !findKey(S, iterEdge->second->sourceNodeId))
                 edges.push(iterEdge->second);
         }
@@ -348,7 +348,7 @@ Tree* Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
             for(iterEdge = edge->targetNode->neighbourEdge.begin(); iterEdge != edge->targetNode->neighbourEdge.end(); iterEdge ++)
             {
                 if(!findKey(S, iterEdge->second->targetNodeId)){
-                    iterEdge->second->distance = iterEdge->second->distance*treeNext->node->influence;
+                    iterEdge->second->distance = iterEdge->second->weight*treeNext->node->influence;
 					if(iterEdge->second->distance > theta)
                     edges.push(iterEdge->second);
                 }
