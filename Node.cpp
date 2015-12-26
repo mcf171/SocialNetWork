@@ -38,28 +38,25 @@ void Node::insertEdge(int targetPoint, Edge* edge)
 {
 	this->neighbourEdge[targetPoint]=edge;
 }
-
-bool findNode(vector<Node> nodes, Node node)
-{
-    
-    bool exists = false;
-    
-    if(find(nodes.begin(), nodes.end(), node) != nodes.end())
-        exists = true;
-    
-    return exists;
-    
-}
+//
+//bool findNode(vector<Node> nodes, Node node)
+//{
+//    
+//    bool exists = false;
+//    
+//    if(find(nodes.begin(), nodes.end(), node) != nodes.end())
+//        exists = true;
+//    
+//    return exists;
+//    
+//}
 
 Node findNode(map<int, Node> S, int key)
 {
-
-    //Node node;
-    map<int, Node>::iterator iter = S.find(key);
-    if(iter!=S.end())
-    {
-        return iter->second;
-    }
+	if(S.count(key)>0)
+	{
+		return S[key];
+	}
     
     return NULL;
     
@@ -67,8 +64,7 @@ Node findNode(map<int, Node> S, int key)
 
 bool findKey(map<int, Node> S, int key)
 {
-	map<int, Node>::iterator iter = S.find(key);
-	if(iter!=S.end())
+	if(S.count(key)>0)
 	{
 		return true;
 	}

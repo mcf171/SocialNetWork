@@ -14,6 +14,7 @@
 #include "Tree.hpp"
 #include <fstream>
 #include <vector>
+#include <math.h>
 
 
 /*
@@ -125,38 +126,38 @@ void precomputationBased(Graph* g, Query q)
     
     calculateGraph(g);
     
-    resetEdgeDistance(g);
+    //resetEdgeDistance(g);
     //cout<<"create MIA";
 }
 
-void resetEdgeDistance(Graph* g)
-{
-    
-    map<int, Node>::iterator nodeIter;
-    for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++) {
-        
-        //获取社交网络图中每个节点
-        Node node = nodeIter->second;
-        
-        map<int, Edge*>::iterator edgeIter;
-        nodeIter->second.ap_node_S_gamma = 1.0;
-        //获取节点的每个邻边将边的权重设置为最大的topic
-        for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
-            Edge* edge = edgeIter->second;
-            
-            double maxDistance = 0;
-            
-            for (int i = 0; i < DIM; i++)
-            {
-                if(edge->realDistribution[i] > maxDistance)
-                    maxDistance = edge->realDistribution[i];
-            }
-            edge->distance = edge->weight;
-            edge->isVisited = false;
-        }
-    }
-}
-
+//void resetEdgeDistance(Graph* g)
+//{
+//    
+//    map<int, Node>::iterator nodeIter;
+//    for (nodeIter = g->nodes.begin(); nodeIter != g->nodes.end(); nodeIter ++) {
+//        
+//        //获取社交网络图中每个节点
+//        Node node = nodeIter->second;
+//        
+//        map<int, Edge*>::iterator edgeIter;
+//        nodeIter->second.ap_node_S_gamma = 1.0;
+//        //获取节点的每个邻边将边的权重设置为最大的topic
+//        for (edgeIter = node.neighbourEdge.begin(); edgeIter != node.neighbourEdge.end(); edgeIter++) {
+//            Edge* edge = edgeIter->second;
+//            
+//            double maxDistance = 0;
+//            
+//            for (int i = 0; i < DIM; i++)
+//            {
+//                if(edge->realDistribution[i] > maxDistance)
+//                    maxDistance = edge->realDistribution[i];
+//            }
+//            edge->distance = edge->weight;
+//            edge->isVisited = false;
+//        }
+//    }
+//}
+//
 void getLocalGraph(Tree tree,double theta,vector<Node> &nodes){
     
     if (tree.node->influence > theta)
@@ -245,6 +246,10 @@ BestEffort::BestEffort(Graph* g,Query* q, double theta, algorithm chooseAlgorith
     this->q = q;
     this->theta = theta;
     this->chooseAlgorithm = chooseAlgorithm;
+
+	this->L1 = new vector<Node*>();
+	this->L2 = new vector<Node*>();
+	this->loaded=false;
 }
 
 
@@ -312,36 +317,65 @@ void BestEffort::Load()
 		f.open(ifname);
 	}
 
-	int number;
-	double influence;
+	//int FirstNodenumber;
+	//double FirstNodeinfluence;
+	//f>>FirstNodenumber>>FirstNodeinfluence;
+
+	//int MaxNodes;
+	//if(q->theta!=0){
+	//	MaxNodes=min((double)NNODE, q->k*(1+FirstNodeinfluence/q->theta));
+	//}else{
+	//	MaxNodes = NNODE;
+	//}
+
+	int* number = new int[NNODE];
+	double* influence = new double[NNODE];
+
+	//number[0]=FirstNodenumber;
+	//influence[0]=FirstNodeinfluence;
 
 	for (int i = 0; i < NNODE; i++)
 	{
-		f>>number>>influence;
-		Node* pnode = new Node(findNode(g->nodes, number));
-        pnode->influence = influence;
-        pnode->MIA = Dijkstra(*pnode, pnode->MIA,q->theta);
-		this->LBackup.push_back(pnode);
+		f>>number[i]>>influence[i];
 	}
 	f.close();
+
+	for (int i = 0; i < NNODE; i++)
+	{
+		Node* pnode = new Node(g->nodes[number[i]]);
+        pnode->influence = influence[i];
+        //pnode->MIA = Dijkstra(*pnode, pnode->MIA,q->theta);
+		this->L1->push_back(pnode);
+
+		if(influence[i]<q->theta)break;
+
+	}
+	loaded=true;
+	cout<<"Nodes: "<<L1->size()<<endl;
 }
 
 void BestEffort::InitL()
 {
 
-    if (!this->L.empty()) {
+    //if (!this->L.empty()) {
 
-        release = new priority_queue<Node>();
-        this->L = *release;
-    }
+    //    release = new priority_queue<Node>();
+    //    this->L = *release;
+    //}
     
-	if(LBackup.size()==0)
+	if(!loaded)
 		this->Load();
 
-	for (vector<Node*>::iterator iter = LBackup.begin();iter!= LBackup.end();iter++)
-	{
-		this->L.push(*(*iter));
+	else{
+		vector<Node*>* Ltemp = L1;
+		L1=L2;
+		L2=Ltemp;
 	}
+
+	//for (vector<Node*>::iterator iter = LBackup.begin();iter!= LBackup.end();iter++)
+	//{
+	//	this->L.push(*(*iter));
+	//}
 
 	
 
@@ -413,6 +447,7 @@ map<int, Node>* BestEffort::bestEffortOnline()
 {
 
     //initL(this,g,theta,chooseAlgorithm);
+	
 	this->InitL();
 
     //S保存种子
@@ -420,7 +455,6 @@ map<int, Node>* BestEffort::bestEffortOnline()
 	//S->clear();
 
     //初始化一个空的最大堆
-	//TODO: 直接New 一个最大堆
     
     if (!this->H.empty()) {
 
@@ -432,7 +466,7 @@ map<int, Node>* BestEffort::bestEffortOnline()
     //预处理在线节点针对LocalGraph算法，如果不是LocalGraph算法
     if(chooseAlgorithm == localGraph)
         preprocessOnline(g, *q);
-    
+
     //K次循环找到所有合适的种子
     for (int i = 0; i < q->k ; i++)
     {
@@ -440,8 +474,9 @@ map<int, Node>* BestEffort::bestEffortOnline()
         
         do
         {
+			//cout<<L1->size()<<endl;
             //从离线的优先队列中和最大堆中考虑是否加入新的元素
-            insertCandidates(this->L, this->H, *q);
+            insertCandidates(*q);
             
             //从堆顶取一个元素
             Node u = this->H.top();
@@ -466,6 +501,7 @@ map<int, Node>* BestEffort::bestEffortOnline()
             //如果已经是精确上界则直接弹出
             else if (exact == u.currentStatus)
             {
+
 				(*S)[u.number]=u;
                 /*
                 map<int,Node>::iterator itertor;
@@ -478,8 +514,9 @@ map<int, Node>* BestEffort::bestEffortOnline()
                 break;
             }
         }while (!this->H.empty());//end while
+		//cout<<endl;
     }//end for
-    
+
     return S;
 }
 
@@ -487,24 +524,27 @@ map<int, Node>* BestEffort::bestEffortOnline()
 /*
 	Adding posible candidates from L
  */
-void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H,Query q)
+void BestEffort::insertCandidates(Query q)
 {
     //return if L is empty
-    if (L.empty())
+    if (L1->empty())
     {
         return;
     }
     
     //insertion process until H.top > L.top
-    while (!L.empty())
+    while (!L1->empty())
     {
-        if (!q.skipNodes.empty() && findKey(q.skipNodes, L.top().number) ){
-            L.pop();
+		Node* node = *(L1->begin());
+		if (!q.skipNodes.empty() && findKey(q.skipNodes, node->number) ){
+			L2->push_back(node);
+			L1->erase(L1->begin());
 			continue;
         }
-        if (H.empty() || H.top() <= L.top()) {
-            H.push(L.top());
-            L.pop();
+        if (H.empty() || H.top() <= *node) {
+            H.push(*node);
+            L2->push_back(node);
+			L1->erase(L1->begin());
         }else
             break;
     }
@@ -526,8 +566,8 @@ double sigma(map<int, Node> nodes, Graph* g ,Query q)
     for(itertor = g.nodes.begin(); itertor != g.nodes.end() ; itertor ++)
         result+=calAP(itertor->second, nodes, q );
     */
-    resetEdgeDistance(g);
-    g->changeGraph(q);
+    //resetEdgeDistance(g);
+    
     Tree* tree = new Tree();
     tree = Dijkstra(tree,nodes,q.theta);
     
@@ -549,7 +589,7 @@ double CalcMargin(Node u, Graph* g, double theta, Query gamma, map<int, Node> S)
     double res = 0.0;
     
     //首先将网络中所有的边权值修改为给定主题下的权值
-    g->changeGraph(gamma);
+    //g->changeGraph(gamma);
     
     //从新的图中获取点u
     Node* u_ = new Node(u);

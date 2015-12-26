@@ -34,8 +34,9 @@ public:
     double theta;
     algorithm chooseAlgorithm;
 
-	vector<Node*> LBackup;
-
+	vector<Node*>* L1;
+	vector<Node*>* L2;
+	bool loaded;
     
 
     BestEffort(Graph* g,Query* q, double theta, algorithm chooseAlgorithm);
@@ -46,11 +47,14 @@ public:
 
     void bestEffortOffline();
     map<int, Node>* bestEffortOnline();
+
+	void insertCandidates(Query q);
+
     //priority_queue<Node*> L;
 };
 
 //void initL(BestEffort* bestEffort,Graph g, double theta, algorithm chooseAlgorithm);
-void resetEdgeDistance(Graph* g);
+//void resetEdgeDistance(Graph* g);
 double CalcMargin(Node u, Graph* g, double theta, Query gamma, map<int, Node> S);
 
 void getLocalGraph(Tree tree,double theta,vector<Node> &nodes);
@@ -64,7 +68,7 @@ double estInfUB(Node node, Graph* g, double theta);
 void precomputationBased(Graph* g, Query q);
 void preprocessOnline(Graph* g, Query q);
 
-void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H,Query q);
+
 double calDetaUSR(map<int, Node>&V, double theta);
 void adjustM(Node& oldNode, double new_inf, priority_queue<Node>& M);
 bool findNodeInM(const Node & findNode,  priority_queue<Node> M);
