@@ -11,19 +11,28 @@
 
 #include <time.h>
 
-#define NNODE 8
-#define NEDGE 22
+#define NNODE 512776
+#define NEDGE 1049866
 #define NSAMPLE 500
 #define DIM 3
 
 
 //文件路径
+<<<<<<< HEAD
 #define NODE_PATH "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/paper_nodetest.txt"
 #define EDGE_PATH "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/paper_edgetest.txt"
 #define PROP_PATH "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/paper_proptest.txt"
 #define SAMPLE_PATH "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/samples.txt"
 #define BEO_DIR "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/beo/"
 #define TSO_DIR "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/tso/"
+=======
+//#define NODE_PATH "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/paper_nodetest.txt"
+//#define EDGE_PATH "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/paper_edgetest.txt"
+//#define PROP_PATH "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/paper_proptest.txt"
+//#define SAMPLE_PATH "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/samples.txt"
+//#define BEO_DIR "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/beo/"
+//#define TSO_DIR "/Users/wangjue/Documents/project/c++_project1/SocialNetwork/SocialNetWork/SocialNetWork/data/tso/"
+>>>>>>> origin/master
 
 //#define NODE_PATH "../SocialNetWorkGit/data/paper_nodetest.txt"
 //#define EDGE_PATH "../SocialNetWorkGit/data/paper_edgetest.txt"
@@ -31,6 +40,16 @@
 //#define SAMPLE_PATH "../SocialNetWorkGit/data/samples.txt"
 //#define BEO_DIR "../data/beo/"
 //#define TSO_DIR "../data/tso/"
+<<<<<<< HEAD
+=======
+
+#define NODE_PATH "../SocialNetWorkGit/data/dblp/nodes_dblp_512776.txt"
+#define EDGE_PATH "../SocialNetWorkGit/data/dblp/edges_dblp_1049866.txt"
+#define PROP_PATH "../SocialNetWorkGit/data/dblp/props_dblp_1049866.txt"
+#define SAMPLE_PATH "../SocialNetWorkGit/data/samples.txt"
+#define BEO_DIR "../data/dblp/beo/"
+#define TSO_DIR "../data/dblp/tso/"
+>>>>>>> origin/master
 
 #define INFMAX 100000000
 
