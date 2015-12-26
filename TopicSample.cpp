@@ -103,6 +103,8 @@ void topicSampleOffline(Graph* g, double theta, int K, double Epsilon){
 		fout<<endl;
 	}
 	fout.close();
+    
+    
 
 }
 
