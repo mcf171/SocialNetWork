@@ -34,6 +34,7 @@ int main(int argc, const char * argv[]) {
     //从文件加载Graph
 	g.Load();
     
+	cout<<"Graph Loaded."<<endl;
     //创建查询语句
     
     double topicDistribution []= {0.2,0.8,0};
@@ -72,6 +73,16 @@ int main(int argc, const char * argv[]) {
 
 	Query* qResult = topicSampleOnline(g,q,theta,K,Epsilon);
 
+	cout<<endl;
+	cout<<"Result:"<<endl;
+	cout<<"\tsigma: "<<qResult->sigma<<endl;
+	cout<<qResult->k<<" Points:"<<endl;
+	for (map<int,Node>::iterator iter = qResult->S.begin();iter!=qResult->S.end();iter++)
+	{
+		cout<<iter->first<<endl;
+	}
+
+	cout<<"end."<<endl;
 
     return 0;
 }

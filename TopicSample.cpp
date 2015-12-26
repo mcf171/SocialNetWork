@@ -34,9 +34,9 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 		//计算每个的S
         double* p = q->topicDistribution;
 
-        cout<<"topic distribution :"<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+        //cout<<"topic distribution :"<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
         
-        BestEffort* bestEffort = new BestEffort(g, *q, theta,precomputation);
+        BestEffort* bestEffort = new BestEffort(g, q, theta,precomputation);
         
         
         map<int, Node>* tempS = bestEffort->bestEffortOnline();
@@ -46,9 +46,11 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 			//q->sigma+=iter->second.influence;
 		}
 		q->sigma=sigma(*tempS,g,*q);
-        cout<<"sigma :"<<q->sigma<<endl;
+        //cout<<"sigma :"<<q->sigma<<endl;
+
 		topicDistributions->push_back(*q);
-        //cout<<i<<"..."<<endl;
+
+        if(i%100==0)cout<<i<<"..."<<endl;
 	}
 
     return topicDistributions;
@@ -170,10 +172,22 @@ vector<Query> loadSampleOfflineResult(Graph g, double theta, int K, double Epsil
 	fin.open(ifname);
 
 	if(!fin){
-		cout<<ifname<<" not found. Running TopicSampleOffline ..."<<endl;
+		clock_t start,finish;
+		double totalTime;
+
+		cout<<ifname<<" not found. Procesing "<<NSAMPLE<<" samples"<<endl;
+		cout<<"Running TopicSampleOffline ..."<<endl;
+
+		start = clock();
 		topicSampleOffline(g,theta,K,Epsilon);
-		cout<<"TopicSampleOffline finished."<<endl;
+		finish = clock();
+		totalTime = (double)(finish-start)/1000.0;
+
+		cout<<"TopicSampleOffline finished with "<<NSAMPLE<<" samples in "<<totalTime<<" s."<<endl;
 		cout<<ifname<<" saved."<<endl;
+		cout<<endl;
+
+		fin.open(ifname);
 	}
 
 
@@ -209,10 +223,17 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 	Query* qResult = new Query(q.k, q.epsilon);
 	double nowSigma = 0;
 
+	clock_t start,finish;
+	double totalTime;
+
+
+
 	vector<Query> Samples = loadSampleOfflineResult(g, theta, K, Epsilon);
     
+	start = clock();
 	bool getBound = findClosestBound(q, Samples, &upperBound, &lowerBound);
-    
+
+
 	if(!getBound)
 	{
 		return NULL;
@@ -220,6 +241,10 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 	}
 	else if (lowerBound->sigma > q.epsilon * upperBound->sigma ) {
         //如果找到的边界满足不等式直接返回种子集合
+		finish = clock();
+		totalTime = (double)(finish-start)/1000.0;
+		cout<<"topicSampleOnline finished with 0 loops in "<<totalTime<<" s."<<endl;
+
 		return lowerBound;
     }else{
     
@@ -238,12 +263,13 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 		q1->sigma=0;
 		q1->S.clear();
 
+		BestEffort* bestEffort = new BestEffort(g, q1, theta, precomputation);
 
 
 		for(int i = 0 ; i < q.k; i ++)
 		{
 			//从BestEffort中找到一个种子,默认返回是一个vector，设置q的值为1，取vector的第一个元素即可
-            BestEffort* bestEffort = new BestEffort(g, *q1, theta, precomputation);
+            
 
             map<int, Node>* umap = bestEffort->bestEffortOnline();
 			Node u = umap->begin()->second;
@@ -289,7 +315,7 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 				}
             
             //sigma是不是还要传个Q
-			double nowSigma = sigma(*nowUnion, g, q);
+			nowSigma = sigma(*nowUnion, g, q);
 
 			if (nowSigma > q.epsilon * upperBound->sigma ){
 				//for (map<int, Node>::iterator iter= nowUnion->begin();iter!=nowUnion->end();iter++)
@@ -298,12 +324,22 @@ Query* topicSampleOnline(Graph g,Query q, double theta, int K, double Epsilon){
 				//}
 				qResult->sigma=nowSigma;
 				qResult->S=*nowUnion;
+
+				finish = clock();
+				totalTime = (double)(finish-start)/1000.0;
+				cout<<"topicSampleOnline finished with "<<i+1<<" loops in "<<totalTime<<" s."<<endl;
+
 				return qResult;
 			}
 
 		}
 		qResult->sigma=nowSigma;
 		qResult->S=S_i;
+
+		finish = clock();
+		totalTime = (double)(finish-start)/1000.0;
+		cout<<"topicSampleOnline finished with "<<q.k+1<<" loops in "<<totalTime<<" s."<<endl;
+
 		return qResult;
 	}
 }

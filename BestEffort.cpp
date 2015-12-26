@@ -13,7 +13,6 @@
 #include "Edge.hpp"
 #include "Tree.hpp"
 #include <fstream>
-
 #include <vector>
 
 
@@ -233,9 +232,8 @@ double estInfUB(Node node, Graph g, double theta)
 
 
 
-void initL(BestEffort* bestEffort,Graph g, double theta, algorithm chooseAlgorithm)
+void BestEffort::Load()
 {
-    
     if (chooseAlgorithm == precomputation) {
         map<int, Node>::iterator nodeIter;
         
@@ -265,7 +263,6 @@ void initL(BestEffort* bestEffort,Graph g, double theta, algorithm chooseAlgorit
         }
 
     }
-    
 
 	stringstream ss;
 	ss<<BEO_DIR<<"A"<<chooseAlgorithm<<"T"<<theta<<".beo";
@@ -277,32 +274,57 @@ void initL(BestEffort* bestEffort,Graph g, double theta, algorithm chooseAlgorit
 	f.open(ifname);
 
 	if(!f){
-		cout<<ifname<<" not found. Running BestEffortOffline ..."<<endl;
-		//TODO
-		bestEffort->bestEffortOffline();
-		cout<<"BestEffortOffline finished."<<endl;
+		clock_t start,finish;
+		double totalTime;
+
+		cout<<ifname<<" not found. Procesing "<<NNODE<<" nodes"<<endl;
+		cout<<"Running BestEffortOffline ..."<<endl;
+
+		start = clock();
+		this->bestEffortOffline();
+		finish = clock();
+		totalTime = (double)(finish-start)/1000.0;
+
+		cout<<"BestEffortOffline finished with "<<NNODE<<" nodes in "<<totalTime<<" s."<<endl;
 		cout<<ifname<<" saved."<<endl;
+		cout<<endl;
+
+		f.open(ifname);
 	}
 
+	int number;
+	double influence;
 
-
-    while (!bestEffort->L.empty()) {
-        bestEffort->L.pop();
-    }
-    
-    int number;
-    double influence;
-    
-    while (!f.eof()) {
-        f>>number>>influence;
-        
-        Node node = findNode(g.nodes, number);
-        node.influence = influence;
-        Dijkstra(g, node,node.MIA);
-        bestEffort->L.push(node);
-    }
-    
+	for (int i = 0; i < NNODE; i++)
+	{
+		f>>number>>influence;
+		Node* pnode = new Node(findNode(g.nodes, number));
+        pnode->influence = influence;
+        Dijkstra(g, *pnode, pnode->MIA);
+		this->LBackup.push_back(pnode);
+	}
+	f.close();
 }
+
+void BestEffort::InitL()
+{
+	
+    while (!this->L.empty()) {
+        this->L.pop();
+    }
+    
+	if(LBackup.size()==0)
+		this->Load();
+
+	for (vector<Node*>::iterator iter = LBackup.begin();iter!= LBackup.end();iter++)
+	{
+		this->L.push(*(*iter));
+	}
+
+	
+
+}
+
 
 
 /*
@@ -335,7 +357,9 @@ void BestEffort::bestEffortOffline()
         if (chooseAlgorithm == localGraph)
             iter->second.influence = iter->second.hat_delta_sigma_p;
         this->L.push(iter->second);
-		cout<<i<<"..."<<endl;
+		
+		if(i%100==0)cout<<i<<"..."<<endl;
+
 		i++;
     }
     
@@ -369,29 +393,33 @@ void BestEffort::bestEffortOffline()
 map<int, Node>* BestEffort::bestEffortOnline()
 {
 
-    initL(this,g,theta,chooseAlgorithm);
+    //initL(this,g,theta,chooseAlgorithm);
+	this->InitL();
+
     //S保存种子
     map<int, Node>* S = new map<int, Node>;
+	//S->clear();
 
     //初始化一个空的最大堆
+	//TODO: 直接New 一个最大堆
     while (!this->H.empty()) {
         this->H.pop();
     }
 
-    S->clear();
+    
     //预处理在线节点针对LocalGraph算法，如果不是LocalGraph算法
     if(chooseAlgorithm == localGraph)
-        preprocessOnline(g, q);
+        preprocessOnline(g, *q);
     
     //K次循环找到所有合适的种子
-    for (int i = 0; i < q.k ; i++)
+    for (int i = 0; i < q->k ; i++)
     {
 
         
         do
         {
             //从离线的优先队列中和最大堆中考虑是否加入新的元素
-            insertCandidates(this->L, this->H,q);
+            insertCandidates(this->L, this->H, *q);
             
             //从堆顶取一个元素
             Node u = this->H.top();
@@ -400,7 +428,7 @@ map<int, Node>* BestEffort::bestEffortOnline()
             //如果是初始状态那么久进一步计算在gama主题分布下的上界
             if (initial == u.currentStatus)
             {
-                double sigma_new = hat_delta_sigma(u, *S, q,chooseAlgorithm);
+                double sigma_new = hat_delta_sigma(u, *S, *q, chooseAlgorithm);
                 u.currentStatus = bounded;
                 u.influence = sigma_new;
                 this->H.push(u);
@@ -408,7 +436,7 @@ map<int, Node>* BestEffort::bestEffortOnline()
             //如果已经是gamga主题分布下的上界则计算精确的上界
             else if (bounded == u.currentStatus)
             {
-                double sigma_new = CalcMargin(u, g, theta, q, *S);
+                double sigma_new = CalcMargin(u, g, theta, *q, *S);
                 u.currentStatus = exact;
                 u.influence = sigma_new;
                 this->H.push(u);
@@ -448,11 +476,9 @@ void insertCandidates(priority_queue<Node> &L, priority_queue<Node> &H,Query q)
     //insertion process until H.top > L.top
     while (!L.empty())
     {
-        if (!q.skipNodes.empty()) {
-            Node node = L.top();
-            if (findKey(q.skipNodes, node.number)) {
-                L.pop();
-            }
+        if (!q.skipNodes.empty() && findKey(q.skipNodes, L.top().number) ){
+            L.pop();
+			continue;
         }
         if (H.empty() || H.top() <= L.top()) {
             H.push(L.top());

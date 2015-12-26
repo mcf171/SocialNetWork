@@ -29,11 +29,14 @@ public:
     priority_queue<Node> H;
     
     Graph g;
-    Query q;
+    Query* q;
     double theta;
     algorithm chooseAlgorithm;
+
+	vector<Node*> LBackup;
+
     
-    BestEffort(Graph g,Query q, double theta, algorithm chooseAlgorithm){
+    BestEffort(Graph g,Query* q, double theta, algorithm chooseAlgorithm){
         
         this->g = g;
         this->q = q;
@@ -41,12 +44,15 @@ public:
         this->chooseAlgorithm = chooseAlgorithm;
     }
     
+	void Load();
+	void InitL();
+
     void bestEffortOffline();
     map<int, Node>* bestEffortOnline();
     //priority_queue<Node*> L;
 };
 
-void initL(BestEffort* bestEffort,Graph g, double theta, algorithm chooseAlgorithm);
+//void initL(BestEffort* bestEffort,Graph g, double theta, algorithm chooseAlgorithm);
 void resetEdgeDistance(Graph& g);
 
 void getLocalGraph(Tree tree,double theta,vector<Node> &nodes);
