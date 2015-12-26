@@ -232,6 +232,19 @@ double estInfUB(Node node, Graph g, double theta)
 
 
 
+BestEffort::BestEffort(Graph g,Query* q, double theta, algorithm chooseAlgorithm){
+    cout<<111<<endl;
+    this->g = g;
+    this->q = q;
+	cout<<222<<endl;
+    this->theta = theta;
+	cout<<333<<endl;
+    this->chooseAlgorithm = chooseAlgorithm;
+	cout<<111<<endl;
+}
+
+
+
 void BestEffort::Load()
 {
 	/*

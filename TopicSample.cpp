@@ -36,10 +36,16 @@ vector<Query>* queryMinning(Graph g, double theta, int K, double Epsilon, double
 
         //cout<<"topic distribution :"<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
         
+		
+
         BestEffort* bestEffort = new BestEffort(g, q, theta,precomputation);
+        cout<<222<<endl;
         
-        
+
         map<int, Node>* tempS = bestEffort->bestEffortOnline();
+
+		
+
 		for (map<int, Node>::iterator iter = tempS->begin();iter != tempS->end();iter++)
 		{
 			q->S[iter->first]=iter->second;
