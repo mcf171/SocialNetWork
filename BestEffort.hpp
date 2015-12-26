@@ -37,7 +37,9 @@ public:
 	vector<Node*> LBackup;
 
     
+
     BestEffort(Graph* g,Query* q, double theta, algorithm chooseAlgorithm);
+
     
 	void Load();
 	void InitL();

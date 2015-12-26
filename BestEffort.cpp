@@ -328,8 +328,7 @@ void BestEffort::InitL()
 {
 
     if (!this->L.empty()) {
-        release = &this->L;
-        delete  release;
+
         release = new priority_queue<Node>();
         this->L = *release;
     }
