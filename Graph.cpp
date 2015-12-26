@@ -295,8 +295,11 @@ Tree* Dijkstra(Tree* MIA,map<int, Node> seeds, double theta)
     for (iterNode = seeds.begin();  iterNode != seeds.end();  iterNode++) {
         
         S[iterNode->second.number] = iterNode->second;
+
         for(iterEdge = iterNode->second.neighbourEdge.begin(); iterEdge != iterNode->second.neighbourEdge.end(); iterEdge++){
+
 			iterEdge->second->distance  = iterEdge->second->weight;
+
             if(!findKey(S, iterEdge->second->targetNodeId) || !findKey(S, iterEdge->second->sourceNodeId))
                 edges.push(iterEdge->second);
         }

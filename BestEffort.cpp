@@ -126,8 +126,6 @@ void precomputationBased(Graph* g, Query q)
     
     calculateGraph(g);
     
-    //resetEdgeDistance(g);
-    //cout<<"create MIA";
 }
 
 //void resetEdgeDistance(Graph* g)
@@ -477,7 +475,6 @@ map<int, Node>* BestEffort::bestEffortOnline()
 			//cout<<L1->size()<<endl;
             //从离线的优先队列中和最大堆中考虑是否加入新的元素
             insertCandidates(*q);
-            
             //从堆顶取一个元素
             Node u = this->H.top();
             this->H.pop();
@@ -566,8 +563,7 @@ double sigma(map<int, Node> nodes, Graph* g ,Query q)
     for(itertor = g.nodes.begin(); itertor != g.nodes.end() ; itertor ++)
         result+=calAP(itertor->second, nodes, q );
     */
-    //resetEdgeDistance(g);
-    
+
     Tree* tree = new Tree();
     tree = Dijkstra(tree,nodes,q.theta);
     
