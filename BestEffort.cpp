@@ -422,11 +422,14 @@ void BestEffort::bestEffortOffline()
     
     ofstream f(ofname);
     
-    priority_queue<Node> temp = this->L;
-    while (!temp.empty()) {
+    priority_queue<Node>* temp = &(this->L);
+    while (!temp->empty()) {
         
-        Node node =temp.top();
-        temp.pop();
+        Node node =temp->top();
+        temp->pop();
+
+		if(node.influence<q->theta)break;
+
         f<<node.number<<" "<<node.influence<<endl;
     }
     f.close();

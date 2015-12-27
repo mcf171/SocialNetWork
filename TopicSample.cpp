@@ -59,8 +59,8 @@ vector<Query>* queryMinning(Graph* g, double theta, int K, double Epsilon, doubl
 		
 		topicDistributions->push_back(*q);
 
-        //if(i%100==0)cout<<i<<"..."<<endl;
-        cout<<i<<"..."<<endl;
+        if(i%10==0)cout<<i<<"..."<<endl;
+        //cout<<i<<"..."<<endl;
 	}
 
     return topicDistributions;

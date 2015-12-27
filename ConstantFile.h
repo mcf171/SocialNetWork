@@ -39,9 +39,9 @@
 //#define NEDGE 22
 
 
-//#define NODE_PATH "../SocialNetWorkGit/data/paper_nodetest.txt"
-//#define EDGE_PATH "../SocialNetWorkGit/data/paper_edgetest.txt"
-//#define PROP_PATH "../SocialNetWorkGit/data/paper_proptest.txt"
+//#define NODE_PATH "../SocialNetWorkGit/data/paper/paper_nodetest.txt"
+//#define EDGE_PATH "../SocialNetWorkGit/data/paper/paper_edgetest.txt"
+//#define PROP_PATH "../SocialNetWorkGit/data/paper/paper_proptest.txt"
 //#define SAMPLE_PATH "../SocialNetWorkGit/data/samples25.txt"
 //#define NSAMPLE 25
 //#define BEO_DIR "../SocialNetWorkGit/data/paper/beo/"
